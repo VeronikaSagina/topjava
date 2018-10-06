@@ -1,4 +1,4 @@
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <title>User list</title>
@@ -6,5 +6,6 @@
 <body>
 <h2><a href="index.html">Home</a></h2>
 <h2>User list</h2>
+
 </body>
 </html>
