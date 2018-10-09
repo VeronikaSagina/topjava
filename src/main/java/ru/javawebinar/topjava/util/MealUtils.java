@@ -66,25 +66,4 @@ public class MealUtils {
     public static MealWithExceed createWithExceed(Meal meal, boolean exceeded) {
         return new MealWithExceed(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories(), exceeded);
     }
-
-/*    public static void edit(Meal update) {
-        if (map.containsKey(update.getId())) {
-            map.put(update.getId(), update);
-        }
-    }
- public static void delete(int id) {
-        map.remove(id);
-    }
-
-    public static Meal get(int id) {
-        return map.get(id);
-    }
-
-    public static void create(Meal meal) {
-        meal.setId(currentId.incrementAndGet());
-        map.put(meal.getId(), meal);
-    }
-     public static void delete(int id) {
-        map.remove(id);
-    }*/
 }

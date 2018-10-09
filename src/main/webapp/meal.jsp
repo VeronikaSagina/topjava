@@ -13,7 +13,7 @@
     <table>
         <tr>
             <td>дата</td>
-            <td><input type="text" name="date" value="<c:out value="${meal.dateTime.format(formatter)}"/>"></td>
+            <td><input type="datetime-local" name="date" value="<c:out value="${meal.dateTime}"/>"></td>
         </tr>
         <tr>
             <td>описание</td>

@@ -9,7 +9,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class MealService {
-    InMemoryMealRepositoryImpl repository = new InMemoryMealRepositoryImpl();
+    private InMemoryMealRepositoryImpl repository = new InMemoryMealRepositoryImpl();
 
     public List<MealWithExceed> findAll() {
         Collection<Meal> all = repository.getAll();
@@ -26,9 +26,5 @@ public class MealService {
 
     public void edit(Meal update) {
         repository.save(update);
-    }
-
-    public void create(Meal meal) {
-        repository.save(meal);
     }
 }
