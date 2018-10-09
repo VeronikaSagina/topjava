@@ -30,17 +30,15 @@ public class MealServlet extends HttpServlet {
         LOG.debug("mealServlet Get");
         final String action = req.getParameter("action");
         if (action != null) {
-            switch (action) {
-                case "edit":
-                    edit(req, resp);
-                    return;
-                case "delete":
-                    delete(req, resp);
-                    break;
-                case "create":
-                    req.setAttribute("formatter", formatter);
-                    req.getRequestDispatcher("meal.jsp").forward(req, resp);
-                    return;
+            if ("edit".equals(action)) {
+                edit(req, resp);
+                return;
+            } else if ("delete".equals(action)) {
+                delete(req, resp);
+            } else if ("create".equals(action)) {
+                req.setAttribute("formatter", formatter);
+                req.getRequestDispatcher("meal.jsp").forward(req, resp);
+                return;
             }
         }
         req.setAttribute("MealList", mealService.findAll());
@@ -93,5 +91,9 @@ public class MealServlet extends HttpServlet {
 
     private void delete(HttpServletRequest req, HttpServletResponse resp) {
         mealService.deleteById(Integer.parseInt(req.getParameter("id")));
+    }
+
+    public static void main(String[] args) {
+        System.out.println("ha-ha-ha");
     }
 }

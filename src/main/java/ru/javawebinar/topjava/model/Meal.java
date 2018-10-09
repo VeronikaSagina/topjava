@@ -54,4 +54,7 @@ public class Meal {
     public void setId(int id) {
         this.id = id;
     }
+    public boolean isNew() {
+        return id == null;
+    }
 }

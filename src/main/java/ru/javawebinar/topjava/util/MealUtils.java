@@ -18,24 +18,18 @@ import java.util.stream.Collectors;
  */
 public class MealUtils {
     private static final AtomicInteger currentId = new AtomicInteger();
-    private static List<Meal> meals = Arrays.asList(
-            new Meal(currentId.incrementAndGet(), LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500),
-            new Meal(currentId.incrementAndGet(), LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000),
-            new Meal(currentId.incrementAndGet(), LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500),
-            new Meal(currentId.incrementAndGet(), LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000),
-            new Meal(currentId.incrementAndGet(), LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500),
-            new Meal(currentId.incrementAndGet(), LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510)
-    );
+    public static final int DEFAULT_CALORIES_PER_DAY = 2000;
+    public static List<Meal> MEALS = new ArrayList<>(Arrays.asList(
+            new Meal(LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500),
+            new Meal(LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000),
+            new Meal(LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500),
+            new Meal(LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000),
+            new Meal(LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500),
+            new Meal(LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510)
+    ));
 
-    private static Map<Integer, Meal> map = meals.stream()
-            .collect(Collectors.toConcurrentMap(Meal::getId, Function.identity()));
-
-    public static List<MealWithExceed> getMealWithExceeds() {
-        return getFilteredWithExceeded(map.values(), LocalTime.MIN, LocalTime.MAX, 2000);
-    }
-
-    public static void delete(int id){
-        map.remove(id);
+    public static List<MealWithExceed> getMealWithExceeds(Collection<Meal> all) {
+        return getFilteredWithExceeded(all, LocalTime.MIN, LocalTime.MAX, DEFAULT_CALORIES_PER_DAY);
     }
 
     public static void main(String[] args) {
@@ -73,10 +67,13 @@ public class MealUtils {
         return new MealWithExceed(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories(), exceeded);
     }
 
-    public static void edit(Meal update) {
+/*    public static void edit(Meal update) {
         if (map.containsKey(update.getId())) {
             map.put(update.getId(), update);
         }
+    }
+ public static void delete(int id) {
+        map.remove(id);
     }
 
     public static Meal get(int id) {
@@ -87,4 +84,7 @@ public class MealUtils {
         meal.setId(currentId.incrementAndGet());
         map.put(meal.getId(), meal);
     }
+     public static void delete(int id) {
+        map.remove(id);
+    }*/
 }
