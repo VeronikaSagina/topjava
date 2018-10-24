@@ -1,30 +1,16 @@
 package ru.javawebinar.topjava.service;
 
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.model.MealWithExceed;
-import ru.javawebinar.topjava.repository.InMemoryMealRepositoryImpl;
-import ru.javawebinar.topjava.util.MealUtils;
+import ru.javawebinar.topjava.to.MealWithExceed;
 
-import java.util.Collection;
 import java.util.List;
 
-public class MealService {
-    private InMemoryMealRepositoryImpl repository = new InMemoryMealRepositoryImpl();
+public interface MealService {
+    List<MealWithExceed> findAll(int userId);
 
-    public List<MealWithExceed> findAll() {
-        Collection<Meal> all = repository.getAll();
-        return MealUtils.getMealWithExceeds(all);
-    }
+    Meal findById(int id, int userId);
 
-    public Meal findById(int id) {
-        return repository.get(id);
-    }
+    void deleteById(int id, int userId);
 
-    public void deleteById(int id) {
-        repository.delete(id);
-    }
-
-    public void edit(Meal update) {
-        repository.save(update);
-    }
+    Meal edit(Meal update, int userId);
 }

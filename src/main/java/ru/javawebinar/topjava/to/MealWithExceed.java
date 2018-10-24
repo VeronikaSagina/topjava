@@ -1,26 +1,27 @@
-package ru.javawebinar.topjava.model;
+package ru.javawebinar.topjava.to;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * GKislin
- * 11.01.2015.
- */
 public class MealWithExceed {
     private final Integer id;
     private final LocalDateTime dateTime;
     private final String description;
     private final int calories;
     private final boolean exceed;
+    private final int userId;
 
-    public MealWithExceed(int id, LocalDateTime dateTime, String description, int calories, boolean exceed) {
+    public MealWithExceed(int userId, int id, LocalDateTime dateTime, String description, int calories, boolean exceed) {
         this.id = id;
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
         this.exceed = exceed;
+        this.userId = userId;
+    }
+
+    public int getUserId() {
+        return userId;
     }
 
     public LocalDateTime getDateTime() {

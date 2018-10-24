@@ -2,8 +2,13 @@ package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
+import ru.javawebinar.topjava.service.MealServiceImpl;
+import ru.javawebinar.topjava.web.meal.MealRestController;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -17,7 +22,13 @@ import java.time.temporal.ChronoUnit;
 public class MealServlet extends HttpServlet {
     private static final Logger LOG = LoggerFactory.getLogger(MealServlet.class);
 
-    private static final MealService mealService = new MealService();
+    ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
+    private static MealService mealService;
+    {
+        if (mealService == null) {
+            mealService = appCtx.getBean(MealService.class);
+        }
+    }
 
     /*
     request - запрос, получить значения
@@ -37,12 +48,12 @@ public class MealServlet extends HttpServlet {
                     delete(req, resp);
                     break;
                 case "create":
-                    req.setAttribute("meal", new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000));
+                    req.setAttribute("meal", new Meal(AuthorizedUser.id(), LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000));
                     req.getRequestDispatcher("meal.jsp").forward(req, resp);
                     return;
             }
         }
-        req.setAttribute("MealList", mealService.findAll());
+        req.setAttribute("MealList", mealService.findAll(AuthorizedUser.id()));
         req.getRequestDispatcher("meals.jsp").forward(req, resp);//пересылка на jsp страничку респонса и реквеста
     }
 
@@ -58,25 +69,32 @@ public class MealServlet extends HttpServlet {
         }
     }
 
-    private void createAndUpdate(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void createAndUpdate(HttpServletRequest req, HttpServletResponse resp) throws  IOException {
         String date = req.getParameter("date");
         LocalDateTime time = LocalDateTime.parse(date);
         String description = req.getParameter("description");
         String calories = req.getParameter("calories");
-        if (req.getParameter("id") != null && !req.getParameter("id").equals("")) {
-            mealService.edit(new Meal(Integer.parseInt(req.getParameter("id")), time, description, Integer.parseInt(calories)));
+        String id = req.getParameter("id");
+        if (id != null && !id.equals("")) {
+            Meal update = mealService.edit(new Meal(AuthorizedUser.id(), Integer.parseInt(id), time, description, Integer.parseInt(calories)), AuthorizedUser.id());
+            LOG.debug("update meal{}", update);
         } else {
-            mealService.edit(new Meal(time, description, Integer.parseInt(calories)));
+            Meal create = mealService.edit(new Meal(AuthorizedUser.id(), time, description, Integer.parseInt(calories)) , AuthorizedUser.id());
+            LOG.debug("create meal{}", create);
         }
         resp.sendRedirect("meals");
     }
 
     private void edit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {//редактировать
-        req.setAttribute("meal", mealService.findById(Integer.parseInt(req.getParameter("id"))));
+        Meal meal = mealService.findById(Integer.parseInt(req.getParameter("id")), AuthorizedUser.id());
+        req.setAttribute("meal", meal);
+        LOG.debug("edit meal{}", meal);
         req.getRequestDispatcher("meal.jsp").forward(req, resp);
     }
 
     private void delete(HttpServletRequest req, HttpServletResponse resp) {
-        mealService.deleteById(Integer.parseInt(req.getParameter("id")));
+        int mealD = Integer.parseInt(req.getParameter("id"));
+        LOG.debug("delete {}", mealD);
+        mealService.deleteById(mealD, AuthorizedUser.id());
     }
 }
