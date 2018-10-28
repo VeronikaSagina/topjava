@@ -2,13 +2,18 @@ package ru.javawebinar.topjava.web.user;
 
 import org.springframework.stereotype.Controller;
 import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.service.UserService;
 import ru.javawebinar.topjava.web.AuthorizedUser;
 
 @Controller
 public class ProfileRestController extends AbstractUserController{
 
-   /* @Autowired
-    private UserService service;*/
+    public ProfileRestController(UserService service) {
+        super(service);
+    }
+
+    /* @Autowired
+        private UserService service;*/
    public User get() {
        return super.get(AuthorizedUser.id());
    }

@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava;
 
+import ru.javawebinar.topjava.repository.mock.InMemoryMealRepositoryImpl;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.service.MealServiceImpl;
 
@@ -11,7 +12,7 @@ import ru.javawebinar.topjava.service.MealServiceImpl;
  * @link https://github.com/JavaOPs/topjava
  */
 public class Main {
-    static MealService mealService = new MealServiceImpl();
+    static MealService mealService = new MealServiceImpl(new InMemoryMealRepositoryImpl());
     public static void main(String[] args) {
         System.out.format("Hello Topjava Enterprise!");
     }

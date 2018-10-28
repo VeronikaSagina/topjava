@@ -17,12 +17,12 @@ import java.util.stream.Collectors;
 public class MealUtils {
     public static final int DEFAULT_CALORIES_PER_DAY = 2000;
     public static List<Meal> MEALS = new ArrayList<>(Arrays.asList(
-            new Meal(1,LocalDateTime.of(2015, Month.MAY, 30, 10, 0), "Завтрак", 500),
-            new Meal(1,LocalDateTime.of(2015, Month.MAY, 30, 13, 0), "Обед", 1000),
-            new Meal(1,LocalDateTime.of(2015, Month.MAY, 30, 20, 0), "Ужин", 500),
-            new Meal(1,LocalDateTime.of(2015, Month.MAY, 31, 10, 0), "Завтрак", 1000),
-            new Meal(1,LocalDateTime.of(2015, Month.MAY, 31, 13, 0), "Обед", 500),
-            new Meal(1,LocalDateTime.of(2015, Month.MAY, 31, 20, 0), "Ужин", 510)
+            new Meal(LocalDateTime.of(2018, Month.OCTOBER, 25, 8, 0), "Завтрак", 500),
+            new Meal(LocalDateTime.of(2018, Month.OCTOBER, 25, 13, 0), "Обед", 1000),
+            new Meal(LocalDateTime.of(2018, Month.OCTOBER, 25, 19, 0), "Ужин", 500),
+            new Meal(LocalDateTime.of(2018, Month.SEPTEMBER, 1, 8, 0), "Завтрак", 1000),
+            new Meal(LocalDateTime.of(2018, Month.SEPTEMBER, 1, 13, 0), "Обед", 500),
+            new Meal(LocalDateTime.of(2018, Month.SEPTEMBER, 1, 19, 0), "Ужин", 510)
     ));
 
     public static List<MealWithExceed> getMealWithExceeds(Collection<Meal> all) {

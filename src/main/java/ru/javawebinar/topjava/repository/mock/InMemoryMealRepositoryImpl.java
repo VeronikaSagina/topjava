@@ -4,56 +4,80 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealUtils;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.Month;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
+
+import static ru.javawebinar.topjava.repository.mock.InMemoryUserRepositoryImpl.ADMIN_ID;
+import static ru.javawebinar.topjava.repository.mock.InMemoryUserRepositoryImpl.USER_ID;
 
 //@Primary - Если есть несколько бинов удовлетворяющих условию (например имплементирующих нужный интерфейс,
 //то будет использован этот бин. Также смотри @Qualifier
 @Repository
 public class InMemoryMealRepositoryImpl implements MealRepository {
-    private static Map<Integer, Meal> mealMapRepository = new ConcurrentHashMap<>();
+    private static Map<Integer,Map<Integer, Meal>> mealMapRepository = new ConcurrentHashMap<>();
     private static final AtomicInteger currentId = new AtomicInteger(0);
     private static final Logger LOG = LoggerFactory.getLogger(InMemoryMealRepositoryImpl.class);
 
     {
-        MealUtils.MEALS.forEach(this::save);
+        MealUtils.MEALS.forEach(um -> save(um, USER_ID));
+        save(new Meal(LocalDateTime.of(2015, Month.JUNE, 1, 14, 0), "Админ ланч", 510), ADMIN_ID);
+        save(new Meal(LocalDateTime.of(2015, Month.JUNE, 1, 21, 0), "Админ ужин", 1500), ADMIN_ID);
     }
 
-    @SuppressWarnings("Duplicates")
+
     @Override
-    public Meal save(Meal meal) {
-        LOG.info("Save " + meal);
+    public Meal save(Meal meal, int userId) {
+        Objects.requireNonNull(meal);
         if (meal.isNew()) {
             meal.setId(currentId.incrementAndGet());
+        }else if (get(meal.getId(), userId) == null){
+            return null;
         }
-        mealMapRepository.put(meal.getId(), meal);
+        Map<Integer, Meal> mealMap = mealMapRepository.computeIfAbsent(userId, ConcurrentHashMap::new);
+        mealMap.put(meal.getId(), meal);
         return meal;
     }
 
     @Override
-    public void delete(int id) {
+    public boolean delete(int id, int userId) {
         LOG.info("Delete " + id);
-        mealMapRepository.remove(id);
+        Map<Integer, Meal> mealMap = mealMapRepository.get(userId);
+        return mealMap != null && mealMap.remove(id) != null;
     }
 
     @Override
-    public Meal get(int id) {
-        LOG.info("Get " + id);
-        return mealMapRepository.get(id);
+    public Meal get(int id, int userId) {
+        Map<Integer, Meal> meals = mealMapRepository.get(userId);
+        return meals == null ? null : meals.get(id);
     }
 
     @Override
-    public List<Meal> getAll() {
-        LOG.info("Get all meals for user.");
-        List<Meal> values = new ArrayList<>(mealMapRepository.values());
+    public List<Meal> getAll(int userId) {
+        LOG.info("Get all meals for user {}" + userId);
+        Map<Integer, Meal> mealMap = mealMapRepository.get(userId);
+        List<Meal> values = new ArrayList<>(mealMap.values());
         values.sort(Comparator.comparing(Meal::getDateTime, Comparator.reverseOrder()));
         return values;
+    }
+
+    @Override
+    public List<Meal> getBetween(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime, int userId) {
+        List<Meal> values = getAll(userId);
+        return values.stream()
+                .filter(meal -> DateTimeUtil.isBetween(meal.getDate(), startDate, endDate))
+                .filter(meal -> DateTimeUtil.isBetween(meal.getTime(), startTime, endTime))
+                .sorted(Comparator.comparing(Meal::getDateTime, Comparator.reverseOrder()))
+                .collect(Collectors.toList());
     }
 }

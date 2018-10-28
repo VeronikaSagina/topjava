@@ -9,8 +9,12 @@ import java.util.List;
 
 @Controller
 public class AdminRestController extends AbstractUserController {
- /*   @Autowired
-    private UserService service;*/
+    public AdminRestController(UserService service) {
+        super(service);
+    }
+
+    /*   @Autowired
+        private UserService service;*/
  @Override
  public List<User> getAll() {
      return super.getAll();

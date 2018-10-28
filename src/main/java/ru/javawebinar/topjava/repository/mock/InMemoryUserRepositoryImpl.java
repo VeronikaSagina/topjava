@@ -21,9 +21,12 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
     private static final Logger LOG = LoggerFactory.getLogger(InMemoryUserRepositoryImpl.class);
     private static Map<Integer, User> mapRepository = new ConcurrentHashMap<>();
     private static final AtomicInteger currentId = new AtomicInteger(0);
+    static final int USER_ID = 1;
+    static final int ADMIN_ID = 2;
 
     @Override
     public User getByEmail(String email) {
+        Objects.requireNonNull(email);
         Optional<Map.Entry<Integer, User>> integerUserEntry = mapRepository.entrySet().stream()
                 .filter(m -> m.getValue().getEmail().equals(email))
                 .findFirst();
@@ -32,9 +35,10 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
                 .orElseThrow(() -> new NotFoundException("user with this email does not exist"));
     }
 
-    @SuppressWarnings("Duplicates")
+
     @Override
     public User save(User user) {
+        Objects.requireNonNull(user);
         LOG.info("Save " + user);
         if (user.isNew()) {
             user.setId(currentId.incrementAndGet());
@@ -59,7 +63,7 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
     @Override
     public List<User> getAll() {
         LOG.info("Get all users.");
-        List<User> values = new ArrayList<>( mapRepository.values());
+        List<User> values = new ArrayList<>(mapRepository.values());
         values.sort(Comparator.comparing(User::getName).thenComparing(User::getEmail));
         return values;
     }

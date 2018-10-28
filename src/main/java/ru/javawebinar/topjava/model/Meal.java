@@ -1,37 +1,28 @@
 package ru.javawebinar.topjava.model;
 
-import ru.javawebinar.topjava.web.AuthorizedUser;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.concurrent.atomic.AtomicInteger;
 
-/**
- * GKislin
- * 11.01.2015.
- */
 public class Meal extends BaseEntity{
-    private Integer id;
+    /*private Integer id;*/
     private final LocalDateTime dateTime;
     private final String description;
     private final int calories;
-    private int userId;
 
-
-    public Meal(int userId, LocalDateTime dateTime, String description, int calories) {
+    public Meal(LocalDateTime dateTime, String description, int calories) {
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
-        this.userId = userId;
     }
 
-    public Meal( int userId, int id, LocalDateTime dateTime, String description, int calories) {
+    public Meal( int id, LocalDateTime dateTime, String description, int calories) {
         this.id = id;
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
-        this.userId = userId;
+
     }
 
     public Integer getId() {
@@ -56,10 +47,6 @@ public class Meal extends BaseEntity{
 
     public LocalTime getTime() {
         return dateTime.toLocalTime();
-    }
-
-    public int getUserId() {
-        return userId;
     }
 
     public void setId(int id) {

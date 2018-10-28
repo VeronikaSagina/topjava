@@ -5,30 +5,35 @@
 <html>
 <head>
     <title>Meal</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<h2>${meal.id == null ? "Создание записи" : "Обновление записи"}</h2>
-<form method="POST" action="meals?action=<c:out value="${meal.id != null ? 'update' : 'create'}"/>">
-    <input hidden type="text" name="id" value="<c:out value="${meal.id}"/>">
-    <table>
-        <tr>
-            <td>дата</td>
-            <td><input type="datetime-local" name="date" value="<c:out value="${meal.dateTime}"/>"></td>
-        </tr>
-        <tr>
-            <td>описание</td>
-            <td><input type="text" name="description" value="<c:out value="${meal.description}"/>"></td>
-        </tr>
-        <tr>
-            <td>калории</td>
-            <td><input type="text" name="calories" value="<c:out value="${meal.calories}"/>"></td>
-        </tr>
-        <tr>
-            <td align="right" colspan="2"><input type="submit" value="Отправить"></td>
-        </tr>
-    </table>
-
-</form>
+<section>
+    <h2><a href="index.html">Home</a></h2>
+    <h2>${param.action == 'create' ? 'Create meal' : 'Edit meal'}</h2>
+    <hr>
+   <%-- <h2>${meal.id == null ? "Создание записи" : "Обновление записи"}</h2>--%>
+  <%--  <form method="POST" action="meals?action=<c:out value="${meal.id != null ? 'update' : 'create'}"/>">--%>
+    <form method="post" action="meals?action=${param.action}">
+        <input hidden type="text" name="id" value="<c:out value="${meal.id}"/>">
+        <table>
+            <tr>
+                <td>DateTime:</td>
+                <td><input type="datetime-local" name="date" value="<c:out value="${meal.dateTime}"/>"></td>
+            </tr>
+            <tr>
+                <td>Description:</td>
+                <td><input type="text" name="description" value="<c:out value="${meal.description}"/>"></td>
+            </tr>
+            <tr>
+                <td>Calories:</td>
+                <td><input type="text" name="calories" value="<c:out value="${meal.calories}"/>"></td>
+            </tr>
+        </table>
+        <button type="submit">Save</button>
+        <button onclick="window.history.back()">Cancel</button>
+    </form>
+</section>
 <%--
 <table border="1px">
     <h2><a href="index.html">Home</a></h2>

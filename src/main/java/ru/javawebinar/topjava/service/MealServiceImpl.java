@@ -6,47 +6,60 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealWithExceed;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealUtils;
+import ru.javawebinar.topjava.util.ValidationUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 
 @Service
 public class MealServiceImpl implements MealService {
-    @Autowired
+
     private MealRepository repository;
 
-    public List<MealWithExceed> findAll(int userId) throws NotFoundException{
-        Collection<Meal> all = repository.getAll();
-        List<Meal> meals = all.stream()
-                .filter(m -> (m.getUserId() == userId))
-                .collect(Collectors.toList());
-        return MealUtils.getMealWithExceeds(meals);
+    public MealServiceImpl(MealRepository repository) {
+        this.repository = repository;
     }
 
-    public Meal findById(int id, int userId) throws NotFoundException{
-        Meal meal = repository.get(id);
-        if (meal.getUserId() == userId) {
+    public List<MealWithExceed> findAll(int userId) throws NotFoundException {
+        Collection<Meal> all = repository.getAll(userId);
+        return MealUtils.getMealWithExceeds(all);
+    }
+
+    @Override
+    public List<MealWithExceed> getBetween(int userId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
+        Collection<Meal> between = repository.getBetween(startDate, endDate, startTime, endTime, userId);
+        return MealUtils.getMealWithExceeds(between);
+    }
+
+    public Meal findById(int id, int userId) throws NotFoundException {
+       /* Meal meal = repository.get(id, userId);
+        if (meal != null) {
             return meal;
-        }
-        throw new NotFoundException("Not found meal with id = " + id);
+        }*/
+        return checkNotFoundWithId(repository.get(id, userId), id);
     }
 
-    public void deleteById(int id, int userId) throws NotFoundException{
-        if (repository.get(id).getUserId() == userId) {
-            repository.delete(id);
+    public void deleteById(int id, int userId) throws NotFoundException {
+       /* if (repository.get(id, userId)!= null) {
+            repository.delete(id, userId);
         } else {
             throw new NotFoundException("Not found meal with id = " + id);
-        }
+        }*/
+       checkNotFoundWithId(repository.delete(id, userId), id);
     }
 
     public Meal edit(Meal update, int userId) throws NotFoundException {
-        if (update.getUserId() == userId) {
-            return repository.save(update);
-        } else {
-            throw new NotFoundException("You can't update this meal");
-        }
+        return checkNotFoundWithId(repository.save(update, userId), update.getId());
+    }
+
+    @Override
+    public Meal save(Meal update, int userId) {
+        return repository.save(update, userId);
     }
 }
