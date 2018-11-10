@@ -38,19 +38,10 @@ public class MealServiceImpl implements MealService {
     }
 
     public Meal findById(int id, int userId) throws NotFoundException {
-       /* Meal meal = repository.get(id, userId);
-        if (meal != null) {
-            return meal;
-        }*/
         return checkNotFoundWithId(repository.get(id, userId), id);
     }
 
     public void deleteById(int id, int userId) throws NotFoundException {
-       /* if (repository.get(id, userId)!= null) {
-            repository.delete(id, userId);
-        } else {
-            throw new NotFoundException("Not found meal with id = " + id);
-        }*/
        checkNotFoundWithId(repository.delete(id, userId), id);
     }
 

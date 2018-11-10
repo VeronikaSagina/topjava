@@ -5,7 +5,12 @@ package ru.javawebinar.topjava.model;
  */
 public class BaseEntity {
     protected Integer id;
+    public BaseEntity(){
 
+    }
+    protected BaseEntity(Integer id) {
+        this.id = id;
+    }
     public Integer getId() {
         return id;
     }

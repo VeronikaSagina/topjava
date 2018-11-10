@@ -13,7 +13,7 @@ public class DateTimeUtil {
         //return LocalDate.from(current).compareTo(LocalDate.from(start)) >= 0 && LocalDate.from(current).compareTo(LocalDate.from(end)) <= 0;
     }
 
-    public static <T extends Comparable<T>> boolean isBetween(T m, T start, T end) {
+    public static <T extends Comparable<? super T>> boolean isBetween(T m, T start, T end) {
         return m.compareTo(start) >= 0 && m.compareTo(end) <= 0;
     }
 
