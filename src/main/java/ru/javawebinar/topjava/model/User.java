@@ -62,4 +62,12 @@ public class User extends NamedEntity {
                 ", authorities=" + roles +
                 '}';
     }
+
+    public Date getRegistered() {
+        return registered;
+    }
+
+    public int getCaloriesPerDay() {
+        return caloriesPerDay;
+    }
 }

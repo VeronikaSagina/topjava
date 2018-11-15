@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealWithExceed;
@@ -22,12 +23,13 @@ public class MealServiceImpl implements MealService {
 
     private MealRepository repository;
 
-    public MealServiceImpl(MealRepository repository) {
+    public MealServiceImpl(/*@Qualifier("jdbcMealRepositoryImpl")*/ MealRepository repository) {
         this.repository = repository;
     }
 
     public List<MealWithExceed> findAll(int userId) throws NotFoundException {
         Collection<Meal> all = repository.getAll(userId);
+
         return MealUtils.getMealWithExceeds(all);
     }
 

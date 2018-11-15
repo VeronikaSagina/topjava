@@ -7,7 +7,7 @@ import java.time.LocalTime;
 import java.util.Collection;
 
 public interface MealRepository {
-    Meal save(Meal Meal, int userId);
+    Meal save(Meal meal, int userId);
 
     boolean delete(int id, int userId);
 

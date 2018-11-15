@@ -17,7 +17,7 @@ import java.util.List;
 public class SpringMain {
 
     public static void main(String[] args) {
-        try (ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml")) {
+        try (ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/springTest-app.xml","spring/spring-app.xml","spring/spring-db.xml")) {
             System.out.println("___________________________________________");
             System.out.println("Bean definition names: ");
             String[] beanDefinitionNames = appCtx.getBeanDefinitionNames();
