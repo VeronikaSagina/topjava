@@ -3,7 +3,10 @@ package ru.javawebinar.topjava.model;
 public class NamedEntity extends BaseEntity {
     protected String name;
 
-    public NamedEntity(Integer id, String name) {
+    NamedEntity() {
+    }
+
+     NamedEntity(Integer id, String name) {
         super(id);
         this.name = name;
     }

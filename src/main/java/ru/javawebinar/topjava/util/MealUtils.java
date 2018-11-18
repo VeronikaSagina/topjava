@@ -5,9 +5,7 @@ import ru.javawebinar.topjava.to.MealWithExceed;
 import ru.javawebinar.topjava.web.AuthorizedUser;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.Month;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -17,14 +15,6 @@ import java.util.stream.Collectors;
  */
 public class MealUtils {
     public static final int DEFAULT_CALORIES_PER_DAY = 2000;
-    public static List<Meal> MEALS = new ArrayList<>(Arrays.asList(
-            new Meal(LocalDateTime.of(2018, Month.OCTOBER, 25, 8, 0), "Завтрак", 500),
-            new Meal(LocalDateTime.of(2018, Month.OCTOBER, 25, 13, 0), "Обед", 1000),
-            new Meal(LocalDateTime.of(2018, Month.OCTOBER, 25, 19, 0), "Ужин", 500),
-            new Meal(LocalDateTime.of(2018, Month.SEPTEMBER, 1, 8, 0), "Завтрак", 1000),
-            new Meal(LocalDateTime.of(2018, Month.SEPTEMBER, 1, 13, 0), "Обед", 500),
-            new Meal(LocalDateTime.of(2018, Month.SEPTEMBER, 1, 19, 0), "Ужин", 510)
-    ));
 
     public static List<MealWithExceed> getMealWithExceeds(Collection<Meal> all) {
         return getFilteredWithExceeded(all, LocalTime.MIN, LocalTime.MAX, DEFAULT_CALORIES_PER_DAY);

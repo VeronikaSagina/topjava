@@ -23,12 +23,21 @@ import java.util.stream.Collectors;
 //то будет использован этот бин. Также смотри @Qualifier
 @Repository
 public class InMemoryMealRepositoryImpl implements MealRepository {
-    private static Map<Integer,Map<Integer, Meal>> mealMapRepository = new ConcurrentHashMap<>();
+    private static Map<Integer, Map<Integer, Meal>> mealMapRepository = new ConcurrentHashMap<>();
     private static final AtomicInteger currentId = new AtomicInteger(0);
     private static final Logger LOG = LoggerFactory.getLogger(InMemoryMealRepositoryImpl.class);
 
+    private static List<Meal> MEALS = new ArrayList<>(Arrays.asList(
+            new Meal(LocalDateTime.of(2018, Month.OCTOBER, 25, 8, 0), "Завтрак", 500),
+            new Meal(LocalDateTime.of(2018, Month.OCTOBER, 25, 13, 0), "Обед", 1000),
+            new Meal(LocalDateTime.of(2018, Month.OCTOBER, 25, 19, 0), "Ужин", 500),
+            new Meal(LocalDateTime.of(2018, Month.SEPTEMBER, 1, 8, 0), "Завтрак", 1000),
+            new Meal(LocalDateTime.of(2018, Month.SEPTEMBER, 1, 13, 0), "Обед", 500),
+            new Meal(LocalDateTime.of(2018, Month.SEPTEMBER, 1, 19, 0), "Ужин", 510)
+    ));
+
     {
-        MealUtils.MEALS.forEach(um -> save(um, InMemoryUserRepositoryImpl.USER_ID));
+        MEALS.forEach(um -> save(um, InMemoryUserRepositoryImpl.USER_ID));
         save(new Meal(LocalDateTime.of(2015, Month.JUNE, 1, 14, 0), "Админ ланч", 510), InMemoryUserRepositoryImpl.ADMIN_ID);
         save(new Meal(LocalDateTime.of(2015, Month.JUNE, 1, 21, 0), "Админ ужин", 1500), InMemoryUserRepositoryImpl.ADMIN_ID);
     }
@@ -42,12 +51,13 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
     public void preDestroy() {
         LOG.info("+++ PreDestroy");
     }
+
     @Override
     public Meal save(Meal meal, int userId) {
         Objects.requireNonNull(meal);
         if (meal.isNew()) {
             meal.setId(currentId.incrementAndGet());
-        }else if (get(meal.getId(), userId) == null){
+        } else if (get(meal.getId(), userId) == null) {
             return null;
         }
         Map<Integer, Meal> mealMap = mealMapRepository.computeIfAbsent(userId, ConcurrentHashMap::new);

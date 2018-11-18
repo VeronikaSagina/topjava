@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.model;
 
+import java.time.Instant;
 import java.util.*;
 
 import static ru.javawebinar.topjava.util.MealUtils.DEFAULT_CALORIES_PER_DAY;
@@ -8,10 +9,19 @@ public class User extends NamedEntity {
     private String email;
     private String password;
     private boolean enabled = true;//включен, разрешен
-    private Date registered = new Date();
+    private Instant registered = Instant.now();
     private Set<Role> roles;
     private List<Meal> mealList = new ArrayList<>();
     private int caloriesPerDay = DEFAULT_CALORIES_PER_DAY;
+
+    public User() {
+
+    }
+
+    public User(User user) {
+        this(user.getId(), user.getName(), user.getEmail(), user.getPassword(), user.getCaloriesPerDay(), user.isEnabled(), user.getRoles());
+    }
+
     public User(Integer id, String name, String email, String password, Role role, Role... roles) {
         this(id, name, email, password, DEFAULT_CALORIES_PER_DAY, true, EnumSet.of(role, roles));
     }
@@ -24,7 +34,17 @@ public class User extends NamedEntity {
         this.enabled = enabled;
         this.roles = roles;
     }
-  /*  public User(String name, String email, String password, Role role, Role... roles) {
+
+    public User(int id, String name, String email, String password, int caloriesPerDay, Instant registered, boolean enabled) {
+        super(id, name);
+        this.email = email;
+        this.password = password;
+        this.caloriesPerDay = caloriesPerDay;
+        this.registered = registered;
+        this.enabled = enabled;
+    }
+
+    /*  public User(String name, String email, String password, Role role, Role... roles) {
         super(name);
         this.email = email;
         this.password = password;
@@ -32,6 +52,15 @@ public class User extends NamedEntity {
         this.authorities = EnumSet.of(role, roles);
     }
 */
+
+    public void setCaloriesPerDay(int caloriesPerDay) {
+        this.caloriesPerDay = caloriesPerDay;
+    }
+
+    private Set<Role> getRoles() {
+        return roles;
+    }
+
     public List<Meal> getMealList() {
         return mealList;
     }
@@ -63,7 +92,7 @@ public class User extends NamedEntity {
                 '}';
     }
 
-    public Date getRegistered() {
+    public Instant getRegistered() {
         return registered;
     }
 

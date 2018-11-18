@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.web.meal.MealRestController;
 
@@ -24,7 +23,7 @@ import java.util.Objects;
 
 
 public class MealServlet extends HttpServlet {
-    private static final Logger LOG = LoggerFactory.getLogger(MealServlet.class);
+   // private static final Logger LOG = LoggerFactory.getLogger(MealServlet.class);
     private ConfigurableApplicationContext appCtx;
     private static MealRestController controller;
 
@@ -62,7 +61,7 @@ public class MealServlet extends HttpServlet {
                 break;
             case "all":
             default:
-                LOG.info("getAll");
+                //LOG.info("getAll");
                 req.setAttribute("meals", controller.findAll());
                 req.getRequestDispatcher("meals.jsp").forward(req, resp);
                 break;
@@ -93,10 +92,10 @@ public class MealServlet extends HttpServlet {
         String id = req.getParameter("id");
         if (id == null || id.isEmpty()) {
             Meal meal1 = controller.create(meal);
-            LOG.info("create meal{}", meal1);
+            //LOG.info("create meal{}", meal1);
         } else {
             controller.update(meal, getId(req));
-            LOG.info("update meal{}", meal);
+           // LOG.info("update meal{}", meal);
         }
         resp.sendRedirect("meals");
     }
@@ -108,7 +107,7 @@ public class MealServlet extends HttpServlet {
 
     private void delete(HttpServletRequest req) {
         int mealD = getId(req);
-        LOG.debug("delete {}", mealD);
+       // LOG.debug("delete {}", mealD);
         controller.deleteById(mealD);
     }
    /* private void edit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {//редактировать

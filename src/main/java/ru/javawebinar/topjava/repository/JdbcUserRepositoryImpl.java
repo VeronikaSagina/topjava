@@ -3,8 +3,8 @@ package ru.javawebinar.topjava.repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.support.DataAccessUtils;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -12,12 +12,22 @@ import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.User;
 
 import javax.sql.DataSource;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Primary
 @Repository
 public class JdbcUserRepositoryImpl implements UserRepository {
-    private static final BeanPropertyRowMapper<User> ROW_MAPPER = BeanPropertyRowMapper.newInstance(User.class);
+    private static final RowMapper<User> ROW_MAPPER = (rs, rowNumber) -> {
+        int id = rs.getInt("id");
+        String email = rs.getString("email");
+        String name = rs.getString("name");
+        String password = rs.getString("password");
+        boolean enabled = rs.getBoolean("enabled");
+        Timestamp registered = rs.getTimestamp("registered");
+        int caloriesPerDay = rs.getInt("calories_per_day");
+        return new User(id, name, email, password, caloriesPerDay, registered.toInstant(), enabled);
+    };
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertUser;
@@ -39,9 +49,10 @@ public class JdbcUserRepositoryImpl implements UserRepository {
                 .addValue("name", user.getName())
                 .addValue("email", user.getEmail())
                 .addValue("password", user.getPassword())
-                .addValue("registered", user.getRegistered())
+                .addValue("registered", Timestamp.from(user.getRegistered()))
                 .addValue("enabled", user.isEnabled())
                 .addValue("caloriesPerDay", user.getCaloriesPerDay());
+
         if (user.isNew()) {
             Number newKey = insertUser.executeAndReturnKey(map);
             user.setId(newKey.intValue());

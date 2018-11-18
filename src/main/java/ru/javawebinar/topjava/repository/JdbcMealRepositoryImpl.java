@@ -1,5 +1,7 @@
 package ru.javawebinar.topjava.repository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.support.DataAccessUtils;
@@ -22,19 +24,19 @@ import java.util.List;
 @Repository
 @Primary
 public class JdbcMealRepositoryImpl implements MealRepository {
-//    private static final BeanPropertyRowMapper<Meal> ROW_MAPPER = BeanPropertyRowMapper.newInstance(Meal.class);
+    //    private static final BeanPropertyRowMapper<Meal> ROW_MAPPER = BeanPropertyRowMapper.newInstance(Meal.class);
+    private final JdbcTemplate jdbcTemplate;
+    private static final Logger LOG = LoggerFactory.getLogger(JdbcMealRepositoryImpl.class);
+    private final SimpleJdbcInsert insertMeal;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
     private static final RowMapper<Meal> ROW_MAPPER = (rs, rowNumber) -> {
     Timestamp dateTime = rs.getTimestamp("dateTime");
     String description = rs.getString("description");
     int calories = rs.getInt("calories");
     int id = rs.getInt("id");
-
     return new Meal(id, dateTime.toLocalDateTime(), description, calories);
 };
-
-    private final JdbcTemplate jdbcTemplate;
-    private final SimpleJdbcInsert insertMeal;
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     @Autowired
     public JdbcMealRepositoryImpl(DataSource dataSource, JdbcTemplate jdbcTemplate,
@@ -49,6 +51,7 @@ public class JdbcMealRepositoryImpl implements MealRepository {
 
     @Override
     public Meal save(Meal meal, int userId) {
+        LOG.debug("save meal {} for user with id {}", meal, userId);
         MapSqlParameterSource map = new MapSqlParameterSource()
                 .addValue("id", meal.getId())
                 .addValue("dateTime", meal.getDateTime())
@@ -67,6 +70,7 @@ public class JdbcMealRepositoryImpl implements MealRepository {
 
     @Override
     public boolean delete(int id, int userId) {
+        LOG.debug("delete meal with id: " + id + " for user with id: "+ userId);
         return jdbcTemplate.update(
                 "DELETE FROM meals WHERE user_id=? and id=?", userId, id) != 0;
 
@@ -74,6 +78,7 @@ public class JdbcMealRepositoryImpl implements MealRepository {
 
     @Override
     public Meal get(int id, int userId) {
+        LOG.debug("get meal with id: " + id + " for user with id: "+ userId);
         List<Meal> query = jdbcTemplate.query(
                 "SELECT * FROM meals WHERE user_id=? and id=?", ROW_MAPPER, userId, id);
         return DataAccessUtils.singleResult(query);
@@ -81,6 +86,7 @@ public class JdbcMealRepositoryImpl implements MealRepository {
 
     @Override
     public Collection<Meal> getAll(int userId) {
+        LOG.debug("get all meals for user with id: "+ userId);
         return jdbcTemplate.query(
                 "SELECT * FROM meals WHERE user_id=? ORDER BY datetime DESC", ROW_MAPPER, userId);
     }
@@ -88,6 +94,9 @@ public class JdbcMealRepositoryImpl implements MealRepository {
     @Override
     public Collection<Meal> getBetween(LocalDate startDate, LocalDate endDate,
                                        LocalTime startTime, LocalTime endTime, int userId) {
+        LOG.debug(String.format("get meals between %s, %s and %s, %s for user with id: %d",
+                String.valueOf(startDate), String.valueOf(startTime), String.valueOf(endDate), String.valueOf(endTime), userId));
+
         return jdbcTemplate.query
                 ("SELECT * FROM meals WHERE user_id=? AND datetime >= ? \n" +
                         " AND  datetime <= ?", ROW_MAPPER, userId, LocalDateTime.of(startDate, startTime), LocalDateTime.of(endDate, endTime));

@@ -2,9 +2,9 @@
 -- truncate table meals;
 -- truncate TABLE user_roles;
 -- truncate table users;
-/*delete from user_roles;
+delete from users;
 delete from meals;
-delete from users;*/
+delete from user_roles;
 alter sequence global_seq restart with 100000;
 
 insert into users (name, email, password) values ('User', 'user@yandex.ru', 'password');
@@ -21,5 +21,12 @@ insert into meals(datetime, description, calories, user_id) values ('2018-11-17 
 insert into meals(datetime, description, calories, user_id) values ('2018-11-17 20:45:00', 'ужин', 1000, 100000);
 insert into meals(datetime, description, calories, user_id) values ('2018-11-19 08:00:00', 'завтрак', 600, 100001);
 insert into meals(datetime, description, calories, user_id) values ('2018-11-19 14:35:00', 'обед', 800, 100001);
+insert into meals(datetime, description, calories, user_id) values ('2018-11-20 07:35:00', 'завтрак', 600, 100001);
 --delete from meals where id = 100010;
-select * from global_seq;
+--select * from global_seq;
+analyze meals;
+explain select * from users
+join meals m on users.id = m.user_id;
+
+select * from users
+                join meals m on users.id = m.user_id;

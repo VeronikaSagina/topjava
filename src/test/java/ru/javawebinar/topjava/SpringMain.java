@@ -25,14 +25,11 @@ public class SpringMain {
                 System.out.println(s);
             }
             System.out.println("___________________________________________");
-            AdminRestController adminUserController = appCtx.getBean(AdminRestController.class);
-            adminUserController.create(new User(null, "userName", "email", "password", Role.ROLE_ADMIN));
-            System.out.println();
 
             MealRestController mealController = appCtx.getBean(MealRestController.class);
             List<MealWithExceed> filteredMealsWithExceeded =
                     mealController.findBetween(
-                            LocalDate.of(2015, Month.MAY, 30), LocalDate.of(2015, Month.MAY, 31),
+                            LocalDate.of(2018, Month.MAY, 30), LocalDate.of(2018, Month.NOVEMBER, 30),
                             LocalTime.of(7, 0), LocalTime.of(11, 0));
             filteredMealsWithExceeded.forEach(System.out::println);
 
