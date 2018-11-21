@@ -25,30 +25,30 @@ public abstract class AbstractUserController {
     }
 
     public User get(int id) {
-        LOG.info("Get" + id);
+        LOG.info("Get user for id {}", id);
         return service.get(id);
     }
 
     public User create(User user) {
-        LOG.info("Create " + user);
+        LOG.info("Create user {}", user);
         checkNew(user);
         return service.save(user);
     }
 
     public void delete(int id) {
-        LOG.info("delete " + id);
+        LOG.info("delete user with id{}", id);
         service.delete(id);
     }
 
 
     User getByMail(String email) {
-        LOG.info("get by email " + email);
+        LOG.info("get by email user {}", email);
         return service.getByEmail(email);
     }
 
 
     void update(User user, int id) {
-        LOG.info("update " + user);
+        LOG.info("update user with id {}", user);
         checkIdConsistent(user, id);
         service.update(user);
     }

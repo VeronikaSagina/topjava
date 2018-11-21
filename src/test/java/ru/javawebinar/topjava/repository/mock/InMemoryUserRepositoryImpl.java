@@ -22,7 +22,6 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
 
     @Override
     public User getByEmail(String email) {
-        Objects.requireNonNull(email);
         Optional<Map.Entry<Integer, User>> integerUserEntry = mapRepository.entrySet().stream()
                 .filter(m -> m.getValue().getEmail().equals(email))
                 .findFirst();
@@ -34,7 +33,6 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
 
     @Override
     public User save(User user) {
-        Objects.requireNonNull(user);
         LOG.info("Save " + user);
         if (user.isNew()) {
             user.setId(currentId.incrementAndGet());

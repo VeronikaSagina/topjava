@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava;
 
 import ru.javawebinar.topjava.matcher.ModelMatcher;
+import ru.javawebinar.topjava.model.BaseEntity;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealWithExceed;
 
@@ -17,13 +18,14 @@ public class MealTestData {
     public static final Meal MEAL_TEST_6 = new Meal(100007, LocalDateTime.of(2018, 11, 17, 20, 45), "ужин", 1000);
     public static final Meal MEAL_TEST_AD1 = new Meal(100008, LocalDateTime.of(2018, 11, 19, 8, 0), "завтрак", 600);
     public static final Meal MEAL_TEST_AD2 = new Meal(100009, LocalDateTime.of(2018, 11, 19, 14, 35), "обед", 800);
+    public static final Meal MEAL_TEST_AD3= new Meal(100001, LocalDateTime.parse("2018-11-20 07:35:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), "завтрак", 600);
 
     public static final ModelMatcher<MealWithExceed> MATCHER = new ModelMatcher<>(
-            (expected, actual) -> expected == actual ||
+     /*       (expected, actual) -> expected == actual ||
                     (Objects.equals(expected.getId(), actual.getId())
                             && Objects.equals(expected.getDateTime(), actual.getDateTime())
                             && Objects.equals(expected.getCalories(), actual.getCalories())
-                            && Objects.equals(expected.getDescription(), actual.getDescription()))
+                            && Objects.equals(expected.getDescription(), actual.getDescription()))*/
     );
 
     private static void parse(int id, String str, int i) {
@@ -34,6 +36,9 @@ public class MealTestData {
         System.out.println(result);
     }
 
+    public static void main(String[] args) {
+        parse(BaseEntity.START_SEQ + 1, "insert into meals(datetime, description, calories, user_id) values ('2018-11-20 07:35:00', 'завтрак', 600, 100001);", 1);
+    }
     private static void parse1(int id, String str, int i) {
         str = str.substring(str.indexOf("'") + 1);
         String dateTimeS = str.substring(0, str.indexOf("'"));

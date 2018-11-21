@@ -1,6 +1,17 @@
 package ru.javawebinar.topjava.model;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.NotEmpty;
+
+@MappedSuperclass
+@Access(AccessType.FIELD)
 public class NamedEntity extends BaseEntity {
+
+    @Column(name = "name")
+    @NotEmpty
     protected String name;
 
     NamedEntity() {

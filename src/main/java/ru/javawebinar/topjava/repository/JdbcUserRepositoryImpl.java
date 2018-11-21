@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -18,16 +19,14 @@ import java.util.List;
 @Primary
 @Repository
 public class JdbcUserRepositoryImpl implements UserRepository {
-    private static final RowMapper<User> ROW_MAPPER = (rs, rowNumber) -> {
-        int id = rs.getInt("id");
-        String email = rs.getString("email");
-        String name = rs.getString("name");
-        String password = rs.getString("password");
-        boolean enabled = rs.getBoolean("enabled");
-        Timestamp registered = rs.getTimestamp("registered");
-        int caloriesPerDay = rs.getInt("calories_per_day");
-        return new User(id, name, email, password, caloriesPerDay, registered.toInstant(), enabled);
-    };
+    private static final RowMapper<User> ROW_MAPPER = (rs, rowNumber) -> new User(
+            rs.getInt("id"),
+            rs.getString("name"),
+            rs.getString("email"),
+            rs.getString("password"),
+            rs.getInt("calories_per_day"),
+            rs.getTimestamp("registered").toLocalDateTime(),
+            rs.getBoolean("enabled"));
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertUser;
@@ -44,7 +43,7 @@ public class JdbcUserRepositoryImpl implements UserRepository {
 
     @Override
     public User save(User user) {
-        MapSqlParameterSource map = new MapSqlParameterSource()
+      /*  MapSqlParameterSource map = new MapSqlParameterSource()
                 .addValue("id", user.getId())
                 .addValue("name", user.getName())
                 .addValue("email", user.getEmail())
@@ -52,13 +51,14 @@ public class JdbcUserRepositoryImpl implements UserRepository {
                 .addValue("registered", Timestamp.from(user.getRegistered()))
                 .addValue("enabled", user.isEnabled())
                 .addValue("caloriesPerDay", user.getCaloriesPerDay());
-
+*/
+        BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(user);
         if (user.isNew()) {
-            Number newKey = insertUser.executeAndReturnKey(map);
+            Number newKey = insertUser.executeAndReturnKey(parameterSource);
             user.setId(newKey.intValue());
         } else {
-            namedParameterJdbcTemplate.update("Update users SET name=:name, email=:email, password=:password, " +
-                    "registered=:registered, enabled=:enabled, calories_per_day=:caloriesPerDay WHERE id=:id", map);
+            namedParameterJdbcTemplate.update("UPDATE users SET name=:name, email=:email, password=:password, " +
+                    "registered=cast(:registered as TIMESTAMP), enabled=:enabled, calories_per_day=:caloriesPerDay WHERE id=:id", parameterSource);
         }
         return user;
     }

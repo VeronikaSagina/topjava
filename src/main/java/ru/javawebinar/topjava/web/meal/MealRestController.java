@@ -10,7 +10,6 @@ import ru.javawebinar.topjava.web.AuthorizedUser;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.checkIdConsistent;
@@ -65,15 +64,15 @@ public class MealRestController {
 
     public Meal create(Meal meal) {
         int userId = AuthorizedUser.id();
-        LOG.info("create {} for User {}", meal, userId);
         checkNew(meal);
+        LOG.info("create {} for User {}", meal, userId);
         return service.save(meal, userId);
     }
 
     public void update(Meal meal, int id) {
         int userId = AuthorizedUser.id();
-        LOG.info("update {} for User {}", meal, userId);
         checkIdConsistent(meal, id);
+        LOG.info("update {} for User {}", meal, userId);
         service.edit(meal, userId);
     }
 }

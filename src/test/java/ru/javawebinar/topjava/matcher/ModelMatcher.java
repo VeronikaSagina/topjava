@@ -32,7 +32,7 @@ public class ModelMatcher<T> {
     private class Wrapper {
         private T entity;
 
-        public Wrapper(T entity) {
+        Wrapper(T entity) {
             this.entity = entity;
         }
 

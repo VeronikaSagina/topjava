@@ -1,17 +1,18 @@
 package ru.javawebinar.topjava.service;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.javawebinar.topjava.MealTestData;
+import ru.javawebinar.topjava.model.BaseEntity;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealWithExceed;
-import ru.javawebinar.topjava.util.DbPopulator;
 import ru.javawebinar.topjava.util.MealUtils;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
@@ -27,6 +28,7 @@ import java.util.List;
         "classpath:spring/spring-db.xml"
 })
 @RunWith(SpringJUnit4ClassRunner.class)
+@Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
 public class MealServiceTest {
     static {
         SLF4JBridgeHandler.install();
@@ -35,19 +37,19 @@ public class MealServiceTest {
     @Autowired
     private MealService service;
 
-    @Autowired
+  /* @Autowired
     private DbPopulator dbPopulator;
 
     @Before
     public void testSetUp() {
         dbPopulator.execute();
-    }
+    }*/
 
     @Test
     public void testGetAll() {
         MealTestData.MATCHER.assertCollectionEquals(
-                MealUtils.getMealWithExceeds(Arrays.asList(MealTestData.MEAL_TEST_AD2, MealTestData.MEAL_TEST_AD1)),
-                service.findAll(100001));
+                MealUtils.getMealWithExceeds(Arrays.asList(MealTestData.MEAL_TEST_AD3, MealTestData.MEAL_TEST_AD2, MealTestData.MEAL_TEST_AD1)),
+                service.findAll(BaseEntity.START_SEQ + 1));
     }
 
     @Test
@@ -86,7 +88,7 @@ public class MealServiceTest {
 
     @Test(expected = NotFoundException.class)
     public void testDeleteForIdException() {
-        service.deleteById(100010, 100001);
+        service.deleteById(100111, 100001);
     }
 
     @Test
@@ -102,7 +104,7 @@ public class MealServiceTest {
         Meal newMeal = new Meal(LocalDateTime.of(2018, 11, 15, 7, 30), "завтрак", 500);
         service.save(newMeal, 100001);
         MealTestData.MATCHER.assertCollectionEquals(MealUtils.getMealWithExceeds(Arrays.asList(
-                MealTestData.MEAL_TEST_AD2, MealTestData.MEAL_TEST_AD1, newMeal
+                MealTestData.MEAL_TEST_AD3, MealTestData.MEAL_TEST_AD2, MealTestData.MEAL_TEST_AD1, newMeal
         )), service.findAll(100001));
     }
 }

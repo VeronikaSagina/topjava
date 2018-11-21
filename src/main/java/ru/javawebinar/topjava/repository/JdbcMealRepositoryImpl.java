@@ -11,10 +11,10 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.util.CollectionUtils;
 import ru.javawebinar.topjava.model.Meal;
 
 import javax.sql.DataSource;
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -30,13 +30,11 @@ public class JdbcMealRepositoryImpl implements MealRepository {
     private final SimpleJdbcInsert insertMeal;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    private static final RowMapper<Meal> ROW_MAPPER = (rs, rowNumber) -> {
-    Timestamp dateTime = rs.getTimestamp("dateTime");
-    String description = rs.getString("description");
-    int calories = rs.getInt("calories");
-    int id = rs.getInt("id");
-    return new Meal(id, dateTime.toLocalDateTime(), description, calories);
-};
+    private static final RowMapper<Meal> ROW_MAPPER = (rs, rowNumber) -> new Meal(
+            rs.getInt("id"),
+            rs.getTimestamp("dateTime").toLocalDateTime(),
+            rs.getString("description"),
+            rs.getInt("calories"));
 
     @Autowired
     public JdbcMealRepositoryImpl(DataSource dataSource, JdbcTemplate jdbcTemplate,
@@ -62,15 +60,18 @@ public class JdbcMealRepositoryImpl implements MealRepository {
             Number newKey = insertMeal.executeAndReturnKey(map);
             meal.setId(newKey.intValue());
         } else {
-            namedParameterJdbcTemplate.update("Update meals SET datetime=:dateTime," +
+            int update = namedParameterJdbcTemplate.update("Update meals SET datetime=:dateTime," +
                     " description=:description, calories=:calories WHERE id = :id AND user_id=:userId", map);
+            if (update == 0) {
+                return null;
+            }
         }
         return meal;
     }
 
     @Override
     public boolean delete(int id, int userId) {
-        LOG.debug("delete meal with id: " + id + " for user with id: "+ userId);
+        LOG.debug("delete meal with id: " + id + " for user with id: " + userId);
         return jdbcTemplate.update(
                 "DELETE FROM meals WHERE user_id=? and id=?", userId, id) != 0;
 
@@ -78,15 +79,15 @@ public class JdbcMealRepositoryImpl implements MealRepository {
 
     @Override
     public Meal get(int id, int userId) {
-        LOG.debug("get meal with id: " + id + " for user with id: "+ userId);
-        List<Meal> query = jdbcTemplate.query(
+        LOG.debug("get meal with id: " + id + " for user with id: " + userId);
+        List<Meal> mealList = jdbcTemplate.query(
                 "SELECT * FROM meals WHERE user_id=? and id=?", ROW_MAPPER, userId, id);
-        return DataAccessUtils.singleResult(query);
+        return CollectionUtils.isEmpty(mealList) ? null : DataAccessUtils.requiredSingleResult(mealList);
     }
 
     @Override
     public Collection<Meal> getAll(int userId) {
-        LOG.debug("get all meals for user with id: "+ userId);
+        LOG.debug("get all meals for user with id: " + userId);
         return jdbcTemplate.query(
                 "SELECT * FROM meals WHERE user_id=? ORDER BY datetime DESC", ROW_MAPPER, userId);
     }
@@ -98,7 +99,7 @@ public class JdbcMealRepositoryImpl implements MealRepository {
                 String.valueOf(startDate), String.valueOf(startTime), String.valueOf(endDate), String.valueOf(endTime), userId));
 
         return jdbcTemplate.query
-                ("SELECT * FROM meals WHERE user_id=? AND datetime >= ? \n" +
-                        " AND  datetime <= ?", ROW_MAPPER, userId, LocalDateTime.of(startDate, startTime), LocalDateTime.of(endDate, endTime));
+                ("SELECT * FROM meals WHERE user_id=? AND datetime between ? AND ?",
+                        ROW_MAPPER, userId, LocalDateTime.of(startDate, startTime), LocalDateTime.of(endDate, endTime));
     }
 }

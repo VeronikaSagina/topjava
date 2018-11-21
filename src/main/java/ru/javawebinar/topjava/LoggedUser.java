@@ -6,9 +6,9 @@ import java.util.Collections;
 import java.util.Set;
 
 public class LoggedUser {
-    protected int id = 0;
-    protected Set<Role> roles = Collections.singleton(Role.ROLE_USER);
-    protected boolean enabled = true;
+    private int id = 0;
+    private Set<Role> roles = Collections.singleton(Role.ROLE_USER);
+    private boolean enabled = true;
 
     private static LoggedUser LOGGED_USER = new LoggedUser();
 
@@ -22,6 +22,18 @@ public class LoggedUser {
 
     public boolean isEnabled() {
         return enabled;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
     public int getId() {

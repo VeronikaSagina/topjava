@@ -54,7 +54,6 @@ public class InMemoryMealRepositoryImpl implements MealRepository {
 
     @Override
     public Meal save(Meal meal, int userId) {
-        Objects.requireNonNull(meal);
         if (meal.isNew()) {
             meal.setId(currentId.incrementAndGet());
         } else if (get(meal.getId(), userId) == null) {

@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.model;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static ru.javawebinar.topjava.util.MealUtils.DEFAULT_CALORIES_PER_DAY;
@@ -9,7 +10,7 @@ public class User extends NamedEntity {
     private String email;
     private String password;
     private boolean enabled = true;//включен, разрешен
-    private Instant registered = Instant.now();
+    private LocalDateTime registered = LocalDateTime.now();
     private Set<Role> roles;
     private List<Meal> mealList = new ArrayList<>();
     private int caloriesPerDay = DEFAULT_CALORIES_PER_DAY;
@@ -35,7 +36,7 @@ public class User extends NamedEntity {
         this.roles = roles;
     }
 
-    public User(int id, String name, String email, String password, int caloriesPerDay, Instant registered, boolean enabled) {
+    public User(int id, String name, String email, String password, int caloriesPerDay, LocalDateTime registered, boolean enabled) {
         super(id, name);
         this.email = email;
         this.password = password;
@@ -92,7 +93,7 @@ public class User extends NamedEntity {
                 '}';
     }
 
-    public Instant getRegistered() {
+    public LocalDateTime getRegistered() {
         return registered;
     }
 

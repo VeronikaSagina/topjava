@@ -22,7 +22,7 @@ import static ru.javawebinar.topjava.UserTestData.USER;
 
 @ContextConfiguration("classpath:spring/springTest-app.xml")
 @RunWith(SpringRunner.class)
-public class InMemoryAdminRestController {
+public class InMemoryAdminRestControllerStringTest {
 
     @Autowired
     private AdminRestController controller;

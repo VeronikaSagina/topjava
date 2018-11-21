@@ -6,6 +6,9 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class DateTimeUtil {
+    private DateTimeUtil() {
+    }
+
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
     public static boolean isBetween(LocalDate mDate, LocalTime mTime, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime) {
@@ -22,14 +25,14 @@ public class DateTimeUtil {
     }
 
     public static LocalDate parseLocalDate(String date) {
-        if (date.isEmpty()){
+        if (date.isEmpty()) {
             return null;
         }
         return LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
     }
 
     public static LocalTime parseLocalTime(String time) {
-        if (time.isEmpty()){
+        if (time.isEmpty()) {
             return null;
         }
         return LocalTime.parse(time, DateTimeFormatter.ofPattern("HH:mm"));

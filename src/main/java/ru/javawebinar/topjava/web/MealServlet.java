@@ -1,8 +1,6 @@
 package ru.javawebinar.topjava.web;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import ru.javawebinar.topjava.model.Meal;
@@ -23,7 +21,8 @@ import java.util.Objects;
 
 
 public class MealServlet extends HttpServlet {
-   // private static final Logger LOG = LoggerFactory.getLogger(MealServlet.class);
+    public static final String PATH_MEALS_JSP = "meals.jsp";
+    public static final String LOCATION_MEALS = "meals";
     private ConfigurableApplicationContext appCtx;
     private static MealRestController controller;
 
@@ -49,7 +48,7 @@ public class MealServlet extends HttpServlet {
         switch (action == null ? "all" : action) {
             case "delete":
                 delete(req);
-                resp.sendRedirect("meals");
+                resp.sendRedirect(LOCATION_MEALS);
                 break;
             case "create":
             case "update":
@@ -61,12 +60,12 @@ public class MealServlet extends HttpServlet {
                 break;
             case "all":
             default:
-                //LOG.info("getAll");
                 req.setAttribute("meals", controller.findAll());
-                req.getRequestDispatcher("meals.jsp").forward(req, resp);
+                req.getRequestDispatcher(PATH_MEALS_JSP).forward(req, resp);
                 break;
         }
     }
+
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -80,7 +79,7 @@ public class MealServlet extends HttpServlet {
             LocalTime startTime = DateTimeUtil.parseLocalTime(req.getParameter("startTime"));
             LocalTime endTime = DateTimeUtil.parseLocalTime(req.getParameter("endTime"));
             req.setAttribute("meals", controller.findBetween(startDate, endDate, startTime, endTime));
-            req.getRequestDispatcher("meals.jsp").forward(req, resp);
+            req.getRequestDispatcher(PATH_MEALS_JSP).forward(req, resp);
         }
     }
 
@@ -91,13 +90,11 @@ public class MealServlet extends HttpServlet {
                 Integer.parseInt(req.getParameter("calories")));
         String id = req.getParameter("id");
         if (id == null || id.isEmpty()) {
-            Meal meal1 = controller.create(meal);
-            //LOG.info("create meal{}", meal1);
+            controller.create(meal);
         } else {
             controller.update(meal, getId(req));
-           // LOG.info("update meal{}", meal);
         }
-        resp.sendRedirect("meals");
+        resp.sendRedirect(LOCATION_MEALS);
     }
 
     private int getId(HttpServletRequest request) {
@@ -107,7 +104,6 @@ public class MealServlet extends HttpServlet {
 
     private void delete(HttpServletRequest req) {
         int mealD = getId(req);
-       // LOG.debug("delete {}", mealD);
         controller.deleteById(mealD);
     }
    /* private void edit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {//редактировать
