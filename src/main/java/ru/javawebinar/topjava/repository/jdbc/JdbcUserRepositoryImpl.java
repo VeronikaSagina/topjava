@@ -1,4 +1,4 @@
-package ru.javawebinar.topjava.repository;
+package ru.javawebinar.topjava.repository.jdbc;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
@@ -11,12 +11,12 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.repository.UserRepository;
 
 import javax.sql.DataSource;
 import java.sql.Timestamp;
 import java.util.List;
 
-@Primary
 @Repository
 public class JdbcUserRepositoryImpl implements UserRepository {
     private static final RowMapper<User> ROW_MAPPER = (rs, rowNumber) -> new User(
@@ -25,7 +25,7 @@ public class JdbcUserRepositoryImpl implements UserRepository {
             rs.getString("email"),
             rs.getString("password"),
             rs.getInt("calories_per_day"),
-            rs.getTimestamp("registered").toLocalDateTime(),
+            rs.getTimestamp("registered").toInstant(),
             rs.getBoolean("enabled"));
 
     private final JdbcTemplate jdbcTemplate;
@@ -43,7 +43,7 @@ public class JdbcUserRepositoryImpl implements UserRepository {
 
     @Override
     public User save(User user) {
-      /*  MapSqlParameterSource map = new MapSqlParameterSource()
+        MapSqlParameterSource map = new MapSqlParameterSource()
                 .addValue("id", user.getId())
                 .addValue("name", user.getName())
                 .addValue("email", user.getEmail())
@@ -51,14 +51,13 @@ public class JdbcUserRepositoryImpl implements UserRepository {
                 .addValue("registered", Timestamp.from(user.getRegistered()))
                 .addValue("enabled", user.isEnabled())
                 .addValue("caloriesPerDay", user.getCaloriesPerDay());
-*/
-        BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(user);
+       /* BeanPropertySqlParameterSource parameterSource = new BeanPropertySqlParameterSource(user);*/
         if (user.isNew()) {
-            Number newKey = insertUser.executeAndReturnKey(parameterSource);
+            Number newKey = insertUser.executeAndReturnKey(map);
             user.setId(newKey.intValue());
         } else {
             namedParameterJdbcTemplate.update("UPDATE users SET name=:name, email=:email, password=:password, " +
-                    "registered=cast(:registered as TIMESTAMP), enabled=:enabled, calories_per_day=:caloriesPerDay WHERE id=:id", parameterSource);
+                    "registered=:registered, enabled=:enabled, calories_per_day=:caloriesPerDay WHERE id=:id", map);
         }
         return user;
     }

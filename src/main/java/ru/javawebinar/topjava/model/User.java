@@ -1,18 +1,54 @@
 package ru.javawebinar.topjava.model;
 
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.Range;
+
+import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.EnumSet;
+import java.util.Set;
 
 import static ru.javawebinar.topjava.util.MealUtils.DEFAULT_CALORIES_PER_DAY;
 
+@Entity
+@Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "email", name = "unique_email")})
+@NamedQueries({
+        @NamedQuery(name = User.DELETE, query = "DELETE FROM User u WHERE u.id = :id"),
+        @NamedQuery(name = User.BY_EMAIL, query = "SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.email=?1"),
+        @NamedQuery(name = User.ALL_SORTED, query = "SELECT u FROM User u LEFT JOIN FETCH u.roles ORDER BY u.name, u.email")
+})
+
 public class User extends NamedEntity {
+    public static final String DELETE = "User.delete";
+    public static final String ALL_SORTED = "User.getAllSorted";
+    public static final String BY_EMAIL = "User.getByEmail";
+
+    @Column(name = "email", nullable = false, unique = true)
+    @Email
+    @NotBlank
     private String email;
+
+    @Column(name = "password", nullable = false)
+    @NotBlank
+    @Length(min = 5)
     private String password;
+
+    @Column(name = "enabled", nullable = false)
     private boolean enabled = true;//включен, разрешен
-    private LocalDateTime registered = LocalDateTime.now();
+
+    @Column(name = "registered", columnDefinition = "timestamp default now()")
+    private Instant registered = Instant.now();
+
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role")
+    @ElementCollection(fetch = FetchType.EAGER)
     private Set<Role> roles;
-    private List<Meal> mealList = new ArrayList<>();
+
+    @Column(name = "calories_per_day", columnDefinition = "int default 2000")
+    @Range(min = 10, max = 10000)
     private int caloriesPerDay = DEFAULT_CALORIES_PER_DAY;
 
     public User() {
@@ -36,7 +72,7 @@ public class User extends NamedEntity {
         this.roles = roles;
     }
 
-    public User(int id, String name, String email, String password, int caloriesPerDay, LocalDateTime registered, boolean enabled) {
+    public User(int id, String name, String email, String password, int caloriesPerDay, Instant registered, boolean enabled) {
         super(id, name);
         this.email = email;
         this.password = password;
@@ -60,10 +96,6 @@ public class User extends NamedEntity {
 
     private Set<Role> getRoles() {
         return roles;
-    }
-
-    public List<Meal> getMealList() {
-        return mealList;
     }
 
     public boolean isEnabled() {
@@ -93,7 +125,7 @@ public class User extends NamedEntity {
                 '}';
     }
 
-    public LocalDateTime getRegistered() {
+    public Instant getRegistered() {
         return registered;
     }
 

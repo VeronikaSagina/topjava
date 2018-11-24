@@ -9,7 +9,7 @@ CREATE TABLE users
 (
   id         INTEGER PRIMARY KEY DEFAULT nextval('GLOBAL_SEQ'),
   name       VARCHAR,
-  email      VARCHAR NOT NULL,
+  email      VARCHAR  UNIQUE NOT NULL,
   password   VARCHAR NOT NULL,
   registered TIMESTAMP           DEFAULT now(),
   enabled    BOOLEAN             DEFAULT TRUE,
@@ -34,4 +34,4 @@ create table meals(
   user_id     INTEGER NOT NULL,
   CONSTRAINT "fk_m.user_id __users" FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
-CREATE INDEX idx_meals_userId_dateTime ON meals using btree(user_id, dateTime DESC);
+CREATE INDEX idx_meals_userId_dateTime ON meals using btree(user_id, datetime DESC);

@@ -1,8 +1,12 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.*;
+import org.junit.rules.ExpectedException;
+import org.junit.rules.Stopwatch;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -19,31 +23,54 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
-@ContextConfiguration({
-        "classpath:spring/spring-app.xml",
-        "classpath:spring/spring-db.xml"
-})
+@ContextConfiguration({"classpath:spring/spring-app.xml", "classpath:spring/spring-db.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
+
 public class MealServiceTest {
+    private static final Logger LOG = LoggerFactory.getLogger(MealServiceTest.class);
+
+    private static Map<String, Long> timesMap = new ConcurrentHashMap<>();
+
+    @Rule
+    public final ExpectedException thrown = ExpectedException.none();
+
+    @Rule
+    public final Stopwatch stopwatch = new Stopwatch() {
+        @Override
+        protected void succeeded(long nanos, Description description) {
+            timesMap.put(description.getMethodName(), nanos);
+            LOG.info(description.getMethodName(), nanos);
+        }
+
+        @Override
+        protected void failed(long nanos, Throwable e, Description description) {
+            timesMap.put(description.getMethodName() + " failed", nanos);
+            LOG.info(description.getMethodName() + " failed", e, nanos);
+        }
+
+        @Override
+        protected void skipped(long nanos, AssumptionViolatedException e, Description description) {
+            LOG.info(description.getMethodName() + " skipped", e, nanos);
+        }
+
+        @Override
+        protected void finished(long nanos, Description description) {
+            timesMap.put(description.getMethodName(), nanos);
+            LOG.info(description.getMethodName(), nanos);
+        }
+    };
+
     static {
         SLF4JBridgeHandler.install();
     }
 
     @Autowired
     private MealService service;
-
-  /* @Autowired
-    private DbPopulator dbPopulator;
-
-    @Before
-    public void testSetUp() {
-        dbPopulator.execute();
-    }*/
 
     @Test
     public void testGetAll() {
@@ -61,10 +88,16 @@ public class MealServiceTest {
         MealTestData.MATCHER.assertCollectionEquals(MealUtils.getMealWithExceeds(Arrays.asList(MealTestData.MEAL_TEST_5, MealTestData.MEAL_TEST_6)), actual);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void testGetByIdException() {
-        //service.findById(100009, 100000);
+        thrown.expect(NotFoundException.class);
         service.findById(100007, 100001);
+    }
+
+    @Test
+    public void testGetByIdException1() {
+        thrown.expect(NotFoundException.class);
+        service.findById(100007, 100011);
     }
 
     @Test
@@ -106,6 +139,16 @@ public class MealServiceTest {
         MealTestData.MATCHER.assertCollectionEquals(MealUtils.getMealWithExceeds(Arrays.asList(
                 MealTestData.MEAL_TEST_AD3, MealTestData.MEAL_TEST_AD2, MealTestData.MEAL_TEST_AD1, newMeal
         )), service.findAll(100001));
+    }
+
+    @AfterClass
+    public static void statistics() {
+        System.out.println("_______________________________________");
+        for (Map.Entry<String, Long> entry : timesMap.entrySet()) {
+            System.out.println(String.format("%s %s мс",
+                    entry.getKey(), TimeUnit.MILLISECONDS.convert(entry.getValue(), TimeUnit.NANOSECONDS)));
+        }
+        System.out.println("_______________________________________");
     }
 }
 
