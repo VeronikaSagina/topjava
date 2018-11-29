@@ -15,22 +15,14 @@
        http://www.springframework.org/schema/tx/spring-tx.xsd">
 
 
-    <context:property-placeholder location="classpath:db/postgres.properties" system-properties-mode="OVERRIDE"/>
+    <!--<context:property-placeholder location="classpath:db/postgres.properties" system-properties-mode="OVERRIDE"/>-->
 
     <context:component-scan base-package="ru.javawebinar.**.repository.jpa"/>
 
     <jdbc:initialize-database data-source="dataSource" enabled="${database.init}">
-        <jdbc:script location="classpath:db/initDB.sql"/>
+        <jdbc:script location="classpath:db/${jdbc.initLocation}"/>
         <jdbc:script encoding="UTF-8" location="classpath:db/populateDB.sql"/>
     </jdbc:initialize-database>
-
-    <bean id="dataSource"
-          class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-        <property name="driverClassName" value="${database.driverClassName}"/>
-        <property name="url" value="${database.url}"/>
-        <property name="username" value="${database.username}"/>
-        <property name="password" value="${database.password}"/>
-    </bean>
 
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
           p:dataSource-ref="dataSource"
@@ -51,8 +43,30 @@
 
     <!--transaction manager-->
     <tx:annotation-driven/>
+
     <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
           p:entityManagerFactory-ref="entityManagerFactory"/>
+
+    <beans profile="hsqldb">
+        <context:property-placeholder location="classpath:db/hsqldb.properties" system-properties-mode="OVERRIDE"/>
+
+        <bean id="dataSource"
+              class="org.springframework.jdbc.datasource.DriverManagerDataSource"
+              p:driverClassName="${database.driverClassName}"
+              p:url="${database.url}"
+              p:username="${database.username}"
+              p:password="${database.password}"/>
+    </beans>
+
+    <beans profile="postgres">
+        <context:property-placeholder location="classpath:db/postgres.properties" system-properties-mode="OVERRIDE"/>
+        <bean id="dataSource"
+              class="org.apache.tomcat.jdbc.pool.DataSource"
+              p:driverClassName="${database.driverClassName}"
+              p:url="${database.url}"
+              p:username="${database.username}"
+              p:password="${database.password}"/>
+    </beans>
     <!-- populate data base -->
 
     <!--    <bean class="ru.javawebinar.topjava.util.DbPopulator">
@@ -70,4 +84,14 @@
      <bean id="namedJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
          <constructor-arg ref="dataSource"/>
      </bean>-->
+
+    <!--dataSource-->
+
+    <!--   <bean id="dataSource"
+             class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+           <property name="driverClassName" value="${database.driverClassName}"/>
+           <property name="url" value="${database.url}"/>
+           <property name="username" value="${database.username}"/>
+           <property name="password" value="${database.password}"/>
+       </bean>-->
 </beans>

@@ -9,11 +9,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.javawebinar.topjava.MealTestData;
+import ru.javawebinar.topjava.Profiles;
+import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.BaseEntity;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealWithExceed;
@@ -30,7 +33,7 @@ import java.util.concurrent.TimeUnit;
 @ContextConfiguration({"classpath:spring/spring-app.xml", "classpath:spring/spring-db.xml"})
 @RunWith(SpringJUnit4ClassRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-
+@ActiveProfiles(Profiles.ACTIVE_DB)
 public class MealServiceTest {
     private static final Logger LOG = LoggerFactory.getLogger(MealServiceTest.class);
 
@@ -85,7 +88,7 @@ public class MealServiceTest {
                 LocalDate.of(2018, 11, 17),
                 LocalTime.of(8, 0, 0),
                 LocalTime.of(21, 0, 0));
-        MealTestData.MATCHER.assertCollectionEquals(MealUtils.getMealWithExceeds(Arrays.asList(MealTestData.MEAL_TEST_5, MealTestData.MEAL_TEST_6)), actual);
+        MealTestData.MATCHER.assertCollectionEquals(MealUtils.getMealWithExceeds(Arrays.asList(MealTestData.MEAL_TEST_6, MealTestData.MEAL_TEST_5)), actual);
     }
 
     @Test
@@ -102,7 +105,7 @@ public class MealServiceTest {
 
     @Test
     public void testGetById() {
-        Meal actual = service.findById(100003, 100000);
+        Meal actual = service.findById(100003, UserTestData.USER_ID);
         Assert.assertEquals(MealTestData.MEAL_TEST_2, actual);
     }
 
@@ -119,8 +122,9 @@ public class MealServiceTest {
                 MealUtils.getMealWithExceeds(testListForUser), service.findAll(100000));
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void testDeleteForIdException() {
+        thrown.expect(NotFoundException.class);
         service.deleteById(100111, 100001);
     }
 
@@ -146,7 +150,7 @@ public class MealServiceTest {
         System.out.println("_______________________________________");
         for (Map.Entry<String, Long> entry : timesMap.entrySet()) {
             System.out.println(String.format("%s %s мс",
-                    entry.getKey(), TimeUnit.MILLISECONDS.convert(entry.getValue(), TimeUnit.NANOSECONDS)));
+                    entry.getKey(), TimeUnit.NANOSECONDS.toMillis(entry.getValue())));
         }
         System.out.println("_______________________________________");
     }

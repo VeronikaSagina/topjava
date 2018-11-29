@@ -12,6 +12,7 @@ alter sequence global_seq restart with 100000;
 
 insert into users (name, email, password)
 values ('User', 'user@yandex.ru', 'password');
+
 insert into users (name, email, password)
 VALUES ('Admin', 'admin@gmail.com', 'admin');
 
@@ -32,11 +33,11 @@ values ('2018-11-18 13:30:00', 'обед', 800, 100000),
        ('2018-11-20 07:35:00', 'завтрак', 600, 100001);
 --delete from meals where id = 100010;
 --select * from global_seq;
-analyze meals;
+/*analyze meals;
 explain select *
         from users
                join meals m on users.id = m.user_id;
 
 select *
 from users
-       join meals m on users.id = m.user_id;
+       join meals m on users.id = m.user_id;*/
