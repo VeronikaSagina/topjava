@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.dao.support.DataAccessUtils;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -93,13 +94,16 @@ public class JdbcMealRepositoryImpl implements MealRepository {
     }
 
     @Override
-    public Collection<Meal> getBetween(LocalDate startDate, LocalDate endDate,
-                                       LocalTime startTime, LocalTime endTime, int userId) {
-        LOG.debug(String.format("get meals between %s, %s and %s, %s for user with id: %d",
-                String.valueOf(startDate), String.valueOf(startTime), String.valueOf(endDate), String.valueOf(endTime), userId));
-
+    public Collection<Meal> getBetween(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
+        LOG.debug(String.format("get meals between %s and %s for user with id: %d",
+                String.valueOf(startDateTime), String.valueOf(endDateTime), userId));
         return jdbcTemplate.query
-                ("SELECT * FROM meals WHERE user_id=? AND datetime between ? AND ?",
-                        ROW_MAPPER, userId, LocalDateTime.of(startDate, startTime), LocalDateTime.of(endDate, endTime));
+                ("SELECT * FROM meals WHERE user_id=? AND datetime between ? AND ? ORDER BY datetime DESC",
+                        ROW_MAPPER, userId, startDateTime, endDateTime);
+    }
+
+    @Override
+    public Meal getMealWithUser(int mealId) {
+        throw new UnsupportedOperationException();
     }
 }

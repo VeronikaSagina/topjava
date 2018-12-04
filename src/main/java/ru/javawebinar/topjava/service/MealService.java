@@ -12,6 +12,8 @@ public interface MealService {
 
     List<MealWithExceed> getBetween(int userId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime);
 
+    Meal getMealWithUser(int mealId);
+
     Meal findById(int id, int userId);
 
     void deleteById(int id, int userId);

@@ -20,10 +20,6 @@ public class MealUtils {
         return getFilteredWithExceeded(all, LocalTime.MIN, LocalTime.MAX, DEFAULT_CALORIES_PER_DAY);
     }
 
-    public static void main(String[] args) {
-
-    }
-
     public static List<MealWithExceed> getFilteredWithExceeded(Collection<Meal> meals, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
         Map<LocalDate, Integer> caloriesSumByDate = meals.stream()
                 .collect(

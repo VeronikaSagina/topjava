@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.repository.jpa;
 
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
@@ -9,20 +10,15 @@ import ru.javawebinar.topjava.repository.MealRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Collection;
-
 @Repository
-@Transactional( readOnly = true)
 public class jpaMealRepositoryImpl implements MealRepository {
 
     @PersistenceContext
     private EntityManager em;
 
     @Override
-    @Transactional
     public Meal save(Meal meal, int userId) {
         meal.setUser(em.getReference(User.class, userId));
         if (meal.isNew()) {
@@ -37,7 +33,6 @@ public class jpaMealRepositoryImpl implements MealRepository {
     }
 
     @Override
-    @Transactional
     public boolean delete(int id, int userId) {
         return em.createNamedQuery(Meal.DELETE)
                 .setParameter("user_id", userId)
@@ -59,11 +54,16 @@ public class jpaMealRepositoryImpl implements MealRepository {
     }
 
     @Override
-    public Collection<Meal> getBetween(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime, int userId) {
+    public Collection<Meal> getBetween(LocalDateTime startDateTime, LocalDateTime endDateTime, int userId) {
         return em.createNamedQuery(Meal.GET_BETWEEN, Meal.class)
-                .setParameter("startDate", LocalDateTime.of(startDate, startTime))
-                .setParameter("endDate", LocalDateTime.of(endDate, endTime))
+                .setParameter("startDate", startDateTime)
+                .setParameter("endDate", endDateTime)
                 .setParameter("user_id", userId)
                 .getResultList();
+    }
+
+    @Override
+    public Meal getMealWithUser(int mealId) {
+        return null;
     }
 }

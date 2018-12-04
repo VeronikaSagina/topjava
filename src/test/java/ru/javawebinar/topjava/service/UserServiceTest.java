@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.service;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.bridge.SLF4JBridgeHandler;
@@ -25,17 +26,19 @@ import java.util.List;
         "classpath:spring/spring-app.xml",
         "classpath:spring/spring-db.xml"
 })
-@ActiveProfiles(Profiles.ACTIVE_DB)
 @RunWith(SpringJUnit4ClassRunner.class)
 @Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-public class UserServiceTest {
+public abstract class UserServiceTest {
 
     static {
         SLF4JBridgeHandler.install();
     }
-
+    @Before
+    public void setUp() {
+        service.evictCache();
+    }
     @Autowired
-    private UserService service;
+    UserService service;
 
     @Test
     public void testSave() {

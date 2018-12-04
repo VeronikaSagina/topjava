@@ -7,7 +7,9 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 
 import static ru.javawebinar.topjava.util.MealUtils.DEFAULT_CALORIES_PER_DAY;
@@ -50,6 +52,9 @@ public class User extends NamedEntity {
     @Column(name = "calories_per_day", columnDefinition = "int default 2000")
     @Range(min = 10, max = 10000)
     private int caloriesPerDay = DEFAULT_CALORIES_PER_DAY;
+
+    @Transient
+    private List<Meal> meals;
 
     public User() {
 
@@ -123,6 +128,7 @@ public class User extends NamedEntity {
                 ", enabled=" + enabled +
                 ", roles=" + roles +
                 ", caloriesPerDay=" + caloriesPerDay +
+                ", meals: " + meals +
                 '}';
     }
 
@@ -132,5 +138,13 @@ public class User extends NamedEntity {
 
     public int getCaloriesPerDay() {
         return caloriesPerDay;
+    }
+
+    public List<Meal> getMeals() {
+        return meals;
+    }
+
+    public void setMeals(List<Meal> meals) {
+        this.meals = meals;
     }
 }

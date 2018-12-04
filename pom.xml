@@ -25,6 +25,8 @@
         <junit.version>4.12</junit.version>
         <hibernate.version>5.3.7.Final</hibernate.version>
         <hibernate-validator.version>6.0.13.Final</hibernate-validator.version>
+        <spring-data-jpa.version>2.1.2.RELEASE</spring-data-jpa.version>
+        <ehcache.version>2.10.4</ehcache.version>
     </properties>
 
     <build>
@@ -81,7 +83,7 @@
         <!--spring-->
         <dependency>
             <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
+            <artifactId>spring-context-support</artifactId>
             <version>${spring.version}</version>
             <exclusions>
                 <exclusion>
@@ -92,9 +94,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-orm</artifactId>
-            <version>${spring.version}</version>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+            <version>${spring-data-jpa.version}</version>
         </dependency>
 
         <!--dataBase-->
@@ -110,7 +112,6 @@
             <version>2.4.0</version>
             <scope>test</scope>
         </dependency>
-
 
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -141,6 +142,19 @@
             <groupId>javax.el</groupId>
             <artifactId>javax.el-api</artifactId>
             <version>3.0.0</version>
+        </dependency>
+
+        <!--cache \_\_\  tools-->
+        <dependency>
+            <groupId>net.sf.ehcache</groupId>
+            <artifactId>ehcache</artifactId>
+            <version>${ehcache.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!--Web-->
@@ -203,8 +217,26 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
         </profile>
+        <profile>
+            <id>jdbc</id>
+        </profile>
+        <profile>
+            <id>jpa</id>
+        </profile>
+        <profile>
+            <id>datajpa</id>
+        </profile>
     </profiles>
 
     <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-framework-bom</artifactId>
+                <version>${spring.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
     </dependencyManagement>
 </project>
