@@ -61,9 +61,4 @@ public class jpaMealRepositoryImpl implements MealRepository {
                 .setParameter("user_id", userId)
                 .getResultList();
     }
-
-    @Override
-    public Meal getMealWithUser(int mealId) {
-        return null;
-    }
 }

@@ -2,20 +2,8 @@ package ru.javawebinar.topjava.service;
 
 import org.junit.*;
 import org.junit.rules.ExpectedException;
-import org.junit.rules.Stopwatch;
-import org.junit.runner.Description;
-import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlConfig;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.javawebinar.topjava.MealTestData;
-import ru.javawebinar.topjava.Profiles;
 import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.BaseEntity;
 import ru.javawebinar.topjava.model.Meal;
@@ -23,56 +11,21 @@ import ru.javawebinar.topjava.to.MealWithExceed;
 import ru.javawebinar.topjava.util.MealUtils;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.Month;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 
-@ContextConfiguration({"classpath:spring/spring-app.xml", "classpath:spring/spring-db.xml"})
-@RunWith(SpringJUnit4ClassRunner.class)
-@Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-public abstract class MealServiceTest {
-    private static final Logger LOG = LoggerFactory.getLogger(MealServiceTest.class);
+import static java.time.LocalDateTime.of;
+import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
-    private static Map<String, Long> timesMap = new ConcurrentHashMap<>();
+public abstract class AbstractMealServiceTest extends DbTest {
 
-    @Rule
-    public final ExpectedException thrown = ExpectedException.none();
-
-    @Rule
-    public final Stopwatch stopwatch = new Stopwatch() {
-        @Override
-        protected void succeeded(long nanos, Description description) {
-            timesMap.put(description.getMethodName(), nanos);
-            LOG.info(description.getMethodName(), nanos);
-        }
-
-        @Override
-        protected void failed(long nanos, Throwable e, Description description) {
-            timesMap.put(description.getMethodName() + " failed", nanos);
-            LOG.info(description.getMethodName() + " failed", e, nanos);
-        }
-
-        @Override
-        protected void skipped(long nanos, AssumptionViolatedException e, Description description) {
-            LOG.info(description.getMethodName() + " skipped", e, nanos);
-        }
-
-        @Override
-        protected void finished(long nanos, Description description) {
-            timesMap.put(description.getMethodName(), nanos);
-            LOG.info(description.getMethodName(), nanos);
-        }
-    };
-
-    static {
-        SLF4JBridgeHandler.install();
-    }
 
     @Autowired
-    MealService service;
+   protected MealService service;
 
     @Test
     public void testGetAll() {
@@ -144,14 +97,12 @@ public abstract class MealServiceTest {
         )), service.findAll(100001));
     }
 
-    @AfterClass
-    public static void statistics() {
-        System.out.println("_______________________________________");
-        for (Map.Entry<String, Long> entry : timesMap.entrySet()) {
-            System.out.println(String.format("%s %s мс",
-                    entry.getKey(), TimeUnit.NANOSECONDS.toMillis(entry.getValue())));
-        }
-        System.out.println("_______________________________________");
+    @Test
+    public void testValidation() throws Exception {
+        validateRootCause(() -> service.save(new Meal(null, of(2015, Month.JUNE, 1, 18, 0), "  ", 300), USER_ID), ConstraintViolationException.class);
+        validateRootCause(() -> service.save(new Meal(null, null, "Description", 300), USER_ID), ConstraintViolationException.class);
+        validateRootCause(() -> service.save(new Meal(null, of(2015, Month.JUNE, 1, 18, 0), "Description", 9), USER_ID), ConstraintViolationException.class);
+        validateRootCause(() -> service.save(new Meal(null, of(2015, Month.JUNE, 1, 18, 0), "Description", 5001), USER_ID), ConstraintViolationException.class);
     }
 }
 

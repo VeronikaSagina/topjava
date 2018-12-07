@@ -5,6 +5,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
+import ru.javawebinar.topjava.Profiles;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.web.meal.MealRestController;
@@ -24,13 +25,16 @@ import java.util.Objects;
 public class MealServlet extends HttpServlet {
     public static final String PATH_MEALS_JSP = "meals.jsp";
     public static final String LOCATION_MEALS = "meals";
-    private ConfigurableApplicationContext appCtx;
+    private ClassPathXmlApplicationContext appCtx;
     private static MealRestController controller;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml", "spring/spring-db.xml");
+        appCtx = new ClassPathXmlApplicationContext();
+        appCtx.getEnvironment().setActiveProfiles(Profiles.getActiveDbProfile(), Profiles.REPOSITORY_IMPLEMENTATION);
+        appCtx.setConfigLocations("spring/spring-app.xml", "spring/spring-db.xml");
+        appCtx.refresh();
         controller = appCtx.getBean(MealRestController.class);
     }
 

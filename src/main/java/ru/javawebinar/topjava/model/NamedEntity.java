@@ -4,6 +4,7 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
 @MappedSuperclass
@@ -11,7 +12,7 @@ import javax.validation.constraints.NotEmpty;
 public class NamedEntity extends BaseEntity {
 
     @Column(name = "name")
-    @NotEmpty
+    @NotBlank
     protected String name;
 
     NamedEntity() {

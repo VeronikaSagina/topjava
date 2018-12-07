@@ -22,4 +22,7 @@
            diskPersistent="false"
            diskExpiryThreadIntervalSeconds="1"
            memoryStoreEvictionPolicy="LRU"/>
+
+    <cache name="ru.javawebinar.topjava.model.User"
+           maxElementsInMemory="25000"/>
 </ehcache>

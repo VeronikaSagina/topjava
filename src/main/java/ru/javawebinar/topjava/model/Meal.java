@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -23,8 +24,8 @@ public class Meal extends BaseEntity {
     public static final String GET_ALL_MEALS = "meal.getAllSorted";
 
 
-    @Column(name = "datetime", nullable = false)
-    @NotBlank
+    @Column(name = "dateTime", nullable = false)
+    @NotNull
     /*  @Convert(converter = LocalDateTimeAttributeConverter.class)*/
     private LocalDateTime dateTime;
 
@@ -34,11 +35,11 @@ public class Meal extends BaseEntity {
 
     @Column(name = "calories", nullable = false)
     @Range(min = 10, max = 5000)
-    @NotBlank
     private int calories;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
+    @NotNull
     private User user;
 
     public Meal() {
@@ -51,7 +52,7 @@ public class Meal extends BaseEntity {
         this.calories = calories;
     }
 
-    public Meal(int id, LocalDateTime dateTime, String description, int calories) {
+    public Meal(Integer id, LocalDateTime dateTime, String description, int calories) {
         setId(id);
         this.dateTime = dateTime;
         this.description = description;
@@ -87,14 +88,14 @@ public class Meal extends BaseEntity {
         return dateTime.toLocalTime();
     }
 
-    @Override
+     @Override
     public String toString() {
         return " Meal{" +
                 "id=" + getId() +
                 ", dateTime=" + dateTime +
                 ", description='" + description + '\'' +
                 ", calories=" + calories +
-                ", user=" + user +
+                ", userId=" + user.getId() +
                 '}';
     }
     /*

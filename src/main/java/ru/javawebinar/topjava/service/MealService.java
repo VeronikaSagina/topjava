@@ -12,7 +12,7 @@ public interface MealService {
 
     List<MealWithExceed> getBetween(int userId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime);
 
-    Meal getMealWithUser(int mealId);
+    Meal getMealWithUser(int mealId,  int userId);
 
     Meal findById(int id, int userId);
 

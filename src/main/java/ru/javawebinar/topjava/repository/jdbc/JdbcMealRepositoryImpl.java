@@ -102,8 +102,4 @@ public class JdbcMealRepositoryImpl implements MealRepository {
                         ROW_MAPPER, userId, startDateTime, endDateTime);
     }
 
-    @Override
-    public Meal getMealWithUser(int mealId) {
-        throw new UnsupportedOperationException();
-    }
 }

@@ -30,7 +30,7 @@
               p:password="${database.password}"/>
     </beans>
 
-    <beans profile="postgres, hsqldb">
+    <beans profile="jpa, datajpa">
         <jdbc:initialize-database data-source="dataSource" enabled="${database.init}">
             <jdbc:script location="classpath:db/${jdbc.initLocation}"/>
             <jdbc:script encoding="UTF-8" location="classpath:db/populateDB.sql"/>
@@ -39,13 +39,42 @@
         <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
               p:dataSource-ref="dataSource"
               p:packagesToScan="ru.javawebinar.**.model">
-            <property name="jpaPropertyMap">
-                <map>
-                    <entry key="#{T(org.hibernate.cfg.AvailableSettings).FORMAT_SQL}" value="${hibernate.format_sql}"/>
-                    <entry key="#{T(org.hibernate.cfg.AvailableSettings).USE_SQL_COMMENTS}"
-                           value="${hibernate.use_sql_comments}"/>
-                </map>
+
+                      <!--  <property name="jpaPropertyMap">
+                            <map>
+                                <entry key="#{T(org.hibernate.cfg.AvailableSettings).FORMAT_SQL}" value="${hibernate.format_sql}"/>
+                                <entry key="#{T(org.hibernate.cfg.AvailableSettings).USE_SQL_COMMENTS}"
+                                       value="${hibernate.use_sql_comments}"/>
+                                <entry key="#{T(org.hibernate.cfg.AvailableSettings).CACHE_REGION_FACTORY}"
+                                       value="org.hibernate.cache.ehcache.SingletonEhCacheRegionFactory"/>
+                                <entry key="#{T(org.hibernate.cfg.AvailableSettings).USE_SECOND_LEVEL_CACHE}" value="true"/>
+                                <entry key="#{T(org.hibernate.cfg.AvailableSettings).USE_QUERY_CACHE}"
+                                       value="false"/> &lt;!&ndash;default&ndash;&gt;
+                                <entry key="#{T(net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory).NET_SF_EHCACHE_CONFIGURATION_RESOURCE_NAME}"
+                                       value="cache/ehcache.xml"/>
+                               &lt;!&ndash; <entry key="#{T(org.hibernate.cache.ehcache.AbstractEhcacheRegionFactory).NET_SF_EHCACHE_CONFIGURATION_RESOURCE_NAME}"
+                                       value="cache/ehcache.xml"/>&ndash;&gt;
+                            </map>
+                        </property>-->
+            <property name="jpaProperties">
+                <props>
+                    <prop key="org.hibernate.cfg.AvailableSettings.FORMAT_SQL">"${hibernate.format_sql}"</prop>
+                    <prop key="org.hibernate.cfg.AvailableSettings.USE_SQL_COMMENTS">"${hibernate.use_sql_comments}"</prop>
+                    <prop key="hibernate.cache.use_query_cache">true</prop>
+                    <prop key="hibernate.cache.use_second_level_cache">true</prop>
+                    <!--   <prop key="hibernate.cache.region.factory">org.hibernate.cache.jcache.JCacheRegionFactory</prop>
+                       <prop key="hibernate.javax.cache.provider">org.ehcache.jsr107.EhcacheCachingProvider</prop>-->
+                    <prop key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
+                    <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory
+                    </prop>
+                    <prop key="net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory.NET_SF_EHCACHE_CONFIGURATION_RESOURCE_NAME">
+                        cache/ehcache.xml
+                    </prop>
+                    <!--<prop key="javax.persistence.sharedCache.mode">ENABLE_SELECTIVE</prop>-->
+                    <!--<prop key="hibernate.generate_statistics">true</prop>-->
+                </props>
             </property>
+
             <property name="jpaVendorAdapter">
                 <bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter"
                       p:showSql="${jpa.showSql}">
@@ -57,6 +86,8 @@
 
         <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
               p:entityManagerFactory-ref="entityManagerFactory"/>
+
+        <bean class="ru.javawebinar.topjava.repository.JpaUtil"/>
     </beans>
 
     <beans profile="jdbc">
@@ -71,18 +102,17 @@
 
     <beans profile="jpa">
         <context:component-scan base-package="ru.javawebinar.**.repository.jpa"/>
-
     </beans>
 
-    <beans profile="datajpa, postgres">
+    <beans profile="datajpa">
         <jpa:repositories base-package="ru.javawebinar.topjava.repository.datajpa"/>
         <context:component-scan base-package="ru.javawebinar.**.repository.datajpa"/>
     </beans>
 
 </beans>
 
-<!---->
-<!-- -->
+        <!---->
+        <!-- -->
 
         <!-- populate data base -->
 

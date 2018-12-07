@@ -3,42 +3,32 @@ package ru.javawebinar.topjava.service;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlConfig;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import ru.javawebinar.topjava.Profiles;
 import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.repository.JpaUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import javax.validation.ConstraintViolationException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-@ContextConfiguration({
-        "classpath:spring/spring-app.xml",
-        "classpath:spring/spring-db.xml"
-})
-@RunWith(SpringJUnit4ClassRunner.class)
-@Sql(scripts = "classpath:db/populateDB.sql", config = @SqlConfig(encoding = "UTF-8"))
-public abstract class UserServiceTest {
 
-    static {
-        SLF4JBridgeHandler.install();
-    }
+public abstract class AbstractUserServiceTest extends DbTest {
     @Before
     public void setUp() {
         service.evictCache();
+        jpaUtil.clear2ndLevelHibernateCache();
     }
+
     @Autowired
-    UserService service;
+    protected JpaUtil jpaUtil;
+
+    @Autowired
+    protected UserService service;
 
     @Test
     public void testSave() {
@@ -49,8 +39,9 @@ public abstract class UserServiceTest {
         UserTestData.MATCHER.assertCollectionEquals(Arrays.asList(UserTestData.ADMIN, newUser, UserTestData.USER), service.getAll());
     }
 
-    @Test(expected = DataAccessException.class)
+    @Test
     public void testDuplicateMailSave() {
+        thrown.expect(DataAccessException.class);
         service.save(new User(null, "newUserDuplicateEmail", "user@yandex.ru", "12345", Role.ROLE_USER));
     }
 
@@ -60,8 +51,9 @@ public abstract class UserServiceTest {
         UserTestData.MATCHER.assertCollectionEquals(Collections.singletonList(UserTestData.ADMIN), service.getAll());
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void testNotFoundDelete() {
+        thrown.expect(NotFoundException.class);
         service.delete(1);
     }
 
@@ -71,8 +63,9 @@ public abstract class UserServiceTest {
         Assert.assertEquals(UserTestData.USER, user);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void testGetNotFoundException() {
+        thrown.expect(NotFoundException.class);
         service.get(1);
     }
 
@@ -95,6 +88,15 @@ public abstract class UserServiceTest {
         updateUser.setCaloriesPerDay(1650);
         service.update(updateUser);
         UserTestData.MATCHER.assertEquals(updateUser, service.get(UserTestData.USER_ID));
+    }
+
+    @Test
+    public void testValidation() throws Exception {
+        validateRootCause(() -> service.save(new User(null, "  ", "mail@yandex.ru", "password", Role.ROLE_USER)), ConstraintViolationException.class);
+        validateRootCause(() -> service.save(new User(null, "User", "  ", "password", Role.ROLE_USER)), ConstraintViolationException.class);
+        validateRootCause(() -> service.save(new User(null, "User", "mail@yandex.ru", "  ", Role.ROLE_USER)), ConstraintViolationException.class);
+        validateRootCause(() -> service.save(new User(null, "User", "mail@yandex.ru", "password", 9, true, Collections.emptySet())), ConstraintViolationException.class);
+        validateRootCause(() -> service.save(new User(null, "User", "mail@yandex.ru", "password", 10001, true, Collections.emptySet())), ConstraintViolationException.class);
     }
 
 }
