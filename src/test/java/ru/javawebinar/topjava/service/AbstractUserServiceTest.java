@@ -18,14 +18,7 @@ import java.util.List;
 
 
 public abstract class AbstractUserServiceTest extends DbTest {
-    @Before
-    public void setUp() {
-        service.evictCache();
-        jpaUtil.clear2ndLevelHibernateCache();
-    }
 
-    @Autowired
-    protected JpaUtil jpaUtil;
 
     @Autowired
     protected UserService service;

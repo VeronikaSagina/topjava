@@ -2,7 +2,11 @@ package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
+import ru.javawebinar.topjava.service.UserService;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +20,14 @@ import java.io.IOException;
 public class UserServlet extends HttpServlet {
     private static final Logger LOG = LoggerFactory.getLogger(UserServlet.class);
 
+    private WebApplicationContext wac;
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        wac = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+    }
+
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         LOG.debug("method post in userServlet");
@@ -26,7 +38,9 @@ public class UserServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         LOG.debug("redirect to users");
-       request.getRequestDispatcher("/users.jsp").forward(request, response);
+        UserService userService = wac.getBean(UserService.class);
+        request.setAttribute("userList", userService.getAll());
+        request.getRequestDispatcher("/users.jsp").forward(request, response);
        // response.sendRedirect("users.jsp");
     }
 }

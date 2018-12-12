@@ -1,12 +1,15 @@
 package ru.javawebinar.topjava.service.datajpa;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
 import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.Profiles;
 import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.repository.JpaUtil;
 import ru.javawebinar.topjava.service.AbstractUserServiceTest;
 import ru.javawebinar.topjava.util.MealUtils;
 
@@ -20,6 +23,15 @@ import static ru.javawebinar.topjava.MealTestData.*;
 
 @ActiveProfiles(Profiles.DATAJPA)
 public class DataJpaUserServiceTest extends AbstractUserServiceTest {
+    @Before
+    public void setUp() {
+        service.evictCache();
+        jpaUtil.clear2ndLevelHibernateCache();
+    }
+
+    @Autowired
+    protected JpaUtil jpaUtil;
+
     @Test
     public void getUserByIdWithMeals() {
         User withMeal = service.getWithMeal(USER_ID);

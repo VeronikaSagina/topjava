@@ -14,6 +14,7 @@ import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
 
 import javax.sql.DataSource;
@@ -83,6 +84,11 @@ public class JdbcMealRepositoryImpl implements MealRepository {
         LOG.debug("get meal with id: " + id + " for user with id: " + userId);
         List<Meal> mealList = jdbcTemplate.query(
                 "SELECT * FROM meals WHERE user_id=? and id=?", ROW_MAPPER, userId, id);
+       /* for (Meal meal : mealList) {
+            User user = new User();
+            user.setId(userId);
+            meal.setUser(user);
+        }*/
         return CollectionUtils.isEmpty(mealList) ? null : DataAccessUtils.requiredSingleResult(mealList);
     }
 

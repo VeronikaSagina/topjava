@@ -1,21 +1,44 @@
-dl{
+dl {
     background: none repeat scroll 0 0 #FAFAFA;
     margin: 8px 0;
     padding: 0;
 }
 
-dt{
+dt {
     display: inline-block;
     width: 170px;
 }
-dd{
+
+dd {
     display: inline-block;
     margin-left: 8px;
     vertical-align: top;
 }
-.normal{
-color: green;
+
+form {
+    display: inline-block;
+    font-size: 30px;
+    text-align:center;
 }
-.exceeded{
+
+.normal {
+    color: green;
+}
+
+.exceeded {
     color: red;;
+}
+
+header{
+    background:none repeat scroll 0 0 #A6C9E2;
+    color: yellow;
+    font-size: 30px;
+    padding: 7px 20px;
+    margin: 7px;
+}
+.center {
+    margin: auto;
+    width: 50%;
+    border: 3px solid green;
+    padding: 10px;
 }

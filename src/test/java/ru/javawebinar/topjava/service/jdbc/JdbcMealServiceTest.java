@@ -6,4 +6,9 @@ import ru.javawebinar.topjava.service.AbstractMealServiceTest;
 
 @ActiveProfiles(Profiles.JDBC)
 public class JdbcMealServiceTest extends AbstractMealServiceTest {
+
+    @Override
+    public void testValidation() throws Exception {
+
+    }
 }

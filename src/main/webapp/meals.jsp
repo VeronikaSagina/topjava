@@ -1,48 +1,41 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib uri="http://mycompany.com" prefix="f" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<fmt:setBundle basename="messages.app"/>
 
 <html>
-<head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <title>MealsList</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
+<jsp:include page="fragments/headTag.jsp"/>
 <body>
+<jsp:include page="fragments/bodyHeader.jsp"/>
 <section>
-
-    <h2><a href="index.html">Home</a></h2>
-    <h2>Meal list</h2>
+    <h2><fmt:message key="meals.title"/></h2>
     <form method="post" action="meals?action=filter">
-        <dl>
-            <dt>From Date:</dt>
-            <dd><input type="date" name="startDate" value="${param.startDate}"></dd>
-        </dl>
-        <dl>
-            <dt>To Date:</dt>
-            <dd><input type="date" name="endDate" value="${param.endDate}"></dd>
-        </dl>
-        <dl>
-            <dt>From Time:</dt>
-            <dd><input type="time" name="startTime" value="${param.startDate}"></dd>
-        </dl>
-        <dl>
-            <dt>To Time</dt>
-            <dd><input type="time" name="endTime" value="${param.endTime}"></dd>
-        </dl>
-        <button type="submit">Filter</button>
+        <div class="row">
+            <div class="col-xs-6">
+                <fmt:message key="meals.date"/>
+                <input type="date" name="startDate" value="${param.startDate}">
+                <input type="date" name="endDate" value="${param.endDate}">
+            </div>
+            <div class="col-xs-6">
+                <fmt:message key="meals.time"/>
+                <input type="time" name="startTime" value="${param.startDate}">
+                <input type="time" name="endTime" value="${param.endTime}">
+            </div>
+        </div>
+        <button type="submit"><fmt:message key="meals.filter"/></button>
     </form>
     <hr>
-    <a href="meals?action=create">Create Meal</a>
+    <a href="meals?action=create"><fmt:message key="meals.createMeal"/></a>
     <hr>
     <%-- <br>
      <br>--%>
     <table border="1px" cellpadding="8" cellspacing="0">
         <thead>
         <tr>
-            <th>Date</th>
-            <th>Description</th>
-            <th>Calories</th>
+            <th><fmt:message key="meals.dateTime"/></th>
+            <th><fmt:message key="meals.description"/></th>
+            <th><fmt:message key="meals.calories"/></th>
             <th></th>
             <th></th>
         </tr>
@@ -53,8 +46,10 @@
                 <td><c:out value="${f:formatLocalDateTime(meal.dateTime)}"/></td>
                 <td><c:out value="${meal.description}"/></td>
                 <td><c:out value="${meal.calories}"/></td>
-                <td><a href="meals?action=update&id=<c:out value="${meal.id}"/>">Update</a></td>
-                <td><a href="meals?action=delete&id=<c:out value="${meal.id}"/>">Delete</a></td>
+                <td><a href="meals?action=update&id=<c:out value="${meal.id}"/>"><fmt:message key="meals.Update"/></a>
+                </td>
+                <td><a href="meals?action=delete&id=<c:out value="${meal.id}"/>"><fmt:message key="meals.Delete"/></a>
+                </td>
             </tr>
         </c:forEach>
     </table>

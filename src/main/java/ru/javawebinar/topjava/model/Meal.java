@@ -1,6 +1,8 @@
 package ru.javawebinar.topjava.model;
 
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
@@ -40,6 +42,7 @@ public class Meal extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     @NotNull
+    @OnDelete(action = OnDeleteAction.CASCADE)//каскадное удаление в базе
     private User user;
 
     public Meal() {
@@ -88,14 +91,14 @@ public class Meal extends BaseEntity {
         return dateTime.toLocalTime();
     }
 
-     @Override
+    @Override
     public String toString() {
         return " Meal{" +
                 "id=" + getId() +
                 ", dateTime=" + dateTime +
                 ", description='" + description + '\'' +
                 ", calories=" + calories +
-                ", userId=" + user.getId() +
+               /* ", userId=" + user.getId() +*/
                 '}';
     }
     /*

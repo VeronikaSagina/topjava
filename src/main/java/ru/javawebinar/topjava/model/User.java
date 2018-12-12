@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.time.Instant;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
@@ -16,6 +17,7 @@ import java.util.Set;
 import static ru.javawebinar.topjava.util.MealUtils.DEFAULT_CALORIES_PER_DAY;
 
 @Entity
+@Cacheable
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Table(name = "users", uniqueConstraints = {@UniqueConstraint(columnNames = "email", name = "unique_email")})
 @NamedQueries({
@@ -49,7 +51,7 @@ public class User extends NamedEntity {
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role")
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
    // @Fetch(FetchMode.SUBSELECT)
     @BatchSize(size = 200)
     private Set<Role> roles;
@@ -58,7 +60,7 @@ public class User extends NamedEntity {
     @Range(min = 10, max = 10000)
     private int caloriesPerDay = DEFAULT_CALORIES_PER_DAY;
 
-    @OneToMany( cascade = CascadeType.REMOVE, mappedBy = "user")
+    @OneToMany( /*cascade = CascadeType.REMOVE,orphanRemoval = true*/  mappedBy = "user")//какскадно удалить, удалить сирот
     @OrderBy("dateTime DESC")
    // @Transient
     private List<Meal> meals;

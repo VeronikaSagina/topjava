@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.context.support.FileSystemXmlApplicationContext;
 import ru.javawebinar.topjava.Profiles;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.web.meal.MealRestController;
@@ -25,24 +27,26 @@ import java.util.Objects;
 public class MealServlet extends HttpServlet {
     public static final String PATH_MEALS_JSP = "meals.jsp";
     public static final String LOCATION_MEALS = "meals";
-    private ClassPathXmlApplicationContext appCtx;
-    private static MealRestController controller;
+   // private ClassPathXmlApplicationContext appCtx;
+    private MealRestController controller;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        appCtx = new ClassPathXmlApplicationContext();
+      /*  appCtx = new ClassPathXmlApplicationContext();
         appCtx.getEnvironment().setActiveProfiles(Profiles.getActiveDbProfile(), Profiles.REPOSITORY_IMPLEMENTATION);
         appCtx.setConfigLocations("spring/spring-app.xml", "spring/spring-db.xml");
         appCtx.refresh();
-        controller = appCtx.getBean(MealRestController.class);
+        controller = appCtx.getBean(MealRestController.class);*/
+        WebApplicationContext springContext = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
+        controller = springContext.getBean(MealRestController.class);
     }
 
-    @Override
+  /*  @Override
     public void destroy() {
         appCtx.close();
         super.destroy();
-    }
+    }*/
 
     /* request - запрос, получить значения response - ответ, вернуть что-то */
 
