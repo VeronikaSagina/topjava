@@ -17,33 +17,6 @@ public class SpringMain {
             }
             System.out.println("___________________________________________");
             MealRestController controller = context.getBean(MealRestController.class);
-
-
-          /*  MealRestController mealController = context.getBean(MealRestController.class);
-            List<MealWithExceed> filteredMealsWithExceeded =
-                    mealController.findBetween(
-                            LocalDate.of(2018, Month.MAY, 30), LocalDate.of(2018, Month.NOVEMBER, 30),
-                            LocalTime.of(7, 0), LocalTime.of(11, 0));
-            filteredMealsWithExceeded.forEach(System.out::println);*/
         }
     }
-   /* public static void main(String[] args) {
-        try (ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/springTest-app.xml","spring/spring-app.xml","spring/spring-db.xml")) {
-            System.out.println("___________________________________________");
-            System.out.println("Bean definition names: ");
-            String[] beanDefinitionNames = appCtx.getBeanDefinitionNames();
-            for(String s : beanDefinitionNames){
-                System.out.println(s);
-            }
-            System.out.println("___________________________________________");
-
-            MealRestController mealController = appCtx.getBean(MealRestController.class);
-            List<MealWithExceed> filteredMealsWithExceeded =
-                    mealController.findBetween(
-                            LocalDate.of(2018, Month.MAY, 30), LocalDate.of(2018, Month.NOVEMBER, 30),
-                            LocalTime.of(7, 0), LocalTime.of(11, 0));
-            filteredMealsWithExceeded.forEach(System.out::println);
-
-        }
-    }*/
 }

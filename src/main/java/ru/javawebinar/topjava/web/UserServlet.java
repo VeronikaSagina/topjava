@@ -39,7 +39,7 @@ public class UserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         LOG.debug("redirect to users");
         UserService userService = wac.getBean(UserService.class);
-        request.setAttribute("userList", userService.getAll());
+        request.setAttribute("users", userService.getAll());
         request.getRequestDispatcher("/users.jsp").forward(request, response);
        // response.sendRedirect("users.jsp");
     }

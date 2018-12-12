@@ -1,11 +1,6 @@
 package ru.javawebinar.topjava.web;
 
 
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Profile;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
-import ru.javawebinar.topjava.Profiles;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 import ru.javawebinar.topjava.model.Meal;
@@ -27,26 +22,14 @@ import java.util.Objects;
 public class MealServlet extends HttpServlet {
     public static final String PATH_MEALS_JSP = "meals.jsp";
     public static final String LOCATION_MEALS = "meals";
-   // private ClassPathXmlApplicationContext appCtx;
     private MealRestController controller;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-      /*  appCtx = new ClassPathXmlApplicationContext();
-        appCtx.getEnvironment().setActiveProfiles(Profiles.getActiveDbProfile(), Profiles.REPOSITORY_IMPLEMENTATION);
-        appCtx.setConfigLocations("spring/spring-app.xml", "spring/spring-db.xml");
-        appCtx.refresh();
-        controller = appCtx.getBean(MealRestController.class);*/
         WebApplicationContext springContext = WebApplicationContextUtils.getRequiredWebApplicationContext(getServletContext());
         controller = springContext.getBean(MealRestController.class);
     }
-
-  /*  @Override
-    public void destroy() {
-        appCtx.close();
-        super.destroy();
-    }*/
 
     /* request - запрос, получить значения response - ответ, вернуть что-то */
 
@@ -115,11 +98,4 @@ public class MealServlet extends HttpServlet {
         int mealD = getId(req);
         controller.deleteById(mealD);
     }
-   /* private void edit(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {//редактировать
-        Meal meal = controller.findById(Integer.parseInt(req.getParameter("id")));
-        req.setAttribute("meal", meal);
-        LOG.debug("edit meal{}", meal);
-        req.getRequestDispatcher("meal.jsp").forward(req, resp);
-    }
-*/
 }

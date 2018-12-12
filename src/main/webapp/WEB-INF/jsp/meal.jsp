@@ -1,14 +1,13 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <jsp:useBean id="meal" scope="request" type="ru.javawebinar.topjava.model.Meal"/>
-<fmt:setBundle basename="messages.app"/>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <html>
     <jsp:include page="fragments/headTag.jsp"/>
 <body>
 <section>
-    <h2><a href="index.jsp"><fmt:message key="app.home"/> </a></h2>
+    <jsp:include page="fragments/bodyHeader.jsp"/>
     <h2>${param.action == 'create' ? 'Create meal' : 'Edit meal'}</h2>
     <hr>
     <%-- <h2>${meal.id == null ? "Создание записи" : "Обновление записи"}</h2>--%>
@@ -17,20 +16,20 @@
         <input hidden type="text" name="id" value="<c:out value="${meal.id}"/>">
         <table>
             <tr>
-                <td><fmt:message key="meals.dateTime"/></td>
+                <td><spring:message code="meals.dateTime"/></td>
                 <td><input type="datetime-local" name="date" value="<c:out value="${meal.dateTime}"/>"></td>
             </tr>
             <tr>
-                <td><fmt:message key="meals.description"/></td>
+                <td><spring:message code="meals.description"/></td>
                 <td><input type="text" name="description" value="<c:out value="${meal.description}"/>"></td>
             </tr>
             <tr>
-                <td><fmt:message key="meals.calories"/></td>
+                <td><spring:message code="meals.calories"/></td>
                 <td><input type="text" name="calories" value="<c:out value="${meal.calories}"/>"></td>
             </tr>
         </table>
-        <button type="submit"><fmt:message key="meals.save"/></button>
-        <button onclick="window.history.back()"><fmt:message key="meals.cancel"/></button>
+        <button type="submit"><spring:message code="meals.save"/></button>
+        <button onclick="window.history.back()"><spring:message code="meals.cancel"/></button>
     </form>
 </section>
 <%--
