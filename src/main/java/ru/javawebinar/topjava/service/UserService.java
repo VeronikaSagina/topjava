@@ -12,6 +12,8 @@ public interface  UserService {
 
     User get(int id) throws NotFoundException;
 
+    User getWithRoles(int id);
+
     User getWithMeal(int id) throws NotFoundException;
 
     User getByEmail(String email) throws NotFoundException;

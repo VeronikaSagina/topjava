@@ -9,7 +9,7 @@
 <jsp:include page="fragments/bodyHeader.jsp"/>
 <section>
     <h2><spring:message code="meals.title"/></h2>
-    <form method="post" action="meals?action=filter">
+    <form method="get" action="meals">
         <div class="row">
             <div class="col-xs-6">
                 <spring:message code="meals.date"/>
@@ -25,7 +25,7 @@
         <button type="submit"><spring:message code="meals.filter"/></button>
     </form>
     <hr>
-    <a href="meals?action=create"><spring:message code="meals.createMeal"/></a>
+    <a href="meals/new"><spring:message code="meals.createMeal"/></a>
     <hr>
     <%-- <br>
      <br>--%>
@@ -45,9 +45,9 @@
                 <td><c:out value="${f:formatLocalDateTime(meal.dateTime)}"/></td>
                 <td><c:out value="${meal.description}"/></td>
                 <td><c:out value="${meal.calories}"/></td>
-                <td><a href="meals?action=update&id=<c:out value="${meal.id}"/>"><spring:message code="meals.Update"/></a>
+                <td><a href="meals/<c:out value="${meal.id}"/>"><spring:message code="meals.Update"/></a>
                 </td>
-                <td><a href="meals?action=delete&id=<c:out value="${meal.id}"/>"><spring:message code="meals.Delete"/></a>
+                <td><a href="meals/delete/<c:out value="${meal.id}"/>"><spring:message code="meals.Delete"/></a>
                 </td>
             </tr>
         </c:forEach>

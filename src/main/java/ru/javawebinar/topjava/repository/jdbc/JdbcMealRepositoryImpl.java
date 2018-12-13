@@ -12,6 +12,10 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.util.CollectionUtils;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.User;
@@ -31,6 +35,12 @@ public class JdbcMealRepositoryImpl implements MealRepository {
     private static final Logger LOG = LoggerFactory.getLogger(JdbcMealRepositoryImpl.class);
     private final SimpleJdbcInsert insertMeal;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private PlatformTransactionManager transactionManager;
+
+    @Autowired
+    public void setTransactionManager(PlatformTransactionManager transactionManager) {
+        this.transactionManager = transactionManager;
+    }
 
     private static final RowMapper<Meal> ROW_MAPPER = (rs, rowNumber) -> new Meal(
             rs.getInt("id"),
@@ -51,32 +61,44 @@ public class JdbcMealRepositoryImpl implements MealRepository {
 
     @Override
     public Meal save(Meal meal, int userId) {
-        LOG.debug("save meal {} for user with id {}", meal, userId);
-        MapSqlParameterSource map = new MapSqlParameterSource()
-                .addValue("id", meal.getId())
-                .addValue("dateTime", meal.getDateTime())
-                .addValue("description", meal.getDescription())
-                .addValue("calories", meal.getCalories())
-                .addValue("userId", userId);
-        if (meal.isNew()) {
-            Number newKey = insertMeal.executeAndReturnKey(map);
-            meal.setId(newKey.intValue());
-        } else {
-            int update = namedParameterJdbcTemplate.update("Update meals SET datetime=:dateTime," +
-                    " description=:description, calories=:calories WHERE id = :id AND user_id=:userId", map);
-            if (update == 0) {
-                return null;
+        TransactionDefinition definition = new DefaultTransactionDefinition();
+        TransactionStatus status = transactionManager.getTransaction(definition);
+        try {
+            LOG.debug("save meal {} for user with id {}", meal, userId);
+            MapSqlParameterSource map = new MapSqlParameterSource()
+                    .addValue("id", meal.getId())
+                    .addValue("dateTime", meal.getDateTime())
+                    .addValue("description", meal.getDescription())
+                    .addValue("calories", meal.getCalories())
+                    .addValue("userId", userId);
+            if (meal.isNew()) {
+                Number newKey = insertMeal.executeAndReturnKey(map);
+                meal.setId(newKey.intValue());
+            } else {
+                namedParameterJdbcTemplate.update("Update meals SET datetime=:dateTime," +
+                        " description=:description, calories=:calories WHERE id = :id AND user_id=:userId", map);
             }
+        } catch (Exception e) {
+            transactionManager.rollback(status);
+            throw e;
         }
         return meal;
     }
 
     @Override
     public boolean delete(int id, int userId) {
-        LOG.debug("delete meal with id: " + id + " for user with id: " + userId);
-        return jdbcTemplate.update(
-                "DELETE FROM meals WHERE user_id=? and id=?", userId, id) != 0;
-
+        TransactionDefinition definition = new DefaultTransactionDefinition();
+        TransactionStatus status = transactionManager.getTransaction(definition);
+        boolean update;
+        try {
+            LOG.debug("delete meal with id: " + id + " for user with id: " + userId);
+            update = jdbcTemplate.update(
+                    "DELETE FROM meals WHERE user_id=? and id=?", userId, id) != 0;
+        } catch (Exception e) {
+            transactionManager.rollback(status);
+            throw e;
+        }
+        return update;
     }
 
     @Override

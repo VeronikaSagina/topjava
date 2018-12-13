@@ -108,7 +108,7 @@ public class User extends NamedEntity {
         this.caloriesPerDay = caloriesPerDay;
     }
 
-    private Set<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 

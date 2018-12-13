@@ -1,7 +1,6 @@
 package ru.javawebinar.topjava.service;
 
 import org.junit.*;
-import org.junit.rules.ExpectedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.UserTestData;
@@ -22,8 +21,6 @@ import static java.time.LocalDateTime.of;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
 public abstract class AbstractMealServiceTest extends DbTest {
-
-
     @Autowired
    protected MealService service;
 

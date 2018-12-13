@@ -49,4 +49,10 @@ public class jpaUserRepositoryImpl implements UserRepository {
         return em.createNamedQuery(User.ALL_SORTED, User.class)
                 .getResultList();
     }
+
+    @Override
+    public User getUserWithRoles(int id) {
+        return null;
+        //TODO
+    }
 }

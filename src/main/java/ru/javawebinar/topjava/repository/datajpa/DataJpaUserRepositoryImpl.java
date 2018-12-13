@@ -10,35 +10,40 @@ import java.util.List;
 
 @Repository
 public class DataJpaUserRepositoryImpl implements UserRepository {
-    private final CrudUserRepository proxy;
+    private final CrudUserRepository crudRepository;
 
     @Autowired
     public DataJpaUserRepositoryImpl(CrudUserRepository proxy) {
-        this.proxy = proxy;
+        this.crudRepository = proxy;
     }
 
     @Override
     public User save(User user) {
-        return proxy.save(user);
+        return crudRepository.save(user);
     }
 
     @Override
     public boolean delete(int id) {
-        return proxy.delete(id) != 0;
+        return crudRepository.delete(id) != 0;
     }
 
     @Override
     public User get(int id) {
-        return proxy.findById(id).orElse(null);
+        return crudRepository.findById(id).orElse(null);
     }
 
     @Override
     public User getByEmail(String email) {
-        return proxy.getByEmail(email);
+        return crudRepository.getByEmail(email);
     }
 
     @Override
     public List<User> getAll() {
-        return proxy.findAll(Sort.by( "name", "email"));
+        return crudRepository.findAll(Sort.by( "name", "email"));
+    }
+
+    @Override
+    public User getUserWithRoles(int id) {
+        return crudRepository.findFirstById(id);
     }
 }

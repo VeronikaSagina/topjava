@@ -25,7 +25,7 @@ public class DateTimeUtil {
     }
 
     public static LocalDate parseLocalDate(String date) {
-        if (date.isEmpty()) {
+        if ( date.isEmpty()) {
             return null;
         }
         return LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd"));

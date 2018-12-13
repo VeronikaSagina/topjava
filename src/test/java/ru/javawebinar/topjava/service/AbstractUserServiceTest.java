@@ -1,14 +1,12 @@
 package ru.javawebinar.topjava.service;
 
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
-import ru.javawebinar.topjava.repository.JpaUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.validation.ConstraintViolationException;
@@ -83,6 +81,11 @@ public abstract class AbstractUserServiceTest extends DbTest {
         UserTestData.MATCHER.assertEquals(updateUser, service.get(UserTestData.USER_ID));
     }
 
+    @Test
+    public void testRoles(){
+        User user = service.get(UserTestData.USER_ID);
+        Assert.assertEquals(UserTestData.USER.getRoles(), user.getRoles());
+    }
     @Test
     public void testValidation() throws Exception {
         validateRootCause(() -> service.save(new User(null, "  ", "mail@yandex.ru", "password", Role.ROLE_USER)), ConstraintViolationException.class);
