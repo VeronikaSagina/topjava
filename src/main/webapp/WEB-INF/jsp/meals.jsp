@@ -45,9 +45,9 @@
                 <td><c:out value="${f:formatLocalDateTime(meal.dateTime)}"/></td>
                 <td><c:out value="${meal.description}"/></td>
                 <td><c:out value="${meal.calories}"/></td>
-                <td><a href="meals/<c:out value="${meal.id}"/>"><spring:message code="meals.Update"/></a>
+                <td><a href="meals/update?id=${meal.id}"><spring:message code="meals.Update"/></a>
                 </td>
-                <td><a href="meals/delete/<c:out value="${meal.id}"/>"><spring:message code="meals.Delete"/></a>
+                <td><a href="meals/delete?id=${meal.id}"><spring:message code="meals.Delete"/></a>
                 </td>
             </tr>
         </c:forEach>

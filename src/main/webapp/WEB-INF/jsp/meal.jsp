@@ -6,13 +6,11 @@
 <html>
 <jsp:include page="fragments/headTag.jsp"/>
 <body>
+<jsp:include page="fragments/bodyHeader.jsp"/>
 <section>
-    <jsp:include page="fragments/bodyHeader.jsp"/>
-    <%-- <h2>${param.action == 'create' ? 'Create meal' : 'Edit meal'}</h2>--%>
+    <h2><spring:message code="${meal.isNew() ? 'meals.add' : 'meals.edit'}"/></h2>
     <hr>
-    <%-- <h2>${meal.id == null ? "Создание записи" : "Обновление записи"}</h2>--%>
-    <%--  <form method="POST" action="meals?action=<c:out value="${meal.id != null ? 'update' : 'create'}"/>">--%>
-    <form method="post" action="<c:out value="${meal.id}"/>">
+    <form method="post" action="meals">
         <input hidden type="text" name="id" value="<c:out value="${meal.id}"/>">
         <table>
             <tr>
@@ -32,19 +30,5 @@
         <button onclick="window.history.back()"><spring:message code="meals.cancel"/></button>
     </form>
 </section>
-<%--
-<table border="1px">
-    <h2><a href="index.html">Home</a></h2>
-    <c:forEach items="${MealList}" var="meal">
-    <tr style="color: ${meal.exceed ? 'lime' : 'red'}">
-        <td><c:out value="${meal.dateTime.format(formatter)}"/></td>
-        <td><c:out value="${meal.description}"/></td>
-        <td><c:out value="${meal.calories}"/></td>
-        <td><c:out value="${meal.exceed}"/></td>
-        <td><a href="meals?action=edit&id=<c:out value="${meal.id}"/>">Update</a></td>
-        <td><a href="meals?action=delete&id=<c:out value="${meal.id}"/>">Delete</a></td>
-        </c:forEach>
-</table>
---%>
 </body>
 </html>

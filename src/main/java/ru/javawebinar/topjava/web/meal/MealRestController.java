@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Objects;
 
 
 @Controller
@@ -53,20 +54,27 @@ public class MealRestController {
         return "meals";
     }
 
-    @RequestMapping(value = "/delete/{id}", method = RequestMethod.GET)
-    public String delete(@PathVariable int id) {
-
-        service.deleteById(id, AuthorizedUser.id());
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    public String delete(HttpServletRequest request) {
+        String id = Objects.requireNonNull(request.getParameter("id"));
+        service.deleteById(Integer.parseInt(id), AuthorizedUser.id());
         return "redirect:/meals";
     }
 
-    @GetMapping("/{id}")
-    public String findById(Model model, @PathVariable/*(name = "id") */int id) {
+    @RequestMapping(value = "/update", method = RequestMethod.GET)
+    public String update(HttpServletRequest request, Model model) {
+        String id = Objects.requireNonNull(request.getParameter("id"));
+        model.addAttribute("meal", service.findById(Integer.parseInt(id), AuthorizedUser.id()));
+        return "meal";
+    }
+
+ /*   @GetMapping("/{id}")
+    public String findById(Model model, @PathVariable*//*(name = "id") *//*int id) {
         LOG.info("findById {} user {}", id, AuthorizedUser.id());
         Meal byId = service.findById(id, AuthorizedUser.id());
         model.addAttribute(byId);
         return "meal";
-    }
+    }*/
 
     @GetMapping("/new")
     public String createMeal(Model model) {
@@ -75,16 +83,16 @@ public class MealRestController {
         return "meal";
     }
 
-    @PostMapping("/{id}")
-    public String createAndUpdate(HttpServletRequest request, @PathVariable/*(name = "id") */String id) {
+    @RequestMapping(method = RequestMethod.POST, value = "meals")
+    public String createAndUpdate(HttpServletRequest request) {
         Meal meal = new Meal(
                 LocalDateTime.parse(request.getParameter("date")),
                 request.getParameter("description"),
                 Integer.parseInt(request.getParameter("calories")));
-        //String id = request.getParameter("id");
-        if ("new".equals(id)) {
+        if (request.getParameter("id").isEmpty()) {
             service.save(meal, AuthorizedUser.id());
         } else {
+            String id = Objects.requireNonNull(request.getParameter("id"));
             meal.setId(Integer.parseInt(id));
             service.edit(meal, AuthorizedUser.id());
         }
