@@ -1,11 +1,8 @@
 package ru.javawebinar.topjava.repository.jpa;
 
-import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
-
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.List;
@@ -34,7 +31,9 @@ public class jpaUserRepositoryImpl implements UserRepository {
 
     @Override
     public User get(int id) {
-        return em.find(User.class, id);
+        return em.createQuery("SELECT u FROM User u LEFT JOIN FETCH u.roles WHERE u.id = :id", User.class)
+                .setParameter("id", id)
+                .getSingleResult();
     }
 
     @Override
@@ -48,11 +47,5 @@ public class jpaUserRepositoryImpl implements UserRepository {
     public List<User> getAll() {
         return em.createNamedQuery(User.ALL_SORTED, User.class)
                 .getResultList();
-    }
-
-    @Override
-    public User getUserWithRoles(int id) {
-        return null;
-        //TODO
     }
 }

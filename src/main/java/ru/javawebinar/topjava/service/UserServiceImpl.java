@@ -51,10 +51,6 @@ public class UserServiceImpl implements UserService {
       return checkNotFoundWithId(repository.get(id), id);
     }
 
-    @Override
-    public User getWithRoles(int id){
-        return repository.getUserWithRoles(id);
-    }
 
     @Transactional
     @Override

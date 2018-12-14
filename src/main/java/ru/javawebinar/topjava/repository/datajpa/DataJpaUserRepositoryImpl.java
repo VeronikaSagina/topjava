@@ -29,7 +29,7 @@ public class DataJpaUserRepositoryImpl implements UserRepository {
 
     @Override
     public User get(int id) {
-        return crudRepository.findById(id).orElse(null);
+        return crudRepository.findById(id);
     }
 
     @Override
@@ -42,8 +42,4 @@ public class DataJpaUserRepositoryImpl implements UserRepository {
         return crudRepository.findAll(Sort.by( "name", "email"));
     }
 
-    @Override
-    public User getUserWithRoles(int id) {
-        return crudRepository.findFirstById(id);
-    }
-}
+   }

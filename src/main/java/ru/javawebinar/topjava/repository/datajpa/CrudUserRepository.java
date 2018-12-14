@@ -14,7 +14,7 @@ public interface CrudUserRepository extends JpaRepository<User, Integer> {
 
     User getByEmail(String email);
 
-    @EntityGraph(attributePaths = {"user", "user.roles"}, type = EntityGraph.EntityGraphType.FETCH)
-        // @Query("SELECT m FROM Meal m join fetch m.user join fetch m.user.roles where m.id = ?1 AND m.user.id = ?2")
-    User findFirstById(int id);
+    //@EntityGraph(attributePaths = {"user", "user.roles"}, type = EntityGraph.EntityGraphType.FETCH)
+    @Query("SELECT u FROM User u join fetch u.roles where u.id = ?1")
+    User findById(int id);
 }

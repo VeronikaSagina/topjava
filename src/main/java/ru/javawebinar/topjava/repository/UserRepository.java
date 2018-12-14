@@ -19,5 +19,4 @@ public interface UserRepository {
 
     List<User> getAll();
 
-    User getUserWithRoles(int id);
 }

@@ -17,9 +17,9 @@ insert into users (name, email, password)
 VALUES ('Admin', 'admin@gmail.com', 'admin');
 
 insert into user_roles (role, user_id)
-values ('ROLE_USER', 100000);
-insert into user_roles (role, user_id)
-values ('ROLE_ADMIN', 100001);
+values ('ROLE_USER', 100000),
+       ('ROLE_ADMIN', 100001),
+       ('ROLE_USER', 100001);
 
 insert into meals(datetime, description, calories, user_id)
 values ('2018-11-18 13:30:00', 'обед', 800, 100000),

@@ -4,12 +4,14 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.validation.ConstraintViolationException;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -24,13 +26,14 @@ public abstract class AbstractUserServiceTest extends DbTest {
     @Test
     public void testSave() {
         User newUser = new User(null, "New", "new@gmail.com", "newPassword",
-                1555, false, Collections.singleton(Role.ROLE_USER));
+                1555, false, Instant.now(), Collections.singleton(Role.ROLE_USER));
         User created = service.save(newUser);
         newUser.setId(created.getId());
         UserTestData.MATCHER.assertCollectionEquals(Arrays.asList(UserTestData.ADMIN, newUser, UserTestData.USER), service.getAll());
     }
 
     @Test
+    @Transactional
     public void testDuplicateMailSave() {
         thrown.expect(DataAccessException.class);
         service.save(new User(null, "newUserDuplicateEmail", "user@yandex.ru", "12345", Role.ROLE_USER));
@@ -43,6 +46,7 @@ public abstract class AbstractUserServiceTest extends DbTest {
     }
 
     @Test
+    @Transactional
     public void testNotFoundDelete() {
         thrown.expect(NotFoundException.class);
         service.delete(1);
@@ -55,6 +59,7 @@ public abstract class AbstractUserServiceTest extends DbTest {
     }
 
     @Test
+    @Transactional
     public void testGetNotFoundException() {
         thrown.expect(NotFoundException.class);
         service.get(1);
@@ -84,6 +89,7 @@ public abstract class AbstractUserServiceTest extends DbTest {
     @Test
     public void testRoles(){
         User user = service.get(UserTestData.USER_ID);
+        System.out.println(user.getRoles());
         Assert.assertEquals(UserTestData.USER.getRoles(), user.getRoles());
     }
     @Test
@@ -91,8 +97,8 @@ public abstract class AbstractUserServiceTest extends DbTest {
         validateRootCause(() -> service.save(new User(null, "  ", "mail@yandex.ru", "password", Role.ROLE_USER)), ConstraintViolationException.class);
         validateRootCause(() -> service.save(new User(null, "User", "  ", "password", Role.ROLE_USER)), ConstraintViolationException.class);
         validateRootCause(() -> service.save(new User(null, "User", "mail@yandex.ru", "  ", Role.ROLE_USER)), ConstraintViolationException.class);
-        validateRootCause(() -> service.save(new User(null, "User", "mail@yandex.ru", "password", 9, true, Collections.emptySet())), ConstraintViolationException.class);
-        validateRootCause(() -> service.save(new User(null, "User", "mail@yandex.ru", "password", 10001, true, Collections.emptySet())), ConstraintViolationException.class);
+        validateRootCause(() -> service.save(new User(null, "User", "mail@yandex.ru", "password", 9, true, Instant.now(), Collections.emptySet())), ConstraintViolationException.class);
+        validateRootCause(() -> service.save(new User(null, "User", "mail@yandex.ru", "password", 10001, true,Instant.now(), Collections.emptySet())), ConstraintViolationException.class);
     }
 
 }

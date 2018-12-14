@@ -4,11 +4,11 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 <html>
-    <jsp:include page="fragments/headTag.jsp"/>
+<jsp:include page="fragments/headTag.jsp"/>
 <body>
 <section>
     <jsp:include page="fragments/bodyHeader.jsp"/>
-   <%-- <h2>${param.action == 'create' ? 'Create meal' : 'Edit meal'}</h2>--%>
+    <%-- <h2>${param.action == 'create' ? 'Create meal' : 'Edit meal'}</h2>--%>
     <hr>
     <%-- <h2>${meal.id == null ? "Создание записи" : "Обновление записи"}</h2>--%>
     <%--  <form method="POST" action="meals?action=<c:out value="${meal.id != null ? 'update' : 'create'}"/>">--%>

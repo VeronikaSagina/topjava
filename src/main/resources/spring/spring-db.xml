@@ -13,6 +13,8 @@
        http://www.springframework.org/schema/data/jpa                   http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
        http://www.springframework.org/schema/jee                        http://www.springframework.org/schema/jee/spring-jee.xsd">
 
+    <tx:annotation-driven/>
+
     <beans profile="hsqldb">
         <context:property-placeholder location="classpath:db/hsqldb.properties" system-properties-mode="OVERRIDE"/>
         <bean id="dataSource"
@@ -22,7 +24,6 @@
               p:username="${database.username}"
               p:password="${database.password}"/>
     </beans>
-
 
     <beans profile="postgres">
         <context:property-placeholder location="classpath:db/postgres.properties" system-properties-mode="OVERRIDE"/>
@@ -39,6 +40,7 @@
         <jee:jndi-lookup jndi-name="java:comp/env/jdbc/topjava" id="dataSource"/>
         <context:property-placeholder location="classpath:db/tomcate.properties" system-properties-mode="OVERRIDE"/>
     </beans>
+
 
     <beans profile="jpa, datajpa">
         <jdbc:initialize-database data-source="dataSource" enabled="${database.init}">
@@ -57,20 +59,12 @@
                     </prop>
                     <prop key="hibernate.cache.use_query_cache">true</prop>
                     <prop key="hibernate.cache.use_second_level_cache">true</prop>
-                    <!--   <prop key="hibernate.cache.region.factory">org.hibernate.cache.jcache.JCacheRegionFactory</prop>
-                       <prop key="hibernate.javax.cache.provider">org.ehcache.jsr107.EhcacheCachingProvider</prop>-->
                     <prop key="hibernate.cache.provider_class">org.hibernate.cache.EhCacheProvider</prop>
                     <prop key="hibernate.cache.region.factory_class">org.hibernate.cache.ehcache.EhCacheRegionFactory
                     </prop>
                     <prop key="net.sf.ehcache.hibernate.AbstractEhcacheRegionFactory.NET_SF_EHCACHE_CONFIGURATION_RESOURCE_NAME">
                         cache/ehcache.xml
                     </prop>
-                    <!-- <prop key="org.hibernate.cfg.AvailableSettings.HBM2DDL_SCRIPTS_ACTION">drop-and-create</prop>
-                     <prop key="org.hibernate.cfg.AvailableSettings.HBM2DDL_\AUTO">create</prop>
-                     <prop key="org.hibernate.cfg.AvailableSettings.HBM2DDL_SCRIPTS_CREATE_TARGET">${TOPJAVA_ROOT}/config/ddl/create.ddl</prop>
-                     <prop key="org.hibernate.cfg.AvailableSettings.HBM2DDL_SCRIPTS_DROP_TARGET">${TOPJAVA_ROOT}/config/ddl/drop.ddl</prop>-->
-                    <!--<prop key="javax.persistence.sharedCache.mode">ENABLE_SELECTIVE</prop>-->
-                    <!--<prop key="hibernate.generate_statistics">true</prop>-->
                 </props>
             </property>
 
@@ -80,8 +74,6 @@
                 </bean>
             </property>
         </bean>
-        <!--transaction manager-->
-        <tx:annotation-driven/>
 
         <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
               p:entityManagerFactory-ref="entityManagerFactory"/>
@@ -101,10 +93,6 @@
               class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
             <property name="dataSource" ref="dataSource"/>
         </bean>
-        <bean id="transactionTemplate"
-              class="org.springframework.transaction.support.TransactionTemplate">
-            <property name="transactionManager" ref="transactionManager"/>
-        </bean>
     </beans>
 
     <beans profile="jpa">
@@ -117,34 +105,3 @@
     </beans>
 
 </beans>
-
-        <!---->
-        <!-- -->
-
-        <!-- populate data base -->
-
-        <!--    <bean class="ru.javawebinar.topjava.util.DbPopulator">
-                <constructor-arg name="dataSource" ref="dataSource"/>
-                <constructor-arg name="scriptLocation" value="classpath:db/populateDB.sql"/>
-            </bean>-->
-
-        <!-- jdbcTemplate-->
-
-        <!--<context:component-scan base-package="ru.javawebinar.topjava.repository.jdbc"/>-->
-        <!-- <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
-             <constructor-arg ref="dataSource"/>
-         </bean>
-
-         <bean id="namedJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
-             <constructor-arg ref="dataSource"/>
-         </bean>-->
-
-        <!--dataSource-->
-
-        <!--   <bean id="dataSource"
-                 class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-               <property name="driverClassName" value="${database.driverClassName}"/>
-               <property name="url" value="${database.url}"/>
-               <property name="username" value="${database.username}"/>
-               <property name="password" value="${database.password}"/>
-           </bean>-->

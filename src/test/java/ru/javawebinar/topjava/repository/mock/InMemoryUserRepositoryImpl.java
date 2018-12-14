@@ -61,10 +61,4 @@ public class InMemoryUserRepositoryImpl implements UserRepository {
         values.sort(Comparator.comparing(User::getName).thenComparing(User::getEmail));
         return values;
     }
-
-    @Override
-    public User getUserWithRoles(int id) {
-        return null;
-        //TODO
-    }
 }
