@@ -4,6 +4,7 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealWithExceed;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -11,6 +12,7 @@ public interface MealService {
     List<MealWithExceed> findAll(int userId);
 
     List<MealWithExceed> getBetween(int userId, LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime);
+    List<MealWithExceed> getBetween(int userId, LocalDateTime startDateTime, LocalDateTime endDateTime);
 
     Meal getMealWithUser(int mealId,  int userId);
 

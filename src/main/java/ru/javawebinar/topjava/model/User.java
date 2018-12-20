@@ -21,7 +21,7 @@ import static ru.javawebinar.topjava.util.MealUtils.DEFAULT_CALORIES_PER_DAY;
 @NamedQueries({
         @NamedQuery(name = User.DELETE, query = "DELETE FROM User u WHERE u.id = :id"),
         @NamedQuery(name = User.BY_EMAIL, query = "SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.roles WHERE u.email=?1"),
-        @NamedQuery(name = User.ALL_SORTED, query = "SELECT u FROM User u LEFT JOIN FETCH u.roles ORDER BY u.name, u.email")
+        @NamedQuery(name = User.ALL_SORTED, query = "SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.roles ORDER BY u.name, u.email")
 })
 
 public class User extends NamedEntity {
@@ -58,7 +58,7 @@ public class User extends NamedEntity {
     @Range(min = 10, max = 10000)
     private int caloriesPerDay = DEFAULT_CALORIES_PER_DAY;
 
-    @OneToMany( /*cascade = CascadeType.REMOVE,orphanRemoval = true*/  mappedBy = "user")
+    @OneToMany( /*cascade = CascadeType.REMOVE,orphanRemoval = true*/  mappedBy = "user", fetch = FetchType.LAZY)
 //какскадно удалить, удалить сирот
     @OrderBy("dateTime DESC")
     // @Transient

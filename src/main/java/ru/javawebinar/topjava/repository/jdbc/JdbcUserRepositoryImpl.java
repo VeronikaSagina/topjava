@@ -15,20 +15,28 @@ import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
 import javax.sql.DataSource;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 public class JdbcUserRepositoryImpl implements UserRepository {
 
-    private static final RowMapper<User> ROW_MAPPER = (rs, rowNumber) -> new User(
-            rs.getInt("id"),
-            rs.getString("name"),
-            rs.getString("email"),
-            rs.getString("password"),
-            rs.getInt("calories_per_day"),
-            rs.getBoolean("enabled"),
-            rs.getTimestamp("registered").toInstant());
+    private static final RowMapper<User> ROW_MAPPER = new RowMapper<User>() {
+        @Override
+        public User mapRow(ResultSet rs, int rowNumber) throws SQLException {
+            return new User(
+                    rs.getInt("id"),
+                    rs.getString("name"),
+                    rs.getString("email"),
+                    rs.getString("password"),
+                    rs.getInt("calories_per_day"),
+                    rs.getBoolean("enabled"),
+                    rs.getTimestamp("registered").toInstant());
+        }
+    };
 
     private final JdbcTemplate jdbcTemplate;
     private final SimpleJdbcInsert insertUser;
@@ -88,12 +96,12 @@ public class JdbcUserRepositoryImpl implements UserRepository {
     public List<User> getAll() {
         SqlRowSet rowSet = jdbcTemplate.queryForRowSet("SELECT * FROM user_roles");
         Map<Integer, Set<Role>> map = new HashMap<>();
-        while (rowSet.next()){
+        while (rowSet.next()) {
             Set<Role> roles = map.computeIfAbsent(rowSet.getInt("user_id"), userId -> EnumSet.noneOf(Role.class));
             roles.add(Role.valueOf(rowSet.getString("role")));
         }
         List<User> users = jdbcTemplate.query("SELECT * FROM users order by name, email", ROW_MAPPER);
-        users.forEach(u->u.setRoles(map.get(u.getId())));
+        users.forEach(u -> u.setRoles(map.get(u.getId())));
         return users;
     }
 
@@ -114,8 +122,11 @@ public class JdbcUserRepositoryImpl implements UserRepository {
 
     private User setRoles(User user) {
         if (user != null) {
-            List<Role> roles = jdbcTemplate.query("SELECT role FROM user_roles  WHERE user_id=?",
-                    (rs, rowNum) -> Role.valueOf(rs.getString("role")), user.getId());
+            List<Map<String, Object>> maps = jdbcTemplate.queryForList("SELECT role FROM user_roles  WHERE user_id=?", user.getId());
+            Set<Role> roles = maps.stream()
+                    .map(m -> (String) m.get("role"))
+                    .map(Role::valueOf)
+                    .collect(Collectors.toSet());
             user.setRoles(roles);
         }
         return user;

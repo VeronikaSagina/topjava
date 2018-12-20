@@ -9,7 +9,6 @@
 <html>
 <jsp:include page="fragments/headTag.jsp"/>
 <body>
-<%--<h2><a href="index.html">Home</a></h2>--%>
 <jsp:include page="fragments/bodyHeader.jsp"/>
 <section>
     <h3><spring:message code="users.title"/> </h3>
@@ -18,13 +17,13 @@
         <tr>
             <th><spring:message code="users.Name"/> </th>
             <th><spring:message code="users.email"/></th>
-            <th><spring:message code="users.roles"/></th>
+            <th><spring:message code="users.authorities"/></th>
             <th><spring:message code="users.active"/></th>
             <th><spring:message code="users.registered"/></th>
         </tr>
         </thead>
         <c:forEach items="${users}" var="user">
-            <jsp:useBean id="user" scope="page" type="ru.javawebinar.topjava.model.User"/>
+            <jsp:useBean id="user" scope="page" type="ru.javawebinar.topjava.to.UserLite"/>
             <tr>
                 <td>${user.name}</td>
                 <td><a href="mailto:${user.email}">${user.email}</a></td>

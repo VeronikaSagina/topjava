@@ -35,8 +35,9 @@ public abstract class AbstractUserServiceTest extends DbTest {
     @Test
     @Transactional
     public void testDuplicateMailSave() {
-        thrown.expect(DataAccessException.class);
+     //   thrown.expect(DataAccessException.class);
         service.save(new User(null, "newUserDuplicateEmail", "user@yandex.ru", "12345", Role.ROLE_USER));
+     //   System.out.println(service.getAll());
     }
 
     @Test
@@ -92,6 +93,14 @@ public abstract class AbstractUserServiceTest extends DbTest {
         System.out.println(user.getRoles());
         Assert.assertEquals(UserTestData.USER.getRoles(), user.getRoles());
     }
+
+    @Test
+    public void testRolesAdmin() {
+        User user = service.get(UserTestData.ADMIN_ID);
+        System.out.println(user.getRoles());
+        Assert.assertEquals(UserTestData.ADMIN.getRoles(), user.getRoles());
+    }
+
     @Test
     public void testValidation() throws Exception {
         validateRootCause(() -> service.save(new User(null, "  ", "mail@yandex.ru", "password", Role.ROLE_USER)), ConstraintViolationException.class);

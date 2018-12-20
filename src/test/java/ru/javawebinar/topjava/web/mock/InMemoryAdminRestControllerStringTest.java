@@ -1,4 +1,4 @@
-package ru.javawebinar.topjava.web;
+package ru.javawebinar.topjava.web.mock;
 
 import org.junit.Assert;
 import org.junit.Before;

@@ -27,7 +27,7 @@
             </tr>
         </table>
         <button type="submit"><spring:message code="meals.save"/></button>
-        <button onclick="window.history.back()"><spring:message code="meals.cancel"/></button>
+        <button onclick="<%=request.getContextPath()%>/meals"><spring:message code="meals.cancel"/></button>
     </form>
 </section>
 </body>

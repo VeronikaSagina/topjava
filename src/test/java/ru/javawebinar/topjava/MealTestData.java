@@ -38,9 +38,9 @@ public class MealTestData {
         System.out.println(result);
     }
 
-    public static void main(String[] args) {
+  /*  public static void main(String[] args) {
         parse(BaseEntity.START_SEQ + 1, "insert into meals(datetime, description, calories, user_id) values ('2018-11-20 07:35:00', 'завтрак', 600, 100001);", 1);
-    }
+    }*/
 
     private static void parse1(int id, String str, int i) {
         str = str.substring(str.indexOf("'") + 1);

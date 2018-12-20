@@ -27,8 +27,6 @@
     <hr>
     <a href="meals/new"><spring:message code="meals.createMeal"/></a>
     <hr>
-    <%-- <br>
-     <br>--%>
     <table border="1px" cellpadding="8" cellspacing="0">
         <thead>
         <tr>
