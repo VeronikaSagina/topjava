@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.repository.UserRepository;
 import ru.javawebinar.topjava.to.MealWithExceed;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.MealUtils;
@@ -14,7 +15,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
@@ -24,15 +24,18 @@ import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 public class MealServiceImpl implements MealService {
 
     private MealRepository repository;
+    private UserRepository userRepository;
 
     @Autowired
-    public MealServiceImpl(MealRepository repository) {
+    public MealServiceImpl(MealRepository repository, UserRepository userRepository) {
         this.repository = repository;
+        this.userRepository = userRepository;
     }
 
     public List<MealWithExceed> findAll(int userId) throws NotFoundException {
+        final int caloriesPerDay = userRepository.get(userId).getCaloriesPerDay();
         Collection<Meal> all = repository.getAll(userId);
-        return MealUtils.getMealWithExceeds(all);
+        return MealUtils.getMealWithExceeds(all, caloriesPerDay);
     }
 
     @Override
@@ -40,14 +43,16 @@ public class MealServiceImpl implements MealService {
                                            LocalDate endDate, LocalTime startTime, LocalTime endTime) {
         Assert.noNullElements(new Object[]{startDate, endDate, startTime, endTime}, "date or time must not be null");
         Collection<Meal> between = repository.getBetween(LocalDateTime.of(startDate, startTime), LocalDateTime.of(endDate, endTime), userId);
-        return MealUtils.getMealWithExceeds(between);
+        final int caloriesPerDay = userRepository.get(userId).getCaloriesPerDay();
+        return MealUtils.getMealWithExceeds(between, caloriesPerDay);
     }
 
     @Override
     public List<MealWithExceed> getBetween(int userId, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         Assert.noNullElements(new Object[]{startDateTime, endDateTime}, "date or time must not be null");
         Collection<Meal> meals = repository.getBetween(startDateTime, endDateTime, userId);
-        return MealUtils.getMealWithExceeds(meals);
+        final int caloriesPerDay = userRepository.get(userId).getCaloriesPerDay();
+        return MealUtils.getMealWithExceeds(meals, caloriesPerDay);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package ru.javawebinar.topjava.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.Length;
@@ -12,8 +14,6 @@ import javax.validation.constraints.NotBlank;
 import java.time.Instant;
 import java.util.*;
 
-import static ru.javawebinar.topjava.util.MealUtils.DEFAULT_CALORIES_PER_DAY;
-
 @Entity
 @Cacheable
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -23,8 +23,9 @@ import static ru.javawebinar.topjava.util.MealUtils.DEFAULT_CALORIES_PER_DAY;
         @NamedQuery(name = User.BY_EMAIL, query = "SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.roles WHERE u.email=?1"),
         @NamedQuery(name = User.ALL_SORTED, query = "SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.roles ORDER BY u.name, u.email")
 })
-
 public class User extends NamedEntity {
+    public static final int DEFAULT_CALORIES_PER_DAY = 2000;
+
     public static final String DELETE = "User.delete";
     public static final String ALL_SORTED = "User.getAllSorted";
     public static final String BY_EMAIL = "User.getByEmail";
@@ -43,6 +44,7 @@ public class User extends NamedEntity {
     private boolean enabled = true;//включен, разрешен
 
     @Column(name = "registered", columnDefinition = "timestamp default now()")
+    @JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ", timezone = "Europe/Moscow")
     private Instant registered = Instant.now();
 
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
@@ -50,7 +52,6 @@ public class User extends NamedEntity {
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Column(name = "role")
     @ElementCollection(fetch = FetchType.EAGER)
-    // @Fetch(FetchMode.SUBSELECT)
     @BatchSize(size = 200)
     private Set<Role> roles;
 
@@ -61,7 +62,8 @@ public class User extends NamedEntity {
     @OneToMany( /*cascade = CascadeType.REMOVE,orphanRemoval = true*/  mappedBy = "user", fetch = FetchType.LAZY)
 //какскадно удалить, удалить сирот
     @OrderBy("dateTime DESC")
-    // @Transient
+    //@Transient
+    @JsonIgnore
     private List<Meal> meals;
 
     public User() {

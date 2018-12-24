@@ -27,7 +27,7 @@ public class UserLite {
     }
 
     public UserLite(User user) {
-        BeanUtils.copyProperties(user, this);
+        BeanUtils.copyProperties(user, this, "meals");
     }
 
     public String getName() {
