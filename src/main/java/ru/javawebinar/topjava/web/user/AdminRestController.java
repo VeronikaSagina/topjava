@@ -12,24 +12,24 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping(AdminRestController.REST_URL)
+@RequestMapping(value = AdminRestController.REST_URL)
 public class AdminRestController extends AbstractUserController {
 
     static final String REST_URL = "/rest/admin/users";
 
     @Autowired
-    public AdminRestController( UserService service) {
+    public AdminRestController(UserService service) {
         super(service);
     }
 
     @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
- public List<User> getAll() {
-     return super.getAll();
- }
+    public List<User> getAll() {
+        return super.getAll();
+    }
 
     @Override
-    @GetMapping(value = "/id", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public User get(@PathVariable("id") int id) {
         return super.get(id);
     }
@@ -45,7 +45,7 @@ public class AdminRestController extends AbstractUserController {
 
     @Override
     @DeleteMapping(value = "/{id}")
-    public void delete(@PathVariable("id") int id){
+    public void delete(@PathVariable("id") int id) {
         super.delete(id);
     }
 

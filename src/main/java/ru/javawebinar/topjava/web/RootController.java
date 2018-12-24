@@ -4,32 +4,33 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.service.UserService;
 import ru.javawebinar.topjava.to.UserLite;
-
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Controller
-public class RootUserController {
+public class RootController {
 
-    private final UserService service;
+    private final UserService userService;
+    private final MealService mealService;
 
     @Autowired
-    public RootUserController(UserService service) {
-        this.service = service;
+    public RootController(UserService service, MealService mealService) {
+        this.mealService = mealService;
+        this.userService = service;
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @GetMapping(value = "/")
     public String root() {
         return "index";
     }
 
-    @RequestMapping(value = "/users", method = RequestMethod.POST)
+    @PostMapping(value = "/users")
     public String setUser(HttpServletRequest request) {
         int userId = Integer.valueOf(request.getParameter("userId"));
         AuthorizedUser.setId(userId);
@@ -38,11 +39,20 @@ public class RootUserController {
 
     @GetMapping(value = "/users")
     public String userList(Model model) {
-        List<User> all = service.getAll();
+        List<User> all = userService.getAll();
         List<UserLite> dtoList = all.stream()
                 .map(UserLite::new)
                 .collect(Collectors.toList());
         model.addAttribute("users", dtoList);
         return "users";
     }
+/*
+
+    @GetMapping("/meals")
+    public String meals(Model model) {
+        model.addAttribute("meals", mealService.findAll(AuthorizedUser.id()));
+        return "meals";
+    }
+*/
+
 }

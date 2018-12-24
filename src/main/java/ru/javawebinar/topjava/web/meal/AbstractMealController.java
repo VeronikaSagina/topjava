@@ -15,6 +15,8 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import static ru.javawebinar.topjava.util.ValidationUtil.checkIdConsistent;
+
 public abstract class AbstractMealController {
     private static final Logger LOG = LoggerFactory.getLogger(JspMealController.class);
 
@@ -46,22 +48,18 @@ public abstract class AbstractMealController {
         service.deleteById(id, AuthorizedUser.id());
     }
 
-    public Meal update(int id) {
-        LOG.info("update meal id:{} for user{}", id, AuthorizedUser.id());
-        return service.findById(id, AuthorizedUser.id());
-    }
-
-    public Meal createMeal() {
-        LOG.info("create meal for user{}", AuthorizedUser.id());
+    public Meal showCreateMeal() {
         return new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000);
     }
 
-    public void save(Meal meal) {
-        service.save(meal, AuthorizedUser.id());
+    public Meal save(Meal meal) {
+        LOG.info("create meal for user{}", AuthorizedUser.id());
+        return service.save(meal, AuthorizedUser.id());
     }
 
-    public void edit(Meal meal) {
-        service.edit(meal, AuthorizedUser.id());
+    public Meal update(Meal meal) {
+        LOG.info("update meal id:{} for user{}", meal.getId(), AuthorizedUser.id());
+        return service.edit(meal, AuthorizedUser.id());
     }
 
     public Meal getOne(int id) {

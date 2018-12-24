@@ -12,6 +12,9 @@ import ru.javawebinar.topjava.to.MealWithExceed;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static ru.javawebinar.topjava.util.ValidationUtil.checkIdConsistent;
+import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
+
 @RestController
 @RequestMapping(MealRestController.REST_URL)
 public class MealRestController extends AbstractMealController {
@@ -35,12 +38,12 @@ public class MealRestController extends AbstractMealController {
         return super.findAll(startDate, endDate, startTime, endTime);
     }
 
-    @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List getAll() {
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<MealWithExceed> getAll() {
         return super.findAll();
     }
 
-    @GetMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
+   /* @GetMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<MealWithExceed> findAllLocalDateTime(@RequestParam("startDateTime")
                                                      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
                                                              LocalDateTime startDateTime,
@@ -48,7 +51,7 @@ public class MealRestController extends AbstractMealController {
                                                      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
                                                              LocalDateTime endDateTime) {
         return super.findAll(startDateTime, endDateTime);
-    }
+    }*/
 
     @GetMapping(value = "/{id}")
     public Meal getOne(@PathVariable("id") int id) {
@@ -62,25 +65,15 @@ public class MealRestController extends AbstractMealController {
     }
 
 
-    @PostMapping(value = {"/create/{id}", "/update"}, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Meal createAndUpdate(@PathVariable("id") Integer id, @RequestParam("date") String date,
-                                @RequestParam("description") String description, @RequestParam("calories") String calories) {
-        if (id != null) {
-            Meal update = super.update(id);
-            Meal meal = new Meal(update.getId(), LocalDateTime.parse(date), description, Integer.parseInt(calories));
-            super.edit(meal);
-            return meal;
-        }
-        Meal meal = new Meal(LocalDateTime.parse(date), description, Integer.parseInt(calories));
-        super.save(meal);
-        return meal;
+    @PutMapping(value = {"/{id}"}, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Meal update(@RequestBody Meal meal, @PathVariable("id") Integer id) {
+        checkIdConsistent(meal, id);
+        return super.update(meal);
     }
-/* @PutMapping(value = "/create/{date}/{description}/{calories}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public Meal createMeal( @PathVariable("date") String date,
-                           @PathVariable("description") String description,  @PathVariable("calories") String calories) {
-        Meal meal = new Meal(LocalDateTime.parse(date), description, Integer.parseInt(calories));
-        super.save(meal);
-        return meal;
-    }*/
 
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Meal create(@RequestBody Meal meal) {
+        checkNew(meal);
+        return super.save(meal);
+    }
 }
