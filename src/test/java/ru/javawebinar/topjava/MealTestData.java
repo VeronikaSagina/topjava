@@ -20,15 +20,17 @@ public class MealTestData {
     public static final Meal MEAL_TEST_AD2 = new Meal(100009, LocalDateTime.of(2018, 11, 19, 14, 35), "обед", 800);
     public static final Meal MEAL_TEST_AD3 = new Meal(100001, LocalDateTime.parse("2018-11-20 07:35:00", DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")), "завтрак", 600);
 
-    public static final ModelMatcher<MealWithExceed> MATCHER = new ModelMatcher<>(
-     /*       (expected, actual) -> expected == actual ||
+    public static final ModelMatcher<MealWithExceed> MATCHER = ModelMatcher.of(MealWithExceed.class,
+            (expected, actual) -> expected == actual ||
                     (Objects.equals(expected.getId(), actual.getId())
                             && Objects.equals(expected.getDateTime(), actual.getDateTime())
                             && Objects.equals(expected.getCalories(), actual.getCalories())
-                            && Objects.equals(expected.getDescription(), actual.getDescription()))*/
+                            && Objects.equals(expected.getDescription(), actual.getDescription()))
     );
 
-    public static final ModelMatcher<Meal> MATCHER_MEAL= new ModelMatcher<>();
+    public static final ModelMatcher<Meal> MATCHER_MEAL= ModelMatcher.of(Meal.class);
+
+    public static final ModelMatcher<MealWithExceed> MATCHER_MEAL_WITH_EXCEED= ModelMatcher.of(MealWithExceed.class);
 
     private static void parse(int id, String str, int i) {
         str = str.substring(str.indexOf("'")).replaceAll("'", "\"");

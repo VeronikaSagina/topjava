@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.web;
 
 import org.junit.Test;
+import ru.javawebinar.topjava.web.user.AbstractUserControllerTest;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -9,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static ru.javawebinar.topjava.UserTestData.USER;
 import static ru.javawebinar.topjava.model.BaseEntity.START_SEQ;
 
-public class RootUserControllerTest extends AbstractUserControllerTest{
+public class RootControllerTest extends AbstractUserControllerTest {
 
     @Test
     public void testUserList() {

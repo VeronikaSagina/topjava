@@ -34,10 +34,10 @@ public class DataJpaUserServiceTest extends AbstractUserServiceTest {
 
     @Test
     public void getUserByIdWithMeals() {
-        User withMeal = service.getWithMeal(USER_ID);
+        User userWithMeal = service.getWithMeal(USER_ID);
         List<Meal> expected = Arrays.asList(MEAL_TEST_1, MEAL_TEST_2, MEAL_TEST_3, MEAL_TEST_4, MEAL_TEST_5, MEAL_TEST_6);
         expected.sort(Comparator.comparing(Meal::getDateTime).reversed());
-        UserTestData.MATCHER.assertEquals(USER, withMeal);
-        MealTestData.MATCHER.assertCollectionEquals(MealUtils.getMealWithExceeds(expected), MealUtils.getMealWithExceeds(withMeal.getMeals()));
+        UserTestData.MATCHER.assertEquals(USER, userWithMeal);
+        MealTestData.MATCHER.assertCollectionEquals(MealUtils.getMealWithExceeds(expected, userWithMeal.getCaloriesPerDay()), MealUtils.getMealWithExceeds(userWithMeal.getMeals(), userWithMeal.getCaloriesPerDay()));
     }
 }

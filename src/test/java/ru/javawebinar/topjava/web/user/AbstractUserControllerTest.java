@@ -1,4 +1,4 @@
-package ru.javawebinar.topjava.web;
+package ru.javawebinar.topjava.web.user;
 
 import org.junit.Before;
 import org.junit.runner.RunWith;
@@ -22,11 +22,11 @@ import static org.junit.Assert.*;
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
         "classpath:spring/spring-mvc.xml",
-        "classpath:spring/spring-db.xml"
+        "classpath:spring/spring-db.xml"/*,
+        "classpath:spring/spring-tools.xml"*/
 })
 @WebAppConfiguration
 @RunWith(SpringJUnit4ClassRunner.class)
-@Transactional
 @ActiveProfiles(resolver = AllActiveProfileResolver.class)
 public class AbstractUserControllerTest {
 
@@ -41,8 +41,9 @@ public class AbstractUserControllerTest {
 
     @Autowired
     private WebApplicationContext webApplicationContext;
+
     @Autowired
-    private UserService userService;
+    protected UserService userService;
 
     @PostConstruct
     private void postConstruct() {
