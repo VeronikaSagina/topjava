@@ -3,6 +3,7 @@ package ru.javawebinar.topjava;
 import ru.javawebinar.topjava.matcher.ModelMatcher;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.to.UserLite;
 
 import java.util.Objects;
 
@@ -24,6 +25,16 @@ public class UserTestData {
                             && Objects.equals(expected.getCaloriesPerDay(), actual.getCaloriesPerDay())
                             && Objects.equals(expected.isEnabled(), actual.isEnabled())
                             && Objects.equals(expected.getRoles(), actual.getRoles())
+                    )
+    );
+    public static final ModelMatcher<UserLite> MATCHER_USER_LITE = ModelMatcher.of(UserLite.class,
+            (expected, actual) -> expected == actual ||
+                    (Objects.equals(expected.getId(), actual.getId())
+                            && Objects.equals(expected.getName(), actual.getName())
+                            && Objects.equals(expected.getEmail(), actual.getEmail())
+                            && Objects.equals(expected.getCaloriesPerDay(), actual.getCaloriesPerDay())
+                            && Objects.equals(expected.isEnabled(), actual.isEnabled())
+                            && Objects.equals(expected.getAuthorities(), actual.getAuthorities())
                     )
     );
 }

@@ -7,9 +7,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.service.UserService;
+import ru.javawebinar.topjava.to.UserLite;
 
 import java.net.URI;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(value = AdminRestController.REST_URL)
@@ -24,19 +26,19 @@ public class AdminRestController extends AbstractUserController {
 
     @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<User> getAll() {
+    public List<UserLite> getAll() {
         return super.getAll();
     }
 
     @Override
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public User get(@PathVariable("id") int id) {
+    public UserLite get(@PathVariable("id") int id) {
         return super.get(id);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> createWithLocation(@RequestBody User user) {
-        User createUser = super.create(user);
+    public ResponseEntity<UserLite> createWithLocation(@RequestBody User user) {
+        UserLite createUser = super.create(user);
         URI urlNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/id")
                 .buildAndExpand(createUser.getId()).toUri();
@@ -57,7 +59,7 @@ public class AdminRestController extends AbstractUserController {
 
     @Override
     @GetMapping(value = "/by", produces = MediaType.APPLICATION_JSON_VALUE)
-    public User getByMail(@RequestParam("email") String email) {
+    public UserLite getByMail(@RequestParam("email") String email) {
         return super.getByMail(email);
     }
 }

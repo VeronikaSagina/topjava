@@ -33,9 +33,8 @@ public abstract class AbstractUserServiceTest extends DbTest {
     }
 
     @Test
-    @Transactional
     public void testDuplicateMailSave() {
-     //   thrown.expect(DataAccessException.class);
+        thrown.expect(DataAccessException.class);
         service.save(new User(null, "newUserDuplicateEmail", "user@yandex.ru", "12345", Role.ROLE_USER));
      //   System.out.println(service.getAll());
     }
@@ -47,7 +46,6 @@ public abstract class AbstractUserServiceTest extends DbTest {
     }
 
     @Test
-    @Transactional
     public void testNotFoundDelete() {
         thrown.expect(NotFoundException.class);
         service.delete(1);
@@ -60,7 +58,6 @@ public abstract class AbstractUserServiceTest extends DbTest {
     }
 
     @Test
-    @Transactional
     public void testGetNotFoundException() {
         thrown.expect(NotFoundException.class);
         service.get(1);
@@ -88,7 +85,7 @@ public abstract class AbstractUserServiceTest extends DbTest {
     }
 
     @Test
-    public void testRoles(){
+    public void testRoles() {
         User user = service.get(UserTestData.USER_ID);
         System.out.println(user.getRoles());
         Assert.assertEquals(UserTestData.USER.getRoles(), user.getRoles());
@@ -107,7 +104,7 @@ public abstract class AbstractUserServiceTest extends DbTest {
         validateRootCause(() -> service.save(new User(null, "User", "  ", "password", Role.ROLE_USER)), ConstraintViolationException.class);
         validateRootCause(() -> service.save(new User(null, "User", "mail@yandex.ru", "  ", Role.ROLE_USER)), ConstraintViolationException.class);
         validateRootCause(() -> service.save(new User(null, "User", "mail@yandex.ru", "password", 9, true, Instant.now(), Collections.emptySet())), ConstraintViolationException.class);
-        validateRootCause(() -> service.save(new User(null, "User", "mail@yandex.ru", "password", 10001, true,Instant.now(), Collections.emptySet())), ConstraintViolationException.class);
+        validateRootCause(() -> service.save(new User(null, "User", "mail@yandex.ru", "password", 10001, true, Instant.now(), Collections.emptySet())), ConstraintViolationException.class);
     }
 
 }

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.service.UserService;
+import ru.javawebinar.topjava.to.UserLite;
 import ru.javawebinar.topjava.web.AuthorizedUser;
 
 @RestController
@@ -19,7 +20,7 @@ public class ProfileRestController extends AbstractUserController {
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public User get() {
+    public UserLite get() {
         return super.get(AuthorizedUser.id());
     }
 

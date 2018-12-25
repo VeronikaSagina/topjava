@@ -10,6 +10,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
+import ru.javawebinar.topjava.to.UserLite;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 import ru.javawebinar.topjava.web.user.AdminRestController;
 
@@ -41,9 +42,9 @@ public class InMemoryAdminRestControllerStringTest {
     @Test
     public void testDelete() {
         controller.delete(UserTestData.USER_ID);
-        Collection<User> users = controller.getAll();
+        Collection<UserLite> users = controller.getAll();
         Assert.assertEquals(users.size(), 1);
-        Assert.assertEquals(users.iterator().next(), ADMIN);
+        Assert.assertEquals(users.iterator().next(), new UserLite(ADMIN));
     }
 
     @Test(expected = NotFoundException.class)

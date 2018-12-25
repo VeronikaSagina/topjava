@@ -3,11 +3,14 @@ package ru.javawebinar.topjava.service.datajpa;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.Profiles;
 import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.JpaUtil;
 import ru.javawebinar.topjava.service.AbstractUserServiceTest;
@@ -40,4 +43,12 @@ public class DataJpaUserServiceTest extends AbstractUserServiceTest {
         UserTestData.MATCHER.assertEquals(USER, userWithMeal);
         MealTestData.MATCHER.assertCollectionEquals(MealUtils.getMealWithExceeds(expected, userWithMeal.getCaloriesPerDay()), MealUtils.getMealWithExceeds(userWithMeal.getMeals(), userWithMeal.getCaloriesPerDay()));
     }
+/*
+
+    @Test
+    public void testDuplicateMailSave() {
+        thrown.expect(DataAccessException.class);
+        service.save(new User(null, "newUserDuplicateEmail", "user@yandex.ru", "12345", Role.ROLE_USER));
+    }
+*/
 }

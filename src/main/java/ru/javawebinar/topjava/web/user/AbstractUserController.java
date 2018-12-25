@@ -4,8 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.service.UserService;
+import ru.javawebinar.topjava.to.UserLite;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.checkIdConsistent;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
@@ -19,20 +21,20 @@ public abstract class AbstractUserController {
         this.service = service;
     }
 
-    public List<User> getAll() {
+    public List<UserLite> getAll() {
         LOG.info("getAll");
-        return service.getAll();
+        return service.getAll().stream().map(UserLite::new).collect(Collectors.toList());
     }
 
-    public User get(int id) {
+    public UserLite get(int id) {
         LOG.info("Get user for id {}", id);
-        return service.get(id);
+        return new UserLite(service.get(id));
     }
 
-    public User create(User user) {
+    public UserLite create(User user) {
         LOG.info("Create user {}", user);
         checkNew(user);
-        return service.save(user);
+        return new UserLite(service.save(user));
     }
 
     public void delete(int id) {
@@ -41,9 +43,9 @@ public abstract class AbstractUserController {
     }
 
 
-    User getByMail(String email) {
+    UserLite getByMail(String email) {
         LOG.info("get by email user {}", email);
-        return service.getByEmail(email);
+        return new UserLite(service.getByEmail(email));
     }
 
 

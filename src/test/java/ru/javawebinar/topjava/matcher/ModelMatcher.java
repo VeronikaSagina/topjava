@@ -6,9 +6,13 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.ResultMatcher;
+import ru.javawebinar.topjava.TestUtil;
+import ru.javawebinar.topjava.web.json.JacksonConfiguration;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -18,8 +22,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * сравнивает бины и колекции, преобразуя их в строку
  * оборачивает каждую сущность перед вызовом Assert.assertEquals
  */
-
-@Component
 public class ModelMatcher<T> {
 
     public interface Equality<T> {
@@ -28,12 +30,7 @@ public class ModelMatcher<T> {
 
     private static Map<Class, ObjectReader> readerMap = new HashMap<>();
 
-
-    private static ObjectMapper objectMapper = new ObjectMapper();
-    static {
-        objectMapper
-                .registerModule(new JavaTimeModule());
-    }
+    private static ObjectMapper objectMapper = JacksonConfiguration.getMapper();
 
     private Equality<T> equality;
 
@@ -65,7 +62,8 @@ public class ModelMatcher<T> {
     }
 
     public void assertCollectionEquals(Collection<T> expected, Collection<T> actual) {
-        Assert.assertEquals(wrap(expected), wrap(actual));
+//        Assert.assertEquals(wrap(expected), wrap(actual));
+        Assert.assertArrayEquals(wrap(expected).toArray(), wrap(actual).toArray());
     }
 
     public ResultMatcher contentMatcher(T expected) {
@@ -120,6 +118,10 @@ public class ModelMatcher<T> {
         } catch (IOException e) {
             throw new IllegalArgumentException("Invalid read from JSON:\n'" + json + "'", e);
         }
+    }
+
+    public T fromJsonAction(ResultActions action) throws UnsupportedEncodingException {
+        return fromJsonValue(TestUtil.getContent(action));
     }
 
     private class Wrapper {
