@@ -113,9 +113,9 @@ public class User extends NamedEntity {
         return enabled;
     }
 
-    public Set<Role> getAuthorities() {
+  /*  public Set<Role> getAuthorities() {
         return roles;
-    }
+    }*/
 
     public String getEmail() {
         return email;

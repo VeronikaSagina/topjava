@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.model;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Range;
@@ -29,6 +30,7 @@ public class Meal extends BaseEntity {
     @Column(name = "dateTime", nullable = false)
     @NotNull
     /*  @Convert(converter = LocalDateTimeAttributeConverter.class)*/
+    //@JsonFormat(shape=JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm")
     private LocalDateTime dateTime;
 
     @Column(name = "description", nullable = false)

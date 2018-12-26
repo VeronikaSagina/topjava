@@ -9,6 +9,7 @@ import java.util.Set;
 
 public class UserLite {
     private int id;
+    private int caloriesPerDay;
     private String name;
     private String email;
     private Set<Role> authorities;
@@ -28,6 +29,14 @@ public class UserLite {
 
     public UserLite(User user) {
         BeanUtils.copyProperties(user, this, "meals");
+    }
+
+    public int getCaloriesPerDay() {
+        return caloriesPerDay;
+    }
+
+    public void setCaloriesPerDay(int caloriesPerDay) {
+        this.caloriesPerDay = caloriesPerDay;
     }
 
     public String getName() {
