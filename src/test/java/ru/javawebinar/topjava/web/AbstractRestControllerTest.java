@@ -17,6 +17,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 import ru.javawebinar.topjava.AllActiveProfileResolver;
 import ru.javawebinar.topjava.repository.JpaUtil;
+import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.service.UserService;
 
 import javax.annotation.PostConstruct;
@@ -54,6 +55,9 @@ public class AbstractRestControllerTest {
 
     @Autowired
     protected UserService userService;
+
+    @Autowired
+    protected MealService mealService;
 
     @PostConstruct
     private void postConstruct() {

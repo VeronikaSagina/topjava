@@ -9,6 +9,8 @@ import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.service.UserService;
 import ru.javawebinar.topjava.to.UserLite;
+import ru.javawebinar.topjava.util.MealUtils;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,24 +19,15 @@ import java.util.stream.Collectors;
 public class RootController {
 
     private final UserService userService;
-    private final MealService mealService;
 
     @Autowired
-    public RootController(UserService service, MealService mealService) {
-        this.mealService = mealService;
+    public RootController(UserService service) {
         this.userService = service;
     }
 
     @GetMapping(value = "/")
     public String root() {
         return "index";
-    }
-
-    @PostMapping(value = "/users")
-    public String setUser(HttpServletRequest request) {
-        int userId = Integer.valueOf(request.getParameter("userId"));
-        AuthorizedUser.setId(userId);
-        return "redirect:meals";
     }
 
     @GetMapping(value = "/users")
@@ -46,13 +39,12 @@ public class RootController {
         model.addAttribute("users", dtoList);
         return "users";
     }
-/*
 
-    @GetMapping("/meals")
-    public String meals(Model model) {
-        model.addAttribute("meals", mealService.findAll(AuthorizedUser.id()));
-        return "meals";
+    @PostMapping(value = "/users")
+    public String setUser(HttpServletRequest request) {
+        int userId = Integer.valueOf(request.getParameter("userId"));
+        AuthorizedUser.setId(userId);
+        return "redirect:meals";
     }
-*/
 
 }

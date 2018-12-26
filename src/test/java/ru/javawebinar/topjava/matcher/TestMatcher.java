@@ -5,10 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.javawebinar.topjava.web.json.JacksonConfiguration;
 
 abstract public class TestMatcher<T> extends BaseMatcher<String> {
-    @Autowired
-    ObjectMapper objectMapper;
+
+    private ObjectMapper objectMapper = JacksonConfiguration.getMapper();
 
     protected T expected;
 

@@ -28,8 +28,8 @@ public class AdminRestControllerTest extends AbstractRestControllerTest {
     public void getAll() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get(REST_URL)
 //                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .accept(MediaType.APPLICATION_JSON_VALUE)
-        ).andExpect(MockMvcResultMatchers.status().isOk());
+                        .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -54,7 +54,8 @@ public class AdminRestControllerTest extends AbstractRestControllerTest {
         mockMvc.perform(delete(REST_URL + USER_ID))
                 .andDo(print())
                 .andExpect(status().isOk());
-        MATCHER_USER_LITE.assertCollectionEquals(Collections.singletonList(new UserLite(ADMIN)), userService.getAll().stream().map(UserLite::new).collect(Collectors.toList()));
+        MATCHER_USER_LITE.assertCollectionEquals(Collections.singletonList(
+                new UserLite(ADMIN)), userService.getAll().stream().map(UserLite::new).collect(Collectors.toList()));
     }
 
     @Test

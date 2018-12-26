@@ -1,31 +1,18 @@
 package ru.javawebinar.topjava.web.meal;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealWithExceed;
-
-import java.time.LocalDateTime;
 import java.util.List;
-
-import static ru.javawebinar.topjava.util.ValidationUtil.checkIdConsistent;
-import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 
 @RestController
 @RequestMapping(MealRestController.REST_URL)
 public class MealRestController extends AbstractMealController {
     static final String REST_URL = "/rest/meals";
 
-    @Autowired
-    protected MealRestController(MealService service) {
-        super(service);
-    }
-
-    @GetMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<MealWithExceed> findAll
             (@RequestParam("startDate") String startDate, @RequestParam("endDate") String endDate,
              @RequestParam("startTime") String startTime, @RequestParam("endTime") String endTime) {
@@ -67,13 +54,11 @@ public class MealRestController extends AbstractMealController {
 
     @PutMapping(value = {"/{id}"}, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Meal update(@RequestBody Meal meal, @PathVariable("id") Integer id) {
-        checkIdConsistent(meal, id);
-        return super.update(meal);
+        return super.update(meal, id);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Meal create(@RequestBody Meal meal) {
-        checkNew(meal);
         return super.save(meal);
     }
 }

@@ -9,7 +9,7 @@
 <jsp:include page="fragments/bodyHeader.jsp"/>
 <section>
     <h2><spring:message code="meals.title"/></h2>
-    <form method="get" action="meals">
+    <form method="get" action="meals/filter">
         <div class="row">
             <div class="col-xs-6">
                 <spring:message code="meals.date"/>

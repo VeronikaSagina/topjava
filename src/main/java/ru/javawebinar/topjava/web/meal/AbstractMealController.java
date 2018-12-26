@@ -2,6 +2,7 @@ package ru.javawebinar.topjava.web.meal;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
@@ -16,15 +17,13 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.checkIdConsistent;
+import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 
 public abstract class AbstractMealController {
     private static final Logger LOG = LoggerFactory.getLogger(JspMealController.class);
 
+    @Autowired
     private MealService service;
-
-    protected AbstractMealController(MealService service) {
-        this.service = service;
-    }
 
     public List<MealWithExceed> findAll() {
         LOG.info("findAll for user{}" + AuthorizedUser.id());
@@ -53,16 +52,20 @@ public abstract class AbstractMealController {
     }
 
     public Meal save(Meal meal) {
+        checkNew(meal);
         LOG.info("create meal for user{}", AuthorizedUser.id());
         return service.save(meal, AuthorizedUser.id());
     }
 
-    public Meal update(Meal meal) {
+    public Meal update(Meal meal, int id) {
+        checkIdConsistent(meal, id);
         LOG.info("update meal id:{} for user{}", meal.getId(), AuthorizedUser.id());
         return service.edit(meal, AuthorizedUser.id());
     }
 
     public Meal getOne(int id) {
-        return service.findById(id, AuthorizedUser.id());
+        int userId = AuthorizedUser.id();
+        LOG.info("get meal {} for User {}", id, userId);
+        return service.findById(id, userId);
     }
 }

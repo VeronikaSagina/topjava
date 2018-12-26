@@ -1,13 +1,12 @@
 package ru.javawebinar.topjava.web.meal;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealWithExceed;
+import ru.javawebinar.topjava.web.AuthorizedUser;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -18,12 +17,14 @@ import java.util.Objects;
 @Controller
 @RequestMapping("/meals")
 public class JspMealController extends AbstractMealController {
-    @Autowired
-    public JspMealController(MealService service) {
-        super(service);
-    }
 
     @GetMapping
+    public String meals(Model model) {
+        model.addAttribute("meals", super.findAll());
+        return "meals";
+    }
+
+    @GetMapping("/filter")
     public String findAll(Model model,
                           @RequestParam(required = false) String startDate,
                           @RequestParam(required = false) String endDate,
@@ -60,7 +61,7 @@ public class JspMealController extends AbstractMealController {
         return "meal";
     }
 
-    @RequestMapping(method = RequestMethod.POST, value = "meals")
+    @PostMapping
     public String createAndUpdate(HttpServletRequest request) {
         Meal meal = new Meal(
                 LocalDateTime.parse(request.getParameter("date")),
@@ -69,9 +70,10 @@ public class JspMealController extends AbstractMealController {
         if (request.getParameter("id").isEmpty()) {
             super.save(meal);
         } else {
-            String id = Objects.requireNonNull(request.getParameter("id"));
-            meal.setId(Integer.parseInt(id));
-            super.update(meal);
+            String sId = Objects.requireNonNull(request.getParameter("id"));
+            int id = Integer.parseInt(sId);
+            meal.setId(id);
+            super.update(meal, id);
         }
         return "redirect:/meals";
     }
