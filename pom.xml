@@ -28,6 +28,12 @@
         <spring-data-jpa.version>2.1.2.RELEASE</spring-data-jpa.version>
         <ehcache.version>2.10.4</ehcache.version>
         <jackson.version>2.9.6</jackson.version>
+        <!--webjars-->
+        <webjars-bootstrap.version>3.3.7-1</webjars-bootstrap.version>
+        <webjars-jquery.version>3.2.1</webjars-jquery.version>
+        <webjars-datetimepicker.version>2.5.4</webjars-datetimepicker.version>
+        <webjars-noty.version>2.4.1</webjars-noty.version>
+        <webjars-datatables.version>1.10.15</webjars-datatables.version>
     </properties>
 
     <build>
@@ -208,9 +214,51 @@
             <version>3.0.0</version>
             <scope>provided</scope>
         </dependency>
-
-        <!--Web-->
-
+        <!-- Webjars (static dependencies distributed as JAR files) -->
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>jquery</artifactId>
+            <version>${webjars-jquery.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>bootstrap</artifactId>
+            <version>${webjars-bootstrap.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.webjars</groupId>
+                    <artifactId>jquery</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>datatables</artifactId>
+            <version>${webjars-datatables.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.webjars.bower</groupId>
+                    <artifactId>jquery</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>datetimepicker</artifactId>
+            <version>${webjars-datetimepicker.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.webjars.bower</groupId>
+                    <artifactId>jquery</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars.bower</groupId>
+            <artifactId>noty</artifactId>
+            <version>${webjars-noty.version}</version>
+        </dependency>
+        <!--Json-->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -228,20 +276,7 @@
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>${jackson.version}</version>
         </dependency>
-
-<!--
-        <dependency>
-            <groupId>com.fasterxml.jackson.module</groupId>
-            <artifactId>jackson-module-parameter-names</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>jackson-datatype-jdk8</artifactId>
-            <version>${jackson.version}</version>
-        </dependency>
--->
+        <!--Web-->
 
         <dependency>
             <groupId>org.apache.tomcat</groupId>

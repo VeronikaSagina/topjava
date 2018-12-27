@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping(MealRestController.REST_URL)
+@RequestMapping(value = MealRestController.REST_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 public class MealRestController extends AbstractMealController {
     static final String REST_URL = "/rest/meals";
 
@@ -26,7 +26,7 @@ public class MealRestController extends AbstractMealController {
             AuthorizedUser.setId(100000);
         }
     }
-    @GetMapping( produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping
     public List<MealWithExceed> findAll
             (@RequestParam(value = "startDate", required = false) String startDate,
              @RequestParam(value = "endDate", required = false) String endDate,
@@ -47,7 +47,7 @@ public class MealRestController extends AbstractMealController {
         return super.findAll();
     }*/
 
-    @GetMapping(value = "/filter", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/filter")
     public List<MealWithExceed> findAllLocalDateTime(@RequestParam("startDateTime")
                                                      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
                                                              LocalDateTime startDateTime,
@@ -72,13 +72,13 @@ public class MealRestController extends AbstractMealController {
     }
 
 
-    @PutMapping(value = {"/{id}"}, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = {"/{id}"}, consumes = MediaType.APPLICATION_JSON_VALUE)
     public Meal update(@RequestBody Meal meal, @PathVariable("id") Integer id) {
         setId();
         return super.update(meal, id);
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Meal> create(@RequestBody Meal meal) {
         setId();
         Meal created = super.save(meal);
