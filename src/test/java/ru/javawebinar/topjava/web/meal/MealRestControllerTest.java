@@ -5,9 +5,7 @@ import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.to.MealWithExceed;
 import ru.javawebinar.topjava.util.MealUtils;
 import ru.javawebinar.topjava.web.AbstractRestControllerTest;
 import ru.javawebinar.topjava.web.AuthorizedUser;
@@ -33,12 +31,24 @@ public class MealRestControllerTest extends AbstractRestControllerTest {
     }
 
     @Test
-    public void findAll() throws Exception {
-        mockMvc.perform(post(REST_URL + "filter")
+    public void getBetweenMy() throws Exception {
+        mockMvc.perform(get(REST_URL)
                 .param("startDate", "2018-10-01")
                 .param("endDate", "2018-11-17")
                 .param("startTime", "07:00")
                 .param("endTime", "21:30"))
+                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(MATCHER.contentListMatcher(
+                        MealUtils.createWithExceed(MEAL_TEST_6, true),
+                        MealUtils.createWithExceed(MEAL_TEST_5, true),
+                        MealUtils.createWithExceed(MEAL_TEST_4, true)));
+    }
+ @Test
+    public void getBetween() throws Exception {
+        mockMvc.perform(get(REST_URL + "filter")
+                .param("startDateTime", "2018-10-01T07:00:00")
+                .param("endDateTime", "2018-11-17T21:30:00"))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(MATCHER.contentListMatcher(
@@ -88,7 +98,7 @@ public class MealRestControllerTest extends AbstractRestControllerTest {
         ResultActions actions = mockMvc.perform(post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(meal)))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
         Meal returned = MATCHER_MEAL.fromJsonAction(actions);
         meal.setId(returned.getId());
 

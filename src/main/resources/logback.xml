@@ -22,6 +22,7 @@
 
     <logger name="ru.javawebinar.topjava" level="debug"/>
     <logger name="org.springframework.web" level="debug"/>
+    <logger name="org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver" level="debug"/>
     <logger name="org.springframework.web.servlet.mvc" level="error"/>
 
     <root level="info">
