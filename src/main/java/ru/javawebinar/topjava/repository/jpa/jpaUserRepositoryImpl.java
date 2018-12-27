@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.repository.jpa;
 
+import org.hibernate.jpa.QueryHints;
 import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
@@ -47,6 +48,7 @@ public class jpaUserRepositoryImpl implements UserRepository {
     public User getByEmail(String email) {
         return em.createNamedQuery(User.BY_EMAIL, User.class)
                 .setParameter(1, email)
+                .setHint(QueryHints.HINT_PASS_DISTINCT_THROUGH, false)
                 .getSingleResult();
     }
 
