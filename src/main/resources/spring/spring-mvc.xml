@@ -15,7 +15,7 @@
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"
           p:prefix="/WEB-INF/jsp/"
           p:suffix=".jsp"/>
-
+<mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
     <!--<bean class="ru.javawebinar.topjava.web.json.JacksonObjectMapper" id="objectMapper" factory-method="getMapper"/>-->
 
 <!--

@@ -5,8 +5,9 @@
 <jsp:include page="fragments/headTag.jsp"/>
 <body>
 <jsp:include page="fragments/bodyHeader.jsp"/>
-<div class="center">
-    <%--<section>--%>
+<div class="jumbotron">
+    <div class="container">
+        <p/>
         <form method="post" action="users">
             <spring:message code="app.Login"/>: <select name="userId">
             <option value="100000"><spring:message code="login.user"/></option>
@@ -18,7 +19,7 @@
             <li><a href="users"><spring:message code="users.title"/></a></li>
             <li><a href="meals"><spring:message code="meals.title"/> </a></li>
         </ul>
-    <%--</section>--%>
+    </div>
 </div>
 </body>
 </html>
