@@ -9,11 +9,13 @@
     <div class="container">
         <p/>
         <form method="post" action="users">
-            <spring:message code="app.Login"/>: <select name="userId">
-            <option value="100000"><spring:message code="login.user"/></option>
-            <option value="100001"><spring:message code="login.admin"/></option>
-        </select>
-            <button title="submit"><spring:message code="common.select"/></button>
+            <div class="form-group">
+                <spring:message code="app.Login"/>: <select name="userId">
+                <option value="100000"><spring:message code="login.user"/></option>
+                <option value="100001"><spring:message code="login.admin"/></option>
+            </select>
+            </div>
+            <button type="submit" title="submit" class="btn btn-primary"><spring:message code="common.select"/></button>
         </form>
         <ul>
             <li><a href="users"><spring:message code="users.title"/></a></li>
