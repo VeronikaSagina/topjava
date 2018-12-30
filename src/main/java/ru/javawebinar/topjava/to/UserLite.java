@@ -12,7 +12,7 @@ public class UserLite {
     private int caloriesPerDay;
     private String name;
     private String email;
-    private Set<Role> authorities;
+    private Set<Role> roles;
     private boolean enabled;
     private Instant registered;
 
@@ -55,12 +55,12 @@ public class UserLite {
         this.email = email;
     }
 
-    public Set<Role> getAuthorities() {
-        return authorities;
+    public Set<Role> getRoles() {
+        return roles;
     }
 
-    public void setAuthorities(Set<Role> authorities) {
-        this.authorities = authorities;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     public boolean isEnabled() {
@@ -85,7 +85,7 @@ public class UserLite {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
-                ", authorities=" + authorities +
+                ", roles=" + roles +
                 ", enabled=" + enabled +
                 ", registered=" + registered +
                 '}';

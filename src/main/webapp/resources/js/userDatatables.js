@@ -1,9 +1,16 @@
 var ajaxUrl = 'ajax/admin/users/';
 var datatableApi;
 
+
+/*$(document).ready(function() {
+    // Обработчик для .ready()
+    // эквивалентно записи ниже
+});*/
+
+
 $(function () {
     datatableApi = $('#datatable').DataTable({
-        "pagihg": false,
+        "paging": false,
         "info": true,
         "columns": [
             {

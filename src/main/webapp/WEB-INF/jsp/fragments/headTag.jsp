@@ -14,9 +14,6 @@
     <link rel="stylesheet" href="webjars/datatables/1.10.15/media/css/dataTables.bootstrap.min.css">
     <link rel="shortcut icon" href="resources/image/icon.png">
 
-    <script type="text/javascript" src="resources/js/datatablesUtil.js" defer></script>
-    <script type="text/javascript" src="resources/js/userDatatables.js" defer></script>
-
     <script type="text/javascript" src="webjars/jquery/3.2.1/dist/jquery.min.js" defer></script>
     <script type="text/javascript" src="webjars/bootstrap/3.3.7-1/js/bootstrap.min.js" defer></script>
     <script type="text/javascript" src="webjars/datatables/1.10.15/media/js/jquery.dataTables.min.js" defer></script>

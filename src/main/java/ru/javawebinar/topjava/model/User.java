@@ -113,7 +113,7 @@ public class User extends NamedEntity {
         return enabled;
     }
 
-  /*  public Set<Role> getAuthorities() {
+  /*  public Set<Role> getRoles() {
         return roles;
     }*/
 

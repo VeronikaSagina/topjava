@@ -9,6 +9,8 @@
 <html>
 <jsp:include page="fragments/headTag.jsp"/>
 <body>
+<script type="text/javascript" src="resources/js/datatablesUtil.js" defer></script>
+<script type="text/javascript" src="resources/js/userDatatables.js" defer></script>
 <jsp:include page="fragments/bodyHeader.jsp"/>
 
 <div class="jumbotron">
@@ -25,7 +27,7 @@
                     <tr>
                         <th><spring:message code="users.Name"/></th>
                         <th><spring:message code="users.email"/></th>
-                        <th><spring:message code="users.authorities"/></th>
+                        <th><spring:message code="users.roles"/></th>
                         <th><spring:message code="users.active"/></th>
                         <th><spring:message code="users.registered"/></th>
                         <th></th>
@@ -37,7 +39,7 @@
                         <tr>
                             <td>${user.name}</td>
                             <td><a href="mailto:${user.email}">${user.email}</a></td>
-                            <td>${user.authorities}</td>
+                            <td>${user.roles}</td>
                             <td>
                                 <input type="checkbox"
                                        <c:if test="${user.enabled}">checked</c:if> id="${user.id}"/>
