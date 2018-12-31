@@ -18,6 +18,7 @@
 
         <tomcat.version>8.5.5</tomcat.version>
         <spring.version>5.1.1.RELEASE</spring.version>
+        <spring-security.version>5.1.1.RELEASE</spring-security.version>
         <postgreSQL.version>42.2.5</postgreSQL.version>
         <guava.version>27.0-jre</guava.version>
         <logback.version>1.2.2</logback.version>
@@ -141,6 +142,18 @@
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
             <version>${spring-data-jpa.version}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-web</artifactId>
+            <version>${spring-security.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-config</artifactId>
+            <version>${spring-security.version}</version>
         </dependency>
 
         <!--dataBase-->

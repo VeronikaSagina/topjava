@@ -4,11 +4,11 @@
 		 http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
     <display-name>Topjava</display-name>
-<context-param>
-    <param-name>spring.profiles.default</param-name>
-    <param-value>postgres, datajpa</param-value>
-</context-param>
-    
+    <context-param>
+        <param-name>spring.profiles.default</param-name>
+        <param-value>postgres, datajpa</param-value>
+    </context-param>
+
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
@@ -16,10 +16,19 @@
             classpath:spring/spring-db.xml
         </param-value>
     </context-param>
-    
+
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
+    <!--security-->
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 
     <filter>
         <filter-name>encodingFilter</filter-name>
