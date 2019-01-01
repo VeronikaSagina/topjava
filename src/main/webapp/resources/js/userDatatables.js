@@ -40,3 +40,11 @@ $(function () {
     });
     makeEditable();
 });
+
+function enableOrDisable(element) {
+    // var userId = element.closest("tr[id]").attr("id");
+    var enabled = element.hasAttribute("checked");
+    $.post(ajaxUrl + "/changeEnabled" + "?" + "userId=" + userId + "&" + "enabled=" + enabled, function (result) {
+        console.log(result);
+    })
+}

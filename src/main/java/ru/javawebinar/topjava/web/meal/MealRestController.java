@@ -33,19 +33,8 @@ public class MealRestController extends AbstractMealController {
              @RequestParam(value = "startTime", required = false) String startTime,
              @RequestParam(value = "endTime", required = false) String endTime) {
         setId();
-        if (StringUtils.isEmpty(startDate)
-                && StringUtils.isEmpty(endDate)
-                && StringUtils.isEmpty(startTime)
-                && StringUtils.isEmpty(endTime)) {
-            return super.findAll();
-        }
         return super.findAll(startDate, endDate, startTime, endTime);
     }
-
-  /*  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<MealWithExceed> getAll() {
-        return super.findAll();
-    }*/
 
     @GetMapping(value = "/filter")
     public List<MealWithExceed> findAllLocalDateTime(@RequestParam("startDateTime")

@@ -36,13 +36,13 @@
                     </thead>
                     <c:forEach items="${users}" var="user">
                         <jsp:useBean id="user" scope="page" type="ru.javawebinar.topjava.to.UserLite"/>
-                        <tr>
+                        <tr id="${user.id}">
                             <td>${user.name}</td>
                             <td><a href="mailto:${user.email}">${user.email}</a></td>
                             <td>${user.roles}</td>
                             <td>
-                                <input type="checkbox"
-                                       <c:if test="${user.enabled}">checked</c:if> id="${user.id}"/>
+                                <input type="checkbox" onclick="enableOrDisable(this)"
+                                       <c:if test="${user.enabled}">checked</c:if>/>
                             </td>
                             <td><%
                                 out.println(DateTimeUtil.formatLocalDateTime(
@@ -51,7 +51,7 @@
                             <td><a class="btn btn-xs btn-primary">
                                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                             </a></td>
-                            <td><a class="btn btn-xs btn-danger delete" id="${user.id}">
+                            <td><a class="btn btn-xs btn-danger delete">
                                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                             </a></td>
                         </tr>

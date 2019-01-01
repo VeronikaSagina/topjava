@@ -1,6 +1,6 @@
 function makeEditable() {
     $('.delete').click(function () {
-        deleteRow($(this).attr("id"));
+        deleteRow($(this).closest("tr[id]").attr("id"));
     });
 
     $('#detailsForm').submit(function () {
@@ -16,6 +16,7 @@ function makeEditable() {
 function add() {
     $('#id').val(null);
     $('#editRow').modal();
+    $('#datetimepicker').datetimepicker();
 }
 
 function deleteRow(id) {

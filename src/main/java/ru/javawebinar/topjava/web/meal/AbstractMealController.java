@@ -31,6 +31,9 @@ public abstract class AbstractMealController {
     }
 
     public List<MealWithExceed> findAll(String startDate, String endDate, String startTime, String endTime) {
+        if (isAllEmpty(startDate, endDate,startTime,endTime)){
+            return findAll();
+        }
         LocalDate startD = !StringUtils.isEmpty(startDate) ? DateTimeUtil.parseLocalDate(startDate) : LocalDate.MIN;
         LocalDate endD = !StringUtils.isEmpty(endDate) ? DateTimeUtil.parseLocalDate(endDate) : LocalDate.MAX;
         LocalTime startT = !StringUtils.isEmpty(startTime) ? DateTimeUtil.parseLocalTime(startTime) : LocalTime.MIN;
@@ -67,5 +70,12 @@ public abstract class AbstractMealController {
         int userId = AuthorizedUser.id();
         LOG.info("get meal {} for User {}", id, userId);
         return service.findById(id, userId);
+    }
+
+    private boolean isAllEmpty( String startDate, String endDate,String startTime,String endTime) {
+        return StringUtils.isEmpty(startDate)
+                && StringUtils.isEmpty(endDate)
+                && StringUtils.isEmpty(startTime)
+                && StringUtils.isEmpty(endTime);
     }
 }
