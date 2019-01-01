@@ -78,12 +78,12 @@ public class AdminRestControllerTest extends AbstractRestControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(expected)))
                 .andExpect(status().isCreated());
-        User returned = MATCHER.fromJsonAction(action);
+        UserLite returned = MATCHER_USER_LITE.fromJsonAction(action);
         expected.setId(returned.getId());
 
 /*        MATCHER.assertEquals(expected, returned);
         MATCHER.assertCollectionEquals(Arrays.asList(ADMIN, expected, USER), userService.getAll());*/
-        MATCHER_USER_LITE.assertEquals(new UserLite(expected), new UserLite(returned));
+        MATCHER_USER_LITE.assertEquals(new UserLite(expected), returned);
         MATCHER_USER_LITE.assertCollectionEquals(
                 Arrays.asList(new UserLite(ADMIN), new UserLite(expected), new UserLite(USER)),
                 userService.getAll().stream().map(UserLite::new).collect(Collectors.toList()));

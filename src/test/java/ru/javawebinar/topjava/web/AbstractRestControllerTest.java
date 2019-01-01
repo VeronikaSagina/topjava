@@ -34,7 +34,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ActiveProfiles(resolver = AllActiveProfileResolver.class)
 @Transactional
-public class AbstractRestControllerTest {
+public abstract class AbstractRestControllerTest {
 
     private static final CharacterEncodingFilter CHARACTER_ENCODING_FILTER = new CharacterEncodingFilter();
 

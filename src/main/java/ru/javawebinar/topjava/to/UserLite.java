@@ -5,6 +5,7 @@ import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 
 import java.time.Instant;
+import java.util.Objects;
 import java.util.Set;
 
 public class UserLite {
@@ -80,9 +81,29 @@ public class UserLite {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserLite lite = (UserLite) o;
+        return id == lite.id &&
+                caloriesPerDay == lite.caloriesPerDay &&
+                enabled == lite.enabled &&
+                name.equals(lite.name) &&
+                email.equals(lite.email) &&
+                roles.equals(lite.roles) &&
+                registered.equals(lite.registered);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, caloriesPerDay, name, email, enabled, registered);
+    }
+
+    @Override
     public String toString() {
         return "UserLite{" +
                 "id=" + id +
+                ", caloriesPerDay=" + caloriesPerDay +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", roles=" + roles +
