@@ -1,8 +1,6 @@
 package ru.javawebinar.topjava;
 
 import org.springframework.context.support.GenericXmlApplicationContext;
-import ru.javawebinar.topjava.Profiles;
-import ru.javawebinar.topjava.web.meal.JspMealController;
 
 public class SpringMain {
     public static void main(String[] args) {

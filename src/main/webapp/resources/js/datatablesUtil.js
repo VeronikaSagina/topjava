@@ -1,22 +1,18 @@
-function makeEditable() {
-    $('.delete').click(function () {
-        deleteRow($(this).closest("tr[id]").attr("id"));
-    });
+var form;
 
-    $('#detailsForm').submit(function () {
-        save();
-        return false;
-    });
+function makeEditable() {
+    form = $('#detailsForm');
 
     $(document).ajaxError(function (event, jqXHR, options, jsExc) {
-        failNoty(event, jqXHR, options, jsExc);
+        failNoty(jqXHR);
     });
+    $.ajaxSetup({ cache: false });
 }
 
 function add() {
-    $('#id').val(null);
+    form.find(":input").val("");
     $('#editRow').modal();
-    $('#datetimepicker').datetimepicker();
+  /*  $('#datetimepicker').datetimepicker();*/
 }
 
 function deleteRow(id) {
@@ -24,20 +20,21 @@ function deleteRow(id) {
         url: ajaxUrl + id,
         type: 'DELETE',
         success: function () {
-            updateTable();
+            //$.get(ajaxUrl, updateTableByData);
+             updateTable();
             successNoty('Deleted');
         }
     });
 }
-
 function updateTable() {
-    $.get(ajaxUrl, function (data) {
-        datatableApi.clear();
-        $.each(data, function (key, item) {
-            datatableApi.row.add(item);
-        });
-        datatableApi.draw();
-    });
+    $.get(ajaxUrl, updateTableByData);
+}
+function updateTableByData(data) {
+    var rows = datatableApi.clear().rows.add(data).draw();
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 function save() {
@@ -48,8 +45,8 @@ function save() {
         data: form.serialize(),
         success: function () {
             $('#editRow').modal('hide');
-            updateTable();
             successNoty('Saved');
+            sleep(50).then(updateTable);
         }
     });
 }
@@ -73,10 +70,10 @@ function successNoty(text) {
     });
 }
 
-function failNoty(event, jqXHR, options, jsExc) {
+function failNoty(jqXHR) {
     closeNoty();
     failedNote = noty({
-        text: 'Failed: ' + jqXHR.statusText + "<br>",
+        text: 'Error status: ' + jqXHR.status,
         type: 'error',
         layout: 'bottomRight'
     });

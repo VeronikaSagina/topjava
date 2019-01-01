@@ -1,24 +1,4 @@
-dl {
-    background: none repeat scroll 0 0 #FAFAFA;
-    margin: 8px 0;
-    padding: 0;
-}
 
-dt {
-    display: inline-block;
-    width: 170px;
-}
-
-dd {
-    display: inline-block;
-    margin-left: 8px;
-    vertical-align: top;
-}
-/*form {
-    display: inline-block;
-    font-size: 30px;
-    text-align:center;
-}*/
 .normal {
     color: green;
 }
@@ -39,4 +19,7 @@ header{
     width: 50%;
     border: 3px solid green;
     padding: 10px;
+}
+.glyphicon {
+    cursor: pointer;
 }

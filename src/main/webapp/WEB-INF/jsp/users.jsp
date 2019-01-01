@@ -19,8 +19,9 @@
             <h3><spring:message code="users.title"/></h3>
 
             <div class="view-box">
-                <a class="btn btn-info" onclick="add()">
+                <a class="btn btn-primary" onclick="add()">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                    <spring:message code="common.add"/>
                 </a>
                 <table class="table table-striped display" id="datatable">
                     <thead>
@@ -36,7 +37,7 @@
                     </thead>
                     <c:forEach items="${users}" var="user">
                         <jsp:useBean id="user" scope="page" type="ru.javawebinar.topjava.to.UserLite"/>
-                        <tr id="${user.id}">
+                        <tr>
                             <td>${user.name}</td>
                             <td><a href="mailto:${user.email}">${user.email}</a></td>
                             <td>${user.roles}</td>
@@ -51,7 +52,7 @@
                             <td><a class="btn btn-xs btn-primary">
                                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                             </a></td>
-                            <td><a class="btn btn-xs btn-danger delete">
+                            <td><a onclick="deleteRow(${user.id})">
                                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                             </a></td>
                         </tr>
@@ -70,7 +71,7 @@
             </div>
             <div class="modal-body">
                 <form class="form-horizontal" id="detailsForm">
-                    <input type="text" hidden="hidden" id="id" name="id">
+                    <input hidden="hidden" id="id" name="id">
 
                     <div class="form-group">
                         <label for="name" class="control-label col-xs-3"><spring:message code="users.name"/></label>
@@ -102,7 +103,7 @@
 
                     <div class="form-group">
                         <div class="col-xs-offset-3 col-xs-9">
-                            <button type="submit" class="btn btn-primary">
+                            <button type="button" onclick="save()" class="btn btn-primary">
                                 <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                             </button>
                         </div>

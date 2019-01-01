@@ -19,10 +19,12 @@ import java.util.stream.Collectors;
 public class RootController {
 
     private final UserService userService;
+    private final MealService mealService;
 
     @Autowired
-    public RootController(UserService service) {
+    public RootController(UserService service, MealService mealService) {
         this.userService = service;
+        this.mealService = mealService;
     }
 
     @GetMapping(value = "/")
@@ -47,4 +49,9 @@ public class RootController {
         return "redirect:meals";
     }
 
+    @GetMapping("/meals")
+    public String meals(Model model) {
+        model.addAttribute("meals", mealService.findAll(AuthorizedUser.id()));
+        return "meals";
+    }
 }

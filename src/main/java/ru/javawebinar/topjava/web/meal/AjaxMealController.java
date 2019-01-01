@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
-@RequestMapping("/ajax/meals")
+@RequestMapping("/ajax/profile/meals")
 public class AjaxMealController extends AbstractMealController {
 
     @GetMapping("/filter")
@@ -43,7 +43,7 @@ public class AjaxMealController extends AbstractMealController {
         return super.update(meal, id);
     }
 
-    @GetMapping
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public List<MealWithExceed> findAll() {
         return super.findAll();
     }

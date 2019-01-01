@@ -16,11 +16,12 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+import static org.slf4j.LoggerFactory.getLogger;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkIdConsistent;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 
 public abstract class AbstractMealController {
-    private static final Logger LOG = LoggerFactory.getLogger(JspMealController.class);
+    private static final Logger LOG = getLogger(AbstractMealController.class);
 
     @Autowired
     private MealService service;
@@ -31,11 +32,11 @@ public abstract class AbstractMealController {
     }
 
     public List<MealWithExceed> findAll(String startDate, String endDate, String startTime, String endTime) {
-        if (isAllEmpty(startDate, endDate,startTime,endTime)){
+        if (isAllEmpty(startDate, endDate, startTime, endTime)) {
             return findAll();
         }
-        LocalDate startD = !StringUtils.isEmpty(startDate) ? DateTimeUtil.parseLocalDate(startDate) : LocalDate.MIN;
-        LocalDate endD = !StringUtils.isEmpty(endDate) ? DateTimeUtil.parseLocalDate(endDate) : LocalDate.MAX;
+        LocalDate startD = !StringUtils.isEmpty(startDate) ? DateTimeUtil.parseLocalDate(startDate) : LocalDate.of(1999, 1, 1);
+        LocalDate endD = !StringUtils.isEmpty(endDate) ? DateTimeUtil.parseLocalDate(endDate) : LocalDate.of(2100, 1, 1);
         LocalTime startT = !StringUtils.isEmpty(startTime) ? DateTimeUtil.parseLocalTime(startTime) : LocalTime.MIN;
         LocalTime endT = !StringUtils.isEmpty(endTime) ? DateTimeUtil.parseLocalTime(endTime) : LocalTime.MAX;
         return service.getBetween(AuthorizedUser.id(), startD, endD, startT, endT);
@@ -72,7 +73,7 @@ public abstract class AbstractMealController {
         return service.findById(id, userId);
     }
 
-    private boolean isAllEmpty( String startDate, String endDate,String startTime,String endTime) {
+    private boolean isAllEmpty(String startDate, String endDate, String startTime, String endTime) {
         return StringUtils.isEmpty(startDate)
                 && StringUtils.isEmpty(endDate)
                 && StringUtils.isEmpty(startTime)

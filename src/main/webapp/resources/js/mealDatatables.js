@@ -1,4 +1,4 @@
-var ajaxUrl = 'ajax/meals/';
+var ajaxUrl = 'ajax/profile/meals/';
 var datatableApi;
 
 $(function () {
@@ -30,10 +30,10 @@ $(function () {
     makeEditable();
 });
 
-function filter() {
-    var form = $('#filterForm');
+/*function filter() {
+    var form = $('#filter');
     var params = "?" + form.serialize();
-  /*  console.log(params);*/
+  /!*  console.log(params);*!/
     $.get(ajaxUrl + "filter" + params, function (data) {
         datatableApi.clear();
         $.each(data, function (key, item) {
@@ -41,10 +41,19 @@ function filter() {
         });
         datatableApi.draw();
     });
+}*/
+function filter() {
+    $.ajax({
+        type: "GET",
+        url: ajaxUrl + "filter",
+        data: $("#filter").serialize(),
+        success: updateTableByData
+    });
 }
 
+/*
 function findAll() {
-    $.get('ajax/meals/', function (data) {
+    $.get(ajaxUrl, function (data) {
         datatableApi.clear();
         $.each(data, function (key, item) {
             datatableApi.row.add(item);
@@ -52,4 +61,5 @@ function findAll() {
         datatableApi.draw();
     });
 }
+*/
 
