@@ -16,6 +16,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static ru.javawebinar.topjava.UserTestData.USER_ID;
+
 
 public abstract class AbstractUserServiceTest extends DbTest {
 
@@ -36,12 +38,12 @@ public abstract class AbstractUserServiceTest extends DbTest {
     public void testDuplicateMailSave() {
         thrown.expect(DataAccessException.class);
         service.save(new User(null, "newUserDuplicateEmail", "user@yandex.ru", "12345", Role.ROLE_USER));
-     //   System.out.println(service.getAll());
+        //   System.out.println(service.getAll());
     }
 
     @Test
     public void testDelete() {
-        service.delete(UserTestData.USER_ID);
+        service.delete(USER_ID);
         UserTestData.MATCHER.assertCollectionEquals(Collections.singletonList(UserTestData.ADMIN), service.getAll());
     }
 
@@ -53,7 +55,7 @@ public abstract class AbstractUserServiceTest extends DbTest {
 
     @Test
     public void testGet() {
-        User user = service.get(UserTestData.USER_ID);
+        User user = service.get(USER_ID);
         Assert.assertEquals(UserTestData.USER, user);
     }
 
@@ -81,12 +83,12 @@ public abstract class AbstractUserServiceTest extends DbTest {
         updateUser.setName("updateUser");
         updateUser.setCaloriesPerDay(1650);
         service.update(updateUser);
-        UserTestData.MATCHER.assertEquals(updateUser, service.get(UserTestData.USER_ID));
+        UserTestData.MATCHER.assertEquals(updateUser, service.get(USER_ID));
     }
 
     @Test
     public void testRoles() {
-        User user = service.get(UserTestData.USER_ID);
+        User user = service.get(USER_ID);
         System.out.println(user.getRoles());
         Assert.assertEquals(UserTestData.USER.getRoles(), user.getRoles());
     }
@@ -96,6 +98,14 @@ public abstract class AbstractUserServiceTest extends DbTest {
         User user = service.get(UserTestData.ADMIN_ID);
         System.out.println(user.getRoles());
         Assert.assertEquals(UserTestData.ADMIN.getRoles(), user.getRoles());
+    }
+
+    @Test
+    public void testEnabled() {
+        service.enable(USER_ID, false);
+        Assert.assertFalse(service.get(USER_ID).isEnabled());
+        service.enable(USER_ID, true);
+        Assert.assertTrue(service.get(USER_ID).isEnabled());
     }
 
     @Test

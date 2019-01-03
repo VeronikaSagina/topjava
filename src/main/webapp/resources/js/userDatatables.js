@@ -41,10 +41,20 @@ $(function () {
     makeEditable();
 });
 
-function enableOrDisable(element) {
+function enableOrDisable(element, id) {
     // var userId = element.closest("tr[id]").attr("id");
-    var enabled = element.hasAttribute("checked");
-    $.post(ajaxUrl + "/changeEnabled" + "?" + "userId=" + userId + "&" + "enabled=" + enabled, function (result) {
-        console.log(result);
-    })
+    var enabled = element.is(":checked");
+    //element.parent().parent().css("text-decoration", enabled ? "none" : "line-through");
+    $.ajax({
+        url: ajaxUrl + id,
+        type: 'POST',
+        data: 'enabled=' + enabled,
+        success: function () {
+            element.closest('tr').toggleClass('disabled');
+            successNoty(enabled ? 'enabled' : 'Disabled');
+        },
+        error:function () {
+            $(element).prop("checked", !enabled);
+        }
+    });
 }

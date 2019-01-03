@@ -6,7 +6,9 @@
 .exceeded {
     color: red;;
 }
-
+.disabled{
+    opacity: 0.3;
+}
 header{
     background:none repeat scroll 0 0 #A6C9E2;
     color: yellow;

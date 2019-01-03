@@ -56,6 +56,7 @@ public abstract class AbstractUserController {
     }
 
     protected void changeEnabled(int userId, boolean enabled) {
-        LOG.info("enabled user with id{} = {}", userId, enabled);
+        LOG.info("enabled user with id{} = {}", userId, enabled ? "enable" : "disable");
+        service.enable(userId, enabled);
     }
 }

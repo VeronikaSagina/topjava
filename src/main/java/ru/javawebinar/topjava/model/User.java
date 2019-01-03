@@ -153,4 +153,8 @@ public class User extends NamedEntity {
     public void setMeals(List<Meal> meals) {
         this.meals = meals;
     }
+
+    public void setEnabled(boolean enable) {
+        enabled = enable;
+    }
 }

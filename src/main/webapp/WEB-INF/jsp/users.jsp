@@ -37,12 +37,12 @@
                     </thead>
                     <c:forEach items="${users}" var="user">
                         <jsp:useBean id="user" scope="page" type="ru.javawebinar.topjava.to.UserLite"/>
-                        <tr>
+                        <tr class="${user.enabled? '':'disabled'}">
                             <td>${user.name}</td>
                             <td><a href="mailto:${user.email}">${user.email}</a></td>
                             <td>${user.roles}</td>
                             <td>
-                                <input type="checkbox" onclick="enableOrDisable(this)"
+                                <input type="checkbox" onclick="enableOrDisable($(this), ${user.id})"
                                        <c:if test="${user.enabled}">checked</c:if>/>
                             </td>
                             <td><%
