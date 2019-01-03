@@ -51,8 +51,8 @@ function filter() {
     });
 }
 
-/*
-function findAll() {
+function clearFilter() {
+    $("#filter")[0].reset();
     $.get(ajaxUrl, function (data) {
         datatableApi.clear();
         $.each(data, function (key, item) {
@@ -61,5 +61,4 @@ function findAll() {
         datatableApi.draw();
     });
 }
-*/
 

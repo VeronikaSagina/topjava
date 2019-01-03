@@ -53,119 +53,121 @@
                                 </form>
                             </div>
                             <div class="panel-footer text-right">
-                                <a class="btn btn-primary" type="button" onclick="filter()">
-                                    <span class="glyphicon glyphicon-filter" aria-hidden="true"></span>
-                                </a>
+                                <button type="button" class="btn btn-primary" onclick="clearFilter()"><spring:message
+                                        code="meals.reset"/></button>
+                                <button type="button" class="btn btn-info" onclick="filter()"><spring:message
+                                        code="meals.filter"/></button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <hr>
-                <hr>
-
-                        <div class="table table-responsive">
-                            <table class="table table-striped display" id="datatable">
-                                <thead>
-                                <tr>
-                                    <th><spring:message code="meals.dateTime"/></th>
-                                    <th><spring:message code="meals.description"/></th>
-                                    <th><spring:message code="meals.calories"/></th>
-                                    <th></th>
-                                    <th></th>
-                                </tr>
-                                </thead>
-                                <c:forEach items="${meals}" var="meal">
-                                    <jsp:useBean id="meal" scope="page"
-                                                 type="ru.javawebinar.topjava.to.MealWithExceed"/>
-                                    <tr class="${meal.exceed ? 'exceeded' : 'normal'}">
-                                        <td><c:out value="${f:formatLocalDateTime(meal.dateTime)}"/></td>
-                                        <td><c:out value="${meal.description}"/></td>
-                                        <td><c:out value="${meal.calories}"/></td>
-                                        <td><a>
-                                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                                        </a></td>
-                                        <td><a onclick="deleteRow(${meal.id})">
-                                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                                        </a></td>
-                                    </tr>
-                                </c:forEach>
-                            </table>
-                        </div>
-                        <h3>
-                            <a class="btn btn-info" onclick="add()">
-                                <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
-                            <%-- <a class="label label-info" role="button" href="meals/new"><spring:message code="meals.createMeal"/></a>--%>
-                        </h3>
-                        <hr>
-                    </div>
-                </div>
             </div>
+            <hr>
+            <hr>
 
-            <div class="modal fade" id="editRow">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h2 class="modal-title"><spring:message code="meals.add"/></h2>
-                        </div>
-                        <div class="modal-body">
-                            <form class="form-horizontal" id="detailsForm">
-                                <input type="text" hidden="hidden" id="id" name="id">
-                                <%--
-                                                    <div class="form-group" id="datetimepicker">
-                                                        <label for="dateTime" class="control-label col-xs-3"><spring:message
-                                                                code="meals.dateTime"/></label>
-                                                        <div class="input-group bootstrap-timepicker timepicker">
-                                                            <input id="dateTime" type="text" class="form-control" data-provide="timepicker"
-                                                                   data-template="modal" data-minute-step="1" data-modal-backdrop="true" name="dateTime"
-                                                                   placeholder="<spring:message code="meals.dateTime"/> ">
-                                                            <span class="input-group-addon">
-                                                        <span class="glyphicon glyphicon-calendar"></span>
-                                                    </span>
-                                                        </div>
-                                                    </div>
-                                --%>
-                                <div class="form-group">
-                                    <label for="dateTime" class="control-label col-xs-3"><spring:message
-                                            code="meals.dateTime"/></label>
+            <div class="table table-responsive">
+                <table class="table table-striped display" id="datatable">
+                    <thead>
+                    <tr>
+                        <th><spring:message code="meals.dateTime"/></th>
+                        <th><spring:message code="meals.description"/></th>
+                        <th><spring:message code="meals.calories"/></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <c:forEach items="${meals}" var="meal">
+                        <jsp:useBean id="meal" scope="page"
+                                     type="ru.javawebinar.topjava.to.MealWithExceed"/>
+                        <tr class="${meal.exceed ? 'exceeded' : 'normal'}">
+                            <td><c:out value="${f:formatLocalDateTime(meal.dateTime)}"/></td>
+                            <td><c:out value="${meal.description}"/></td>
+                            <td><c:out value="${meal.calories}"/></td>
+                            <td><a onclick="editRow(${meal.id})">
+                                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                            </a></td>
+                            <td><a onclick="deleteRow(${meal.id})">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                            </a></td>
+                        </tr>
+                    </c:forEach>
+                </table>
+            </div>
+            <h3>
+                <a class="btn btn-info" onclick="add()">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
+                <%-- <a class="label label-info" role="button" href="meals/new"><spring:message code="meals.createMeal"/></a>--%>
+            </h3>
+            <hr>
+        </div>
+    </div>
+</div>
 
-                                    <div class="col-xs-9">
-                                        <input type="datetime-local" class="form-control" id="dateTime"
-                                               name="dateTime">
-                                    </div>
-                                </div>
+<div class="modal fade" id="editRow">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h2 class="modal-title"><spring:message code="meals.add"/></h2>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" id="detailsForm">
+                    <input type="text" hidden="hidden" id="id" name="id">
+                    <%--
+                                        <div class="form-group" id="datetimepicker">
+                                            <label for="dateTime" class="control-label col-xs-3"><spring:message
+                                                    code="meals.dateTime"/></label>
+                                            <div class="input-group bootstrap-timepicker timepicker">
+                                                <input id="dateTime" type="text" class="form-control" data-provide="timepicker"
+                                                       data-template="modal" data-minute-step="1" data-modal-backdrop="true" name="dateTime"
+                                                       placeholder="<spring:message code="meals.dateTime"/> ">
+                                                <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-calendar"></span>
+                                        </span>
+                                            </div>
+                                        </div>
+                    --%>
+                    <div class="form-group">
+                        <label for="dateTime" class="control-label col-xs-3"><spring:message
+                                code="meals.dateTime"/></label>
 
-                                <div class="form-group">
-                                    <label for="calories" class="control-label col-xs-3"><spring:message
-                                            code="meals.calories"/></label>
-
-                                    <div class="col-xs-9">
-                                        <input type="text" class="form-control" id="calories" name="calories"
-                                               placeholder="<spring:message code="meals.calories"/>">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="description" class="control-label col-xs-3"><spring:message
-                                            code="meals.description"/></label>
-
-                                    <div class="col-xs-9">
-                                        <input type="text" class="form-control" id="description"
-                                               name="description"
-                                               placeholder="<spring:message code="meals.description"/>">
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="col-xs-offset-3 col-xs-9">
-                                        <button type="button" class="btn btn-primary" onclick="save()">
-                                            <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
+                        <div class="col-xs-9">
+                            <input type="datetime-local" class="form-control" id="dateTime"
+                                   name="dateTime">
                         </div>
                     </div>
-                </div>
+
+                    <div class="form-group">
+                        <label for="calories" class="control-label col-xs-3"><spring:message
+                                code="meals.calories"/></label>
+
+                        <div class="col-xs-9">
+                            <input type="text" class="form-control" id="calories" name="calories"
+                                   placeholder="<spring:message code="meals.calories"/>">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="description" class="control-label col-xs-3"><spring:message
+                                code="meals.description"/></label>
+
+                        <div class="col-xs-9">
+                            <input type="text" class="form-control" id="description"
+                                   name="description"
+                                   placeholder="<spring:message code="meals.description"/>">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-xs-offset-3 col-xs-9">
+                            <button type="button" class="btn btn-primary" onclick="save()">
+                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

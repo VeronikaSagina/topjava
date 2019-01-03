@@ -6,13 +6,13 @@ function makeEditable() {
     $(document).ajaxError(function (event, jqXHR, options, jsExc) {
         failNoty(jqXHR);
     });
-    $.ajaxSetup({ cache: false });
+    $.ajaxSetup({cache: false});
 }
 
 function add() {
     form.find(":input").val("");
     $('#editRow').modal();
-  /*  $('#datetimepicker').datetimepicker();*/
+    /*  $('#datetimepicker').datetimepicker();*/
 }
 
 function deleteRow(id) {
@@ -21,14 +21,27 @@ function deleteRow(id) {
         type: 'DELETE',
         success: function () {
             //$.get(ajaxUrl, updateTableByData);
-             updateTable();
+            updateTable();
             successNoty('Deleted');
         }
     });
 }
+
 function updateTable() {
     $.get(ajaxUrl, updateTableByData);
 }
+
+function editRow(id) {
+    $.get(ajaxUrl + id, function (data) {
+        console.log("data", data);
+        form.find(":input[id='id']").val(data.id);
+        form.find(":input[id='dateTime']").val(data.dateTime);
+        form.find(":input[id='calories']").val(data.calories);
+        form.find(":input[id='description']").val(data.description);
+        $('#editRow').modal();
+    });
+}
+
 function updateTableByData(data) {
     var rows = datatableApi.clear().rows.add(data).draw();
 }
@@ -46,7 +59,7 @@ function save() {
         success: function () {
             $('#editRow').modal('hide');
             successNoty('Saved');
-            sleep(50).then(updateTable);
+            sleep(0).then(updateTable);
         }
     });
 }

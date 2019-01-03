@@ -22,7 +22,10 @@ public class AjaxMealController extends AbstractMealController {
         return super.findAll(startDate, endDate, startTime, endTime);
     }
 
-
+    @GetMapping(value = "/{id}")
+    public Meal getOne(@PathVariable("id") int id) {
+        return super.getOne(id);
+    }
 
     @Override
     @DeleteMapping("{id}")
@@ -37,7 +40,7 @@ public class AjaxMealController extends AbstractMealController {
                                 @RequestParam("description") String description,
                                 @RequestParam("calories") Integer calories) {
         Meal meal = new Meal(id, dateTime, description, calories);
-        if (meal.isNew()){
+        if (meal.isNew()) {
             return super.save(meal);
         }
         return super.update(meal, id);
