@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.service.UserService;
 import ru.javawebinar.topjava.to.UserLite;
+import ru.javawebinar.topjava.to.UserTo;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -49,10 +50,15 @@ public abstract class AbstractUserController {
     }
 
 
-    void update(User user, int id) {
+    public void update(User user, int id) {
         LOG.info("update user with id {}", user);
         checkIdConsistent(user, id);
         service.update(user);
+    }
+
+    public void update(UserTo userTo) {
+        LOG.info("update {}", userTo);
+        service.update(userTo);
     }
 
     protected void changeEnabled(int userId, boolean enabled) {

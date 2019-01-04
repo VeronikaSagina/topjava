@@ -1,10 +1,13 @@
 package ru.javawebinar.topjava.web.user;
 
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.service.UserService;
 import ru.javawebinar.topjava.to.UserLite;
+import ru.javawebinar.topjava.to.UserTo;
+import ru.javawebinar.topjava.util.UserUtil;
 
 import java.util.List;
 
@@ -24,27 +27,29 @@ public class AdminAjaxController extends AbstractUserController {
     }
 
     @Override
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public UserLite get(@PathVariable("id") int id) {
+        return super.get(id);
+    }
+
+    @Override
     @DeleteMapping("{id}")
     public void delete(@PathVariable("id") int id) {
         super.delete(id);
     }
 
     @PostMapping
-    public void createOrUpdate(@RequestParam("id") Integer id,
-                               @RequestParam("name") String name,
-                               @RequestParam("email") String email,
-                               @RequestParam("password") String password) {
-        User user = new User(id, name, email, password, Role.ROLE_USER);
-        if (user.isNew()) {
-            super.create(user);
+    public void createOrUpdate(UserTo userTo) {
+        if (userTo.isNew()) {
+            super.create(UserUtil.createNewUserFromUserTo(userTo));
         } else {
-            super.update(user, id);
+            super.update(userTo);
         }
     }
 
     @PostMapping(value = "/{id}")
     public void changeEnabled(@PathVariable("id") int userId,
-                             @RequestParam("enabled") boolean enabled) {
+                              @RequestParam("enabled") boolean enabled) {
         super.changeEnabled(userId, enabled);
     }
 }
