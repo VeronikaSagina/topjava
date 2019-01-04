@@ -10,11 +10,15 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.repository.UserRepository;
+import ru.javawebinar.topjava.to.UserTo;
+import ru.javawebinar.topjava.util.UserUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.UUID;
+
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFound;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 
@@ -78,6 +82,14 @@ public class UserServiceImpl implements UserService {
     @CacheEvict(value = "users", allEntries = true)
     public void update(User user) {
         repository.save(user);
+    }
+
+    @Override
+    @Transactional
+    @CacheEvict(value = "users", allEntries = true)
+    public void update(UserTo userTo) {
+        User user = get(userTo.getId());
+        repository.save(UserUtil.updateFromUserTo(user, userTo));
     }
 
     @CacheEvict(value = "users", allEntries = true)

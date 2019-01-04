@@ -1,7 +1,7 @@
 package ru.javawebinar.topjava.web;
 
 
-import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.util.UserUtil;
 
 public class AuthorizedUser {
     private AuthorizedUser() {
@@ -18,6 +18,6 @@ public class AuthorizedUser {
     }
 
     public static int getCaloriesPerDay() {
-        return User.DEFAULT_CALORIES_PER_DAY;
+        return UserUtil.DEFAULT_CALORIES_PER_DAY;
     }
 }

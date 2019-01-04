@@ -7,6 +7,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 import org.springframework.util.CollectionUtils;
+import ru.javawebinar.topjava.util.UserUtil;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -23,8 +24,8 @@ import java.util.*;
         @NamedQuery(name = User.BY_EMAIL, query = "SELECT DISTINCT u FROM User u LEFT JOIN FETCH u.roles WHERE u.email=?1"),
         @NamedQuery(name = User.ALL_SORTED, query = "SELECT u FROM User u ORDER BY u.name, u.email")
 })
+
 public class User extends NamedEntity {
-    public static final int DEFAULT_CALORIES_PER_DAY = 2000;
 
     public static final String DELETE = "User.delete";
     public static final String ALL_SORTED = "User.getAllSorted";
@@ -57,7 +58,7 @@ public class User extends NamedEntity {
 
     @Column(name = "calories_per_day", columnDefinition = "int default 2000")
     @Range(min = 10, max = 10000)
-    private int caloriesPerDay = DEFAULT_CALORIES_PER_DAY;
+    private int caloriesPerDay = UserUtil.DEFAULT_CALORIES_PER_DAY;
 
     @OneToMany( /*cascade = CascadeType.REMOVE,orphanRemoval = true*/  mappedBy = "user", fetch = FetchType.LAZY)
 //какскадно удалить, удалить сирот
@@ -75,7 +76,7 @@ public class User extends NamedEntity {
     }
 
     public User(Integer id, String name, String email, String password, Role role, Role... roles) {
-        this(id, name, email, password, DEFAULT_CALORIES_PER_DAY, true, Instant.now(), EnumSet.of(role, roles));
+        this(id, name, email, password, UserUtil.DEFAULT_CALORIES_PER_DAY, true, Instant.now(), EnumSet.of(role, roles));
     }
 
     public User(Integer id, String name, String email, String password, int caloriesPerDay, boolean enabled, Instant registered, Collection<Role> roles) {
@@ -97,6 +98,14 @@ public class User extends NamedEntity {
         this.enabled = enabled;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public void setCaloriesPerDay(int caloriesPerDay) {
         this.caloriesPerDay = caloriesPerDay;
     }
@@ -113,29 +122,12 @@ public class User extends NamedEntity {
         return enabled;
     }
 
-  /*  public Set<Role> getRoles() {
-        return roles;
-    }*/
-
     public String getEmail() {
         return email;
     }
 
     public String getPassword() {
         return password;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + getId() +
-                ", email='" + email + '\'' +
-                ", name=" + name +
-                ", enabled=" + enabled +
-                ", roles=" + roles +
-                ", caloriesPerDay=" + caloriesPerDay +
-                ", meals: " + meals +
-                '}';
     }
 
     public Instant getRegistered() {
@@ -156,5 +148,18 @@ public class User extends NamedEntity {
 
     public void setEnabled(boolean enable) {
         enabled = enable;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + getId() +
+                ", email='" + email + '\'' +
+                ", name=" + name +
+                ", enabled=" + enabled +
+                ", roles=" + roles +
+                ", caloriesPerDay=" + caloriesPerDay +
+                ", meals: " + meals +
+                '}';
     }
 }

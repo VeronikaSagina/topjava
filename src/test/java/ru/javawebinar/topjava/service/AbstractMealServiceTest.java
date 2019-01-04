@@ -6,9 +6,9 @@ import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.BaseEntity;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.to.MealWithExceed;
 import ru.javawebinar.topjava.util.MealUtils;
+import ru.javawebinar.topjava.util.UserUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.validation.ConstraintViolationException;
@@ -30,7 +30,7 @@ public abstract class AbstractMealServiceTest extends DbTest {
     @Test
     public void testGetAll() {
         MealTestData.MATCHER.assertCollectionEquals(
-                MealUtils.getMealWithExceeds(Arrays.asList(MealTestData.MEAL_TEST_AD3, MealTestData.MEAL_TEST_AD2, MealTestData.MEAL_TEST_AD1), User.DEFAULT_CALORIES_PER_DAY),
+                MealUtils.getMealWithExceeds(Arrays.asList(MealTestData.MEAL_TEST_AD3, MealTestData.MEAL_TEST_AD2, MealTestData.MEAL_TEST_AD1), UserUtil.DEFAULT_CALORIES_PER_DAY),
                 service.findAll(BaseEntity.START_SEQ + 1));
     }
 
@@ -40,7 +40,7 @@ public abstract class AbstractMealServiceTest extends DbTest {
                 LocalDate.of(2018, 11, 17),
                 LocalTime.of(8, 0, 0),
                 LocalTime.of(21, 0, 0));
-        MealTestData.MATCHER.assertCollectionEquals(MealUtils.getMealWithExceeds(Arrays.asList(MealTestData.MEAL_TEST_6, MealTestData.MEAL_TEST_5), User.DEFAULT_CALORIES_PER_DAY), actual);
+        MealTestData.MATCHER.assertCollectionEquals(MealUtils.getMealWithExceeds(Arrays.asList(MealTestData.MEAL_TEST_6, MealTestData.MEAL_TEST_5), UserUtil.DEFAULT_CALORIES_PER_DAY), actual);
     }
 
     @Test
@@ -71,7 +71,7 @@ public abstract class AbstractMealServiceTest extends DbTest {
         testListForUser.add(MealTestData.MEAL_TEST_4);
         service.deleteById(100003, 100000);
         MealTestData.MATCHER.assertCollectionEquals(
-                MealUtils.getMealWithExceeds(testListForUser, User.DEFAULT_CALORIES_PER_DAY), service.findAll(100000));
+                MealUtils.getMealWithExceeds(testListForUser, UserUtil.DEFAULT_CALORIES_PER_DAY), service.findAll(100000));
     }
 
     @Test
@@ -94,7 +94,7 @@ public abstract class AbstractMealServiceTest extends DbTest {
         service.save(newMeal, 100001);
         MealTestData.MATCHER.assertCollectionEquals(MealUtils.getMealWithExceeds(Arrays.asList(
                 MealTestData.MEAL_TEST_AD3, MealTestData.MEAL_TEST_AD2, MealTestData.MEAL_TEST_AD1, newMeal
-        ), User.DEFAULT_CALORIES_PER_DAY), service.findAll(100001));
+        ), UserUtil.DEFAULT_CALORIES_PER_DAY), service.findAll(100001));
     }
 
     @Test
