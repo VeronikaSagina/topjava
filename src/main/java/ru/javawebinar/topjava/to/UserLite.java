@@ -23,6 +23,7 @@ public class UserLite {
     private Set<Role> roles;
     private boolean enabled;
     private Instant registered;
+    private String password;
 
     public UserLite(User user) {
         BeanUtils.copyProperties(user, this, "meals");
@@ -38,6 +39,7 @@ public class UserLite {
                 caloriesPerDay == lite.caloriesPerDay &&
                 enabled == lite.enabled &&
                 name.equals(lite.name) &&
+                password.equals(lite.password) &&
                 email.equals(lite.email) &&
                 roles.equals(lite.roles) &&
                 registered.equals(lite.registered);
@@ -45,7 +47,7 @@ public class UserLite {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, caloriesPerDay, name, email, enabled, registered);
+        return Objects.hash(id, caloriesPerDay, name, email, enabled, registered, password);
     }
 
     @Override

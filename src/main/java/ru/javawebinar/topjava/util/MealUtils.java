@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.util;
 
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.to.MealWithExceed;
 import ru.javawebinar.topjava.web.AuthorizedUser;
 
@@ -14,6 +15,8 @@ import java.util.stream.Collectors;
  * 31.05.2015.
  */
 public class MealUtils {
+    private MealUtils() {
+    }
 
     public static List<MealWithExceed> getMealWithExceeds(Collection<Meal> all, int caloriesPerDay) {
         return getFilteredWithExceeded(all, LocalTime.MIN, LocalTime.MAX, caloriesPerDay);
@@ -48,5 +51,9 @@ public class MealUtils {
 
     public static MealWithExceed createWithExceed(Meal meal, boolean exceeded) {
         return new MealWithExceed(AuthorizedUser.id(), meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories(), exceeded);
+    }
+
+    public static Meal createMealFromMealTo(MealTo mealTo){
+        return new Meal(mealTo.getDateTime(), mealTo.getDescription(), mealTo.getCalories());
     }
 }

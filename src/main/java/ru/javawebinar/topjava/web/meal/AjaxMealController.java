@@ -1,12 +1,16 @@
 package ru.javawebinar.topjava.web.meal;
 
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.to.MealWithExceed;
+import ru.javawebinar.topjava.util.MealUtils;
 
-import java.time.LocalDateTime;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -33,17 +37,19 @@ public class AjaxMealController extends AbstractMealController {
         super.delete(id);
     }
 
-    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public Meal createAndUpdate(@RequestParam("id") Integer id,
-                                @RequestParam("dateTime")
-                                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTime,
-                                @RequestParam("description") String description,
-                                @RequestParam("calories") Integer calories) {
-        Meal meal = new Meal(id, dateTime, description, calories);
-        if (meal.isNew()) {
-            return super.save(meal);
+    @PostMapping
+    public ResponseEntity<String> createAndUpdate(@Valid MealTo meal, BindingResult result) {
+        if (result.hasErrors()){
+            StringBuilder sb = new StringBuilder();
+            result.getFieldErrors().forEach(f -> sb.append(f.getField()).append(" ").append(f.getDefaultMessage()).append("<br>"));
+            return new ResponseEntity<>(sb.toString(), HttpStatus.UNPROCESSABLE_ENTITY);
         }
-        return super.update(meal, id);
+        if (meal.isNew()) {
+            super.save(MealUtils.createMealFromMealTo(meal));
+        } else {
+            super.update(MealUtils.createMealFromMealTo(meal), meal.getId());
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
