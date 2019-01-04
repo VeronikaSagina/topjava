@@ -29,6 +29,7 @@
         <spring-data-jpa.version>2.1.2.RELEASE</spring-data-jpa.version>
         <ehcache.version>2.10.4</ehcache.version>
         <jackson.version>2.9.6</jackson.version>
+        <lombok.version>1.18.4</lombok.version>
         <!--webjars-->
         <webjars-bootstrap.version>3.3.7-1</webjars-bootstrap.version>
         <webjars-jquery.version>3.2.1</webjars-jquery.version>
@@ -124,6 +125,14 @@
             <artifactId>logback-classic</artifactId>
             <version>${logback.version}</version>
             <scope>runtime</scope>
+        </dependency>
+
+        <!--lombok-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <!--spring-->

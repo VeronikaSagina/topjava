@@ -3,10 +3,17 @@ package ru.javawebinar.topjava.model;
 
 import javax.persistence.*;
 import java.util.Objects;
-
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 /*
  * primary kay
  */
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @MappedSuperclass
 @Access(AccessType.FIELD)
 public class BaseEntity {
@@ -17,22 +24,6 @@ public class BaseEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "global_seq")
     @Access(value = AccessType.PROPERTY)
     private Integer id;
-
-    BaseEntity() {
-
-    }
-
-    BaseEntity(Integer id) {
-        this.id = id;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     public boolean isNew() {
         return id == null;
