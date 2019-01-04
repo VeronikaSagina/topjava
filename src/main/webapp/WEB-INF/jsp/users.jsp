@@ -49,7 +49,7 @@
                                 out.println(DateTimeUtil.formatLocalDateTime(
                                         LocalDateTime.ofInstant(user.getRegistered(), ZoneId.systemDefault())));
                             %></td>
-                            <td><a class="btn btn-xs btn-primary">
+                            <td><a onclick="editRow(${user.id})">
                                 <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                             </a></td>
                             <td><a onclick="deleteRow(${user.id})">
@@ -67,7 +67,8 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h2 class="modal-title"><spring:message code="users.add"/></h2>
+                <h2 class="modal-title" hidden id="headerEdit"><spring:message code="users.edit"/></h2>
+                <h2 class="modal-title" hidden id="headerAdd"><spring:message code="users.add"/></h2>
             </div>
             <div class="modal-body">
                 <form class="form-horizontal" id="detailsForm">

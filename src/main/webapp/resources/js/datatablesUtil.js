@@ -10,6 +10,8 @@ function makeEditable() {
 }
 
 function add() {
+    $("#headerAdd").removeAttr("hidden");
+    $("#headerEdit").attr("hidden", true);
     form.find(":input").val("");
     $('#editRow').modal();
     /*  $('#datetimepicker').datetimepicker();*/
@@ -34,10 +36,17 @@ function updateTable() {
 function editRow(id) {
     $.get(ajaxUrl + id, function (data) {
         console.log("data", data);
+        $.each(data, function (key, value) {
+            form.find(":input[id='" + key + "']").val(value);
+        });
+        /*
         form.find(":input[id='id']").val(data.id);
         form.find(":input[id='dateTime']").val(data.dateTime);
         form.find(":input[id='calories']").val(data.calories);
         form.find(":input[id='description']").val(data.description);
+        */
+        $("#headerEdit").removeAttr("hidden");
+        $("#headerAdd").attr("hidden", true);
         $('#editRow').modal();
     });
 }
