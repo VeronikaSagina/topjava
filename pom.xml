@@ -238,6 +238,11 @@
         </dependency>
         <!-- Webjars (static dependencies distributed as JAR files) -->
         <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>momentjs</artifactId>
+            <version>2.22.2</version>
+        </dependency>
+        <dependency>
             <groupId>org.webjars.bower</groupId>
             <artifactId>jquery</artifactId>
             <version>${webjars-jquery.version}</version>

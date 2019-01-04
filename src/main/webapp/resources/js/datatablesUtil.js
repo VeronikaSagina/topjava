@@ -100,3 +100,17 @@ function failNoty(jqXHR) {
         layout: 'bottomRight'
     });
 }
+
+function renderEditBtn(data, type, row) {
+    if (type === 'display') {
+        return '<span onclick="editRow(' + row.id + ');">' +
+            '<span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>'
+    }
+}
+
+function renderDeleteBtn(data, type, row) {
+    if (type === 'display') {
+        return '<span onclick="deleteRow(' + row.id + ');">' +
+            '<span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>'
+    }
+}

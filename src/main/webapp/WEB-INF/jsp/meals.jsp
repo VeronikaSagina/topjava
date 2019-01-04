@@ -76,21 +76,6 @@
                         <th></th>
                     </tr>
                     </thead>
-                    <c:forEach items="${meals}" var="meal">
-                        <jsp:useBean id="meal" scope="page"
-                                     type="ru.javawebinar.topjava.to.MealWithExceed"/>
-                        <tr class="${meal.exceed ? 'exceeded' : 'normal'}">
-                            <td><c:out value="${f:formatLocalDateTime(meal.dateTime)}"/></td>
-                            <td><c:out value="${meal.description}"/></td>
-                            <td><c:out value="${meal.calories}"/></td>
-                            <td><a onclick="editRow(${meal.id})">
-                                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                            </a></td>
-                            <td><a onclick="deleteRow(${meal.id})">
-                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                            </a></td>
-                        </tr>
-                    </c:forEach>
                 </table>
             </div>
             <h3>

@@ -2,9 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@taglib uri="http://mycompany.com" prefix="f" %>
-<%@ page import="java.time.LocalDateTime" %>
-<%@ page import="ru.javawebinar.topjava.util.DateTimeUtil" %>
-<%@ page import="java.time.ZoneId" %>
 
 <html>
 <jsp:include page="fragments/headTag.jsp"/>
@@ -35,28 +32,6 @@
                         <th></th>
                     </tr>
                     </thead>
-                    <c:forEach items="${users}" var="user">
-                        <jsp:useBean id="user" scope="page" type="ru.javawebinar.topjava.to.UserLite"/>
-                        <tr class="${user.enabled? '':'disabled'}">
-                            <td>${user.name}</td>
-                            <td><a href="mailto:${user.email}">${user.email}</a></td>
-                            <td>${user.roles}</td>
-                            <td>
-                                <input type="checkbox" onclick="enableOrDisable($(this), ${user.id})"
-                                       <c:if test="${user.enabled}">checked</c:if>/>
-                            </td>
-                            <td><%
-                                out.println(DateTimeUtil.formatLocalDateTime(
-                                        LocalDateTime.ofInstant(user.getRegistered(), ZoneId.systemDefault())));
-                            %></td>
-                            <td><a onclick="editRow(${user.id})">
-                                <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-                            </a></td>
-                            <td><a onclick="deleteRow(${user.id})">
-                                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                            </a></td>
-                        </tr>
-                    </c:forEach>
                 </table>
             </div>
         </div>

@@ -10,25 +10,50 @@ var datatableApi;
 
 $(function () {
     datatableApi = $('#datatable').DataTable({
+        "ajax": {
+            "url": ajaxUrl,
+            "dataSrc": ""
+        },
         "paging": false,
         "info": true,
         "columns": [
             {
                 "data": "name"
             }, {
-                "data": "email"
+                "data": "email",
+                "render": function (data, type, row) {
+                    if (type === 'display') {
+                        return '<a href="mailto:' + data + '">' + data + '</a>';
+                    }
+                    return data;
+                }
             }, {
-                "data": "roles"
+                "data": "roles",
+                searchable: false
             }, {
-                "data": "enabled"
+                "data": "enabled",
+                "render": function (data, type, row) {
+                    if (type === 'display') {
+                        return '<input type="checkbox" ' + (data ? 'checked' : '') + ' onclick="enableOrDisable($(this),' + row.id + ');"/>';
+                    }
+                    return data;
+                }
             }, {
-                "data": "registered"
+                "data": "registered",
+                "render": function (date, type, row) {
+                    if (type === 'display') {
+                        return '<span>' + date.substring(0, 10) + '</span>'
+                    }
+                    return date;
+                }
             }, {
-                "defaultContent": "Edit",
-                "orderable": false
+                "orderable": false,
+                "defaultContent": "",
+                "render": renderEditBtn
             }, {
-                "defaultContent": "Delete",
-                "orderable": false
+                "orderable": false,
+                "defaultContent": "",
+                "render": renderDeleteBtn
             }
         ],
         "order": [
@@ -36,9 +61,14 @@ $(function () {
                 0,
                 "asc"
             ]
-        ]
+        ],
+        "createdRow": function (row, data, dataIndex) {
+            if (!data.enabled) {
+                $(row).addClass("disabled");
+            }
+        },
+        "initComplete": makeEditable
     });
-    makeEditable();
 });
 
 function enableOrDisable(element, id) {
@@ -53,7 +83,7 @@ function enableOrDisable(element, id) {
             element.closest('tr').toggleClass('disabled');
             successNoty(enabled ? 'enabled' : 'Disabled');
         },
-        error:function () {
+        error: function () {
             $(element).prop("checked", !enabled);
         }
     });
