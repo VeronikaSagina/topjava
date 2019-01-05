@@ -81,7 +81,6 @@
             <h3>
                 <a class="btn btn-info" onclick="add()">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></a>
-                <%-- <a class="label label-info" role="button" href="meals/new"><spring:message code="meals.createMeal"/></a>--%>
             </h3>
             <hr>
         </div>
@@ -156,4 +155,10 @@
     </div>
 </div>
 </body>
+<script type="text/javascript">
+    var i18n = [];
+    <c:forEach var='key' items='<%=new String[]{"common.deleted","common.saved","common.enabled","common.disabled","common.errorStatus"}%>'>
+    i18n['${key}'] = '<spring:message code="${key}"/>';
+    </c:forEach>
+</script>
 </html>

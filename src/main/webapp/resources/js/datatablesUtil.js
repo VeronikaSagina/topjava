@@ -3,7 +3,7 @@ var form;
 function makeEditable() {
     form = $('#detailsForm');
 
-    $(document).ajaxError(function (event, jqXHR, options, jsExc) {
+    $(document).ajaxError(function (event, jqXHR) {
         failNoty(jqXHR);
     });
     $.ajaxSetup({cache: false});
@@ -14,7 +14,6 @@ function add() {
     $("#headerEdit").attr("hidden", true);
     form.find(":input").val("");
     $('#editRow').modal();
-    /*  $('#datetimepicker').datetimepicker();*/
 }
 
 function deleteRow(id) {
@@ -22,9 +21,8 @@ function deleteRow(id) {
         url: ajaxUrl + id,
         type: 'DELETE',
         success: function () {
-            //$.get(ajaxUrl, updateTableByData);
             updateTable();
-            successNoty('Deleted');
+            successNoty('common.deleted');
         }
     });
 }
@@ -52,7 +50,7 @@ function editRow(id) {
 }
 
 function updateTableByData(data) {
-    var rows = datatableApi.clear().rows.add(data).draw();
+    datatableApi.clear().rows.add(data).draw();
 }
 
 function sleep(ms) {
@@ -67,7 +65,7 @@ function save() {
         data: form.serialize(),
         success: function () {
             $('#editRow').modal('hide');
-            successNoty('Saved');
+            successNoty('common.saved');
             sleep(0).then(updateTable);
         }
     });
@@ -82,10 +80,10 @@ function closeNoty() {
     }
 }
 
-function successNoty(text) {
+function successNoty(key) {
     closeNoty();
     noty({
-        text: text,
+        text: i18n[key],
         type: 'success',
         layout: 'bottomRight',
         timeout: 1500
@@ -95,7 +93,7 @@ function successNoty(text) {
 function failNoty(jqXHR) {
     closeNoty();
     failedNote = noty({
-        text: 'Error status: ' + jqXHR.status + (jqXHR.responseJSON ? '<br>' + jqXHR.responseJSON : ''),
+        text: i18n['common.errorStatus'] + ': ' + jqXHR.status + (jqXHR.responseJSON ? '<br>' + jqXHR.responseJSON : ''),
         type: 'error',
         layout: 'bottomRight'
     });

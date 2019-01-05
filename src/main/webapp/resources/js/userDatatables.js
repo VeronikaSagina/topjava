@@ -21,7 +21,7 @@ $(function () {
                 "data": "name"
             }, {
                 "data": "email",
-                "render": function (data, type, row) {
+                "render": function (data, type) {
                     if (type === 'display') {
                         return '<a href="mailto:' + data + '">' + data + '</a>';
                     }
@@ -40,7 +40,7 @@ $(function () {
                 }
             }, {
                 "data": "registered",
-                "render": function (date, type, row) {
+                "render": function (date, type) {
                     if (type === 'display') {
                         return '<span>' + date.substring(0, 10) + '</span>'
                     }
@@ -62,7 +62,7 @@ $(function () {
                 "asc"
             ]
         ],
-        "createdRow": function (row, data, dataIndex) {
+        "createdRow": function (row, data) {
             if (!data.enabled) {
                 $(row).addClass("disabled");
             }
@@ -81,7 +81,7 @@ function enableOrDisable(element, id) {
         data: 'enabled=' + enabled,
         success: function () {
             element.closest('tr').toggleClass('disabled');
-            successNoty(enabled ? 'enabled' : 'Disabled');
+            successNoty(enabled ? 'common.enabled' : 'common.disabled');
         },
         error: function () {
             $(element).prop("checked", !enabled);

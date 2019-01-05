@@ -12,7 +12,7 @@ $(function () {
         "columns": [
             {
                 "data": "dateTime",
-                "render": function (data, type, row) {
+                "render": function (data, type) {
                     if (type === 'display') {
                         return moment(data).format('MM-DD-YYYY hh:mm');
                     }
