@@ -3,6 +3,8 @@ package ru.javawebinar.topjava.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
@@ -13,24 +15,24 @@ import ru.javawebinar.topjava.repository.UserRepository;
 import ru.javawebinar.topjava.to.UserTo;
 import ru.javawebinar.topjava.util.UserUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
+import ru.javawebinar.topjava.web.AuthorizedUser;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFound;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 
-@Service
+@Service("userService")
 @Transactional(readOnly = true)
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
     private UserRepository repository;
     private MealRepository mealRepository;
 
     @Autowired
-    public UserServiceImpl(/*@Qualifier("jdbcUserRepositoryImpl")*/ UserRepository repository, MealRepository mealRepository) {
+    public UserServiceImpl( UserRepository repository, MealRepository mealRepository) {
         this.repository = repository;
         this.mealRepository = mealRepository;
     }
@@ -105,5 +107,14 @@ public class UserServiceImpl implements UserService {
         User user = get(id);
         user.setEnabled(enable);
         repository.save(user);
+    }
+
+    @Override
+    public AuthorizedUser loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = repository.getByEmail(email.toLowerCase());
+        if (user == null){
+            throw new UsernameNotFoundException(String.format("User %s is not found", email));
+        }
+        return new AuthorizedUser(user);
     }
 }

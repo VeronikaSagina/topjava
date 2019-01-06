@@ -8,6 +8,7 @@
         http://www.springframework.org/schema/context
         http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
+    <mvc:default-servlet-handler/>
     <context:component-scan base-package="ru.javawebinar.**.web"/>
 
     <mvc:resources mapping="/resources/**" location="/resources/"/>
@@ -15,13 +16,8 @@
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"
           p:prefix="/WEB-INF/jsp/"
           p:suffix=".jsp"/>
-<mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
-    <!--<bean class="ru.javawebinar.topjava.web.json.JacksonObjectMapper" id="objectMapper" factory-method="getMapper"/>-->
 
-<!--
-    <bean class="com.fasterxml.jackson.databind.ObjectMapper" id="objectMapper"
-          factory-method="ru.javawebinar.topjava.web.json.getMapper"/>
--->
+<mvc:resources mapping="/webjars/**" location="classpath:/META-INF/resources/webjars/"/>
 
     <bean class="ru.javawebinar.topjava.web.json.JacksonConfiguration" id="objectMapper" factory-method="getMapper"/>
 

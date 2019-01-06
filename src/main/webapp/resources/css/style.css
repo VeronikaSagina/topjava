@@ -6,22 +6,37 @@
 .exceeded {
     color: red;;
 }
-.disabled{
+
+.disabled {
     opacity: 0.3;
 }
-header{
-    background:none repeat scroll 0 0 #A6C9E2;
+
+header {
+    background: none repeat scroll 0 0 #A6C9E2;
     color: yellow;
     font-size: 30px;
     padding: 7px 20px;
     margin: 7px;
 }
+
 .center {
     margin: auto;
     width: 50%;
     border: 3px solid green;
     padding: 10px;
 }
+
 .glyphicon {
     cursor: pointer;
+}
+
+.error{
+    color: #a94442;
+    background-color: #f2dede;
+    border: 1px solid #ebccd1;
+}
+.message{
+    color: forestgreen;
+    background-color: #c6fbc2;
+    border: 1px solid lightgreen;
 }

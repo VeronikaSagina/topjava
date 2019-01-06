@@ -2,16 +2,13 @@ package ru.javawebinar.topjava.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-
-import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class RootController {
 
     @GetMapping(value = "/")
     public String root() {
-        return "index";
+        return "redirect:meals";
     }
 
     @GetMapping(value = "/users")
@@ -19,11 +16,9 @@ public class RootController {
         return "users";
     }
 
-    @PostMapping(value = "/users")
-    public String setUser(HttpServletRequest request) {
-        int userId = Integer.valueOf(request.getParameter("userId"));
-        AuthorizedUser.setId(userId);
-        return "redirect:meals";
+    @GetMapping(value = "/login")
+    public String login() {
+        return "login";
     }
 
     @GetMapping("/meals")

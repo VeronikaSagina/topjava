@@ -7,8 +7,16 @@ import ru.javawebinar.topjava.to.UserTo;
 public class UserUtil {
     public static final int DEFAULT_CALORIES_PER_DAY = 2000;
 
-    public static User createNewUserFromUserTo(UserTo newUser){
+    private UserUtil() {
+
+    }
+
+    public static User createNewUserFromUserTo(UserTo newUser) {
         return new User(null, newUser.getName(), newUser.getEmail().toLowerCase(), newUser.getPassword(), Role.ROLE_USER);
+    }
+
+    public static UserTo asTo(User user) {
+        return new UserTo(user.getId(), user.getName(), user.getEmail(), user.getPassword(), user.getCaloriesPerDay());
     }
 
     public static User updateFromUserTo(User user, UserTo userTo) {
