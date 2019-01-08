@@ -10,11 +10,8 @@ import ru.javawebinar.topjava.util.UserUtil;
 import static java.util.Objects.requireNonNull;
 
 public class AuthorizedUser extends org.springframework.security.core.userdetails.User {
-    private static final long SERIAL_VERSION_UID = 1L;
 
     private final UserTo userTo;
-
-    private static int id;
 
     public AuthorizedUser(User user) {
         super(user.getEmail(), user.getPassword(), user.isEnabled(), true, true, true, user.getRoles());
@@ -38,10 +35,6 @@ public class AuthorizedUser extends org.springframework.security.core.userdetail
 
     public static int id() {
         return get().userTo.getId();
-    }
-
-    public static void setId(int id) {
-        AuthorizedUser.id = id;
     }
 
     public static int getCaloriesPerDay() {

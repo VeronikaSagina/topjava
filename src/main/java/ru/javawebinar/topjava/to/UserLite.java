@@ -29,7 +29,6 @@ public class UserLite {
         BeanUtils.copyProperties(user, this, "meals");
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
