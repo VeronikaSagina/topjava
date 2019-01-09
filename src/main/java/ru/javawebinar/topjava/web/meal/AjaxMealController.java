@@ -9,6 +9,7 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.to.MealWithExceed;
 import ru.javawebinar.topjava.util.MealUtils;
+import ru.javawebinar.topjava.util.ValidationUtil;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -39,10 +40,8 @@ public class AjaxMealController extends AbstractMealController {
 
     @PostMapping
     public ResponseEntity<String> createAndUpdate(@Valid MealTo meal, BindingResult result) {
-        if (result.hasErrors()){
-            StringBuilder sb = new StringBuilder();
-            result.getFieldErrors().forEach(f -> sb.append(f.getField()).append(" ").append(f.getDefaultMessage()).append("<br>"));
-            return new ResponseEntity<>(sb.toString(), HttpStatus.UNPROCESSABLE_ENTITY);
+        if (result.hasErrors()) {
+            return ValidationUtil.getErrorResponse(result);
         }
         if (meal.isNew()) {
             super.save(MealUtils.createMealFromMealTo(meal));

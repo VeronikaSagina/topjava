@@ -51,13 +51,13 @@ public abstract class AbstractUserController {
 
 
     public void update(User user, int id) {
-        LOG.info("update user with id {}", user);
+        LOG.info("update user{} with id={}", user, id);
         checkIdConsistent(user, id);
         service.update(user);
     }
 
-    public void update(UserTo userTo) {
-        LOG.info("update {}", userTo);
+    public void update(UserTo userTo, int id) {
+        LOG.info("update {} with id={}", userTo, id);
         service.update(userTo);
     }
 

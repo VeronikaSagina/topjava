@@ -1,7 +1,6 @@
 package ru.javawebinar.topjava.web.meal;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import ru.javawebinar.topjava.model.Meal;
@@ -56,14 +55,14 @@ public abstract class AbstractMealController {
     }
 
     public Meal save(Meal meal) {
-        checkNew(meal);
         LOG.info("create meal for user{}", AuthorizedUser.id());
+        checkNew(meal);
         return service.save(meal, AuthorizedUser.id());
     }
 
     public Meal update(Meal meal, int id) {
-        checkIdConsistent(meal, id);
         LOG.info("update meal id:{} for user{}", meal.getId(), AuthorizedUser.id());
+        checkIdConsistent(meal, id);
         return service.edit(meal, AuthorizedUser.id());
     }
 

@@ -38,6 +38,9 @@ $(function () {
                 "asc"
             ]
         ],
+        "createdRow": function (row, data) {
+            $(row).addClass(data.exceed ? 'exceeded' : 'normal');
+        },
         "initComplete": makeEditable
     });
 });
