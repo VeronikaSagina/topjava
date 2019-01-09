@@ -1,3 +1,4 @@
+<%@page session="false" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
@@ -14,7 +15,7 @@
     <div class="container">
         <div class="shadow">
             <h3><spring:message code="users.title"/></h3>
-
+        <br/>
             <div class="view-box">
                 <a class="btn btn-primary" onclick="add()">
                     <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
@@ -89,6 +90,7 @@
         </div>
     </div>
 </div>
+
 </body>
 <script type="text/javascript">
     var i18n = [];

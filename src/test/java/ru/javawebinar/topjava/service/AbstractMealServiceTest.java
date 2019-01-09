@@ -1,6 +1,9 @@
 package ru.javawebinar.topjava.service;
 
-import org.junit.*;
+import mockit.Mock;
+import mockit.MockUp;
+import org.junit.Assert;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.UserTestData;
@@ -10,15 +13,19 @@ import ru.javawebinar.topjava.to.MealWithExceed;
 import ru.javawebinar.topjava.util.MealUtils;
 import ru.javawebinar.topjava.util.UserUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
+import ru.javawebinar.topjava.web.AuthorizedUser;
 
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static java.time.LocalDateTime.of;
+import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
 import static ru.javawebinar.topjava.UserTestData.USER_ID;
 
 public abstract class AbstractMealServiceTest extends DbTest {
@@ -29,6 +36,12 @@ public abstract class AbstractMealServiceTest extends DbTest {
 
     @Test
     public void testGetAll() {
+        new MockUp<AuthorizedUser>() {
+            @Mock
+            public int id() {
+                return ADMIN_ID;
+            }
+        };
         MealTestData.MATCHER.assertCollectionEquals(
                 MealUtils.getMealWithExceeds(Arrays.asList(MealTestData.MEAL_TEST_AD3, MealTestData.MEAL_TEST_AD2, MealTestData.MEAL_TEST_AD1), UserUtil.DEFAULT_CALORIES_PER_DAY),
                 service.findAll(BaseEntity.START_SEQ + 1));
@@ -40,6 +53,12 @@ public abstract class AbstractMealServiceTest extends DbTest {
                 LocalDate.of(2018, 11, 17),
                 LocalTime.of(8, 0, 0),
                 LocalTime.of(21, 0, 0));
+        new MockUp<AuthorizedUser>() {
+            @Mock
+            public int id() {
+                return USER_ID;
+            }
+        };
         MealTestData.MATCHER.assertCollectionEquals(MealUtils.getMealWithExceeds(Arrays.asList(MealTestData.MEAL_TEST_6, MealTestData.MEAL_TEST_5), UserUtil.DEFAULT_CALORIES_PER_DAY), actual);
     }
 
@@ -70,8 +89,14 @@ public abstract class AbstractMealServiceTest extends DbTest {
         testListForUser.add(MealTestData.MEAL_TEST_5);
         testListForUser.add(MealTestData.MEAL_TEST_4);
         service.deleteById(100003, 100000);
+        new MockUp<AuthorizedUser>() {
+            @Mock
+            public int id() {
+                return USER_ID;
+            }
+        };
         MealTestData.MATCHER.assertCollectionEquals(
-                MealUtils.getMealWithExceeds(testListForUser, UserUtil.DEFAULT_CALORIES_PER_DAY), service.findAll(100000));
+                MealUtils.getMealWithExceeds(testListForUser, UserUtil.DEFAULT_CALORIES_PER_DAY), service.findAll(USER_ID));
     }
 
     @Test
@@ -92,6 +117,12 @@ public abstract class AbstractMealServiceTest extends DbTest {
     public void testSave() {
         Meal newMeal = new Meal(LocalDateTime.of(2018, 11, 15, 7, 30), "завтрак", 500);
         service.save(newMeal, 100001);
+        new MockUp<AuthorizedUser>() {
+            @Mock
+            public int id() {
+                return ADMIN_ID;
+            }
+        };
         MealTestData.MATCHER.assertCollectionEquals(MealUtils.getMealWithExceeds(Arrays.asList(
                 MealTestData.MEAL_TEST_AD3, MealTestData.MEAL_TEST_AD2, MealTestData.MEAL_TEST_AD1, newMeal
         ), UserUtil.DEFAULT_CALORIES_PER_DAY), service.findAll(100001));
