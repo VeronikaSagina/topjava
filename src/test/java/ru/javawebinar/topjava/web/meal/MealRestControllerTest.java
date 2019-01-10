@@ -1,6 +1,5 @@
 package ru.javawebinar.topjava.web.meal;
 
-import mockit.Mock;
 import mockit.MockUp;
 import org.junit.Test;
 import org.springframework.http.MediaType;
@@ -91,13 +90,12 @@ public class MealRestControllerTest extends AbstractRestControllerTest {
 
         List<Meal> meals = Arrays.asList(MEAL_TEST_1, MEAL_TEST_3, MEAL_TEST_4, MEAL_TEST_5, MEAL_TEST_6);
         meals.sort(Comparator.comparing(Meal::getDateTime).reversed());
-        new MockUp<AuthorizedUser>() {
-            @Mock
-            public int id() {
-                return USER_ID;
-            }
-        };
-        MATCHER.assertCollectionEquals(MealUtils.getMealWithExceeds(meals, 2000), mealService.findAll(USER_ID));
+        MockUp<AuthorizedUser> mockUp = TestUtil.getMockUp(USER_ID);
+        try {
+            MATCHER.assertCollectionEquals(MealUtils.getMealWithExceeds(meals, 2000), mealService.findAll(USER_ID));
+        } finally {
+            mockUp.tearDown();
+        }
     }
 
     @Test
@@ -125,13 +123,11 @@ public class MealRestControllerTest extends AbstractRestControllerTest {
         MATCHER_MEAL.assertEquals(meal, returned);
         List<Meal> meals = Arrays.asList(MEAL_TEST_1, MEAL_TEST_2, MEAL_TEST_3, MEAL_TEST_4, MEAL_TEST_5, MEAL_TEST_6, meal);
         meals.sort(Comparator.comparing(Meal::getDateTime).reversed());
-        new MockUp<AuthorizedUser>() {
-            @Mock
-            public int id() {
-                return USER_ID;
-            }
-        };
-        MATCHER.assertCollectionEquals(MealUtils.getMealWithExceeds(meals, 2000), mealService.findAll(USER_ID));
+        MockUp<AuthorizedUser> mockUp = TestUtil.getMockUp(USER_ID);
+        try {
+            MATCHER.assertCollectionEquals(MealUtils.getMealWithExceeds(meals, 2000), mealService.findAll(USER_ID));
+        } finally {
+            mockUp.tearDown();
+        }
     }
-
 }

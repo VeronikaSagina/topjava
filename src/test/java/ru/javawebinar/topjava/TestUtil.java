@@ -1,5 +1,7 @@
 package ru.javawebinar.topjava;
 
+import mockit.Mock;
+import mockit.MockUp;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
@@ -13,7 +15,17 @@ import ru.javawebinar.topjava.web.AuthorizedUser;
 import java.io.UnsupportedEncodingException;
 
 public class TestUtil {
+
     private TestUtil() {
+    }
+
+    public static MockUp<AuthorizedUser> getMockUp(int userId) {
+        return new MockUp<AuthorizedUser>() {
+            @Mock
+            public int id() {
+                return userId;
+            }
+        };
     }
 
     public static ResultActions print(ResultActions action) throws UnsupportedEncodingException {
