@@ -30,11 +30,11 @@ public class MealTo implements HasId {
     @JsonView(View.JsonREST.class)
     private LocalDateTime dateTime;
 
-    @NotBlank
+    @NotBlank(groups = {View.ValidatedUI.class, Default.class})
     private String description;
 
-    @NotNull
-    @Range(min = 10, max = 5000)
+    @NotNull(groups = {View.ValidatedUI.class, Default.class})
+    @Range(min = 10, max = 5000, groups = {View.ValidatedUI.class, Default.class})
     private Integer calories;
 
     @Override
