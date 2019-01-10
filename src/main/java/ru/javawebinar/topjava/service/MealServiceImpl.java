@@ -5,9 +5,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.repository.UserRepository;
-import ru.javawebinar.topjava.to.MealWithExceed;
 import ru.javawebinar.topjava.repository.MealRepository;
+import ru.javawebinar.topjava.repository.UserRepository;
+import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.to.MealWithExceed;
 import ru.javawebinar.topjava.util.MealUtils;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
@@ -70,9 +71,10 @@ public class MealServiceImpl implements MealService {
     }
 
     @Transactional
-    public Meal edit(Meal update, int userId) throws NotFoundException {
-        Assert.notNull(update, "meal must not be null");
-        return checkNotFoundWithId(repository.save(update, userId), update.getId());
+    public void edit(MealTo toUpdate, int userId) throws NotFoundException {
+        Assert.notNull(toUpdate, "meal must not be null");
+        Meal meal = findById(toUpdate.getId(), userId);
+        checkNotFoundWithId(repository.save(MealUtils.updateFromMealTo(meal, toUpdate), userId), meal.getId());
     }
 
     @Transactional

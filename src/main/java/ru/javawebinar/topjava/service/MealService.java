@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.service;
 
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.to.MealWithExceed;
 
 import java.time.LocalDate;
@@ -20,6 +21,6 @@ public interface MealService {
 
     void deleteById(int id, int userId);
 
-    Meal edit(Meal update, int userId);
+    void edit(MealTo update, int userId);
     Meal save(Meal update, int userId);
 }

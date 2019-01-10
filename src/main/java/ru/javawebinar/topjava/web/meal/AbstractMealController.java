@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
+import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.to.MealWithExceed;
 import ru.javawebinar.topjava.util.DateTimeUtil;
+import ru.javawebinar.topjava.util.MealUtils;
 import ru.javawebinar.topjava.web.AuthorizedUser;
 
 import java.time.LocalDate;
@@ -54,22 +56,23 @@ public abstract class AbstractMealController {
         return new Meal(LocalDateTime.now().truncatedTo(ChronoUnit.MINUTES), "", 1000);
     }
 
-    public Meal save(Meal meal) {
+    public Meal save(MealTo meal) {
         LOG.info("create meal for user{}", AuthorizedUser.id());
         checkNew(meal);
-        return service.save(meal, AuthorizedUser.id());
+        Meal meal1 = new Meal(meal.getDateTime(), meal.getDescription(), meal.getCalories());
+        return service.save(meal1, AuthorizedUser.id());
     }
 
-    public Meal update(Meal meal, int id) {
+    public void update(MealTo meal, Integer id) {
         LOG.info("update meal id:{} for user{}", meal.getId(), AuthorizedUser.id());
         checkIdConsistent(meal, id);
-        return service.edit(meal, AuthorizedUser.id());
+        service.edit(meal, AuthorizedUser.id());
     }
 
-    public Meal getOne(int id) {
+    public MealTo getOne(int id) {
         int userId = AuthorizedUser.id();
         LOG.info("get meal {} for User {}", id, userId);
-        return service.findById(id, userId);
+        return MealUtils.createMealToFromMeal(service.findById(id, userId));
     }
 
     private boolean isAllEmpty(String startDate, String endDate, String startTime, String endTime) {

@@ -49,18 +49,15 @@ public abstract class AbstractUserController {
         return new UserLite(service.getByEmail(email));
     }
 
-
-    public void update(User user, int id) {
-        LOG.info("update user{} with id={}", user, id);
-        checkIdConsistent(user, id);
-        service.update(user);
-    }
-
     public void update(UserTo userTo, int id) {
         LOG.info("update {} with id={}", userTo, id);
         service.update(userTo);
     }
-
+    public void update(User user, int id) {
+        LOG.info("update {} with id={}", user, id);
+        checkIdConsistent(user, id);
+        service.update(user);
+    }
     protected void changeEnabled(int userId, boolean enabled) {
         LOG.info("enabled user with id{} = {}", userId, enabled ? "enable" : "disable");
         service.enable(userId, enabled);

@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.to.MealWithExceed;
 
 import java.net.URI;
@@ -39,7 +40,7 @@ public class MealRestController extends AbstractMealController {
     }
 
     @GetMapping(value = "/{id}")
-    public Meal getOne(@PathVariable("id") int id) {
+    public MealTo getOne(@PathVariable("id") int id) {
         return super.getOne(id);
     }
 
@@ -49,14 +50,14 @@ public class MealRestController extends AbstractMealController {
         super.delete(id);
     }
 
-
+    @Override
     @PutMapping(value = {"/{id}"}, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public Meal update(@RequestBody Meal meal, @PathVariable("id") Integer id) {
-        return super.update(meal, id);
+    public void update(@RequestBody MealTo meal, @PathVariable("id") Integer id) {
+        super.update(meal, id);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Meal> create(@RequestBody Meal meal) {
+    public ResponseEntity<Meal> create(@RequestBody MealTo meal) {
         Meal created = super.save(meal);
         URI uriOfNew = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")

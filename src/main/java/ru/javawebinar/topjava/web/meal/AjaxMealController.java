@@ -1,14 +1,14 @@
 package ru.javawebinar.topjava.web.meal;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.View;
 import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.to.MealWithExceed;
-import ru.javawebinar.topjava.util.MealUtils;
 import ru.javawebinar.topjava.util.ValidationUtil;
 
 import javax.validation.Valid;
@@ -18,7 +18,9 @@ import java.util.List;
 @RequestMapping("/ajax/profile/meals")
 public class AjaxMealController extends AbstractMealController {
 
+    @Override
     @GetMapping("/filter")
+    @JsonView(View.JsonUI.class)
     public List<MealWithExceed> findAll
             (@RequestParam(value = "startDate", required = false) String startDate,
              @RequestParam(value = "endDate", required = false) String endDate,
@@ -27,8 +29,10 @@ public class AjaxMealController extends AbstractMealController {
         return super.findAll(startDate, endDate, startTime, endTime);
     }
 
+    @Override
     @GetMapping(value = "/{id}")
-    public Meal getOne(@PathVariable("id") int id) {
+    @JsonView(View.JsonUI.class)
+    public MealTo getOne(@PathVariable("id") int id) {
         return super.getOne(id);
     }
 
@@ -44,14 +48,16 @@ public class AjaxMealController extends AbstractMealController {
             return ValidationUtil.getErrorResponse(result);
         }
         if (meal.isNew()) {
-            super.save(MealUtils.createMealFromMealTo(meal));
+            super.save(meal);
         } else {
-            super.update(MealUtils.createMealFromMealTo(meal), meal.getId());
+            super.update(meal, meal.getId());
         }
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @Override
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @JsonView(View.JsonUI.class)
     public List<MealWithExceed> findAll() {
         return super.findAll();
     }
