@@ -35,8 +35,7 @@ function editRow(id) {
     $.get(ajaxUrl + id, function (data) {
         console.log("data", data);
         $.each(data, function (key, value) {
-            form.find(":input[id='" + key + "']").val(
-                key === "dateTime" ? moment(data).format('MM-DD-YYYY hh:mm') : value);
+            form.find(":input[name='" + key + "']").val(value);
         });
         /*
         form.find(":input[id='id']").val(data.id);

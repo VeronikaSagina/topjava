@@ -11,13 +11,7 @@ $(function () {
         "info": true,
         "columns": [
             {
-                "data": "dateTime",
-                "render": function (data, type) {
-                    if (type === 'display') {
-                        return moment(data).format('MM-DD-YYYY hh:mm');
-                    }
-                    return data;
-                }
+                "data": "dateTimeUI"
             }, {
                 "data": "description"
             }, {

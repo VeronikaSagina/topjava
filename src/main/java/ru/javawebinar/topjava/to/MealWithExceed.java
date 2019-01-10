@@ -1,13 +1,15 @@
 package ru.javawebinar.topjava.to;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
+import ru.javawebinar.topjava.View;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class MealWithExceed {
+    private static final String DATE_TIME_PATTERN = "yyyy-MM-dd HH:mm";
     private final Integer id;
+    @JsonView(View.JsonREST.class)
     private final LocalDateTime dateTime;
     private final String description;
     private final int calories;
@@ -55,9 +57,16 @@ public class MealWithExceed {
         return exceed;
     }
 
+    @JsonGetter
+    @JsonView(View.JsonUI.class)
+    @JsonFormat(pattern = DATE_TIME_PATTERN)
+    public LocalDateTime getDateTimeUI() {
+        return dateTime;
+    }
+
     @Override
     public String toString() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_TIME_PATTERN);
         return "UserMealWithExceed{" +
                 "id=" + id +
                 "dateTime=" + dateTime.format(formatter) +

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.javawebinar.topjava.HasId;
 
 import javax.persistence.*;
 import java.util.Objects;
@@ -17,7 +18,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @MappedSuperclass
 @Access(AccessType.FIELD)
-public class BaseEntity {
+public class BaseEntity implements HasId {
     public static final int START_SEQ = 100000;
 
     @Id
@@ -26,6 +27,7 @@ public class BaseEntity {
     @Access(value = AccessType.PROPERTY)
     private Integer id;
 
+    @Override
     public boolean isNew() {
         return id == null;
     }

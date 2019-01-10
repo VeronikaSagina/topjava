@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
+import ru.javawebinar.topjava.HasId;
 import ru.javawebinar.topjava.util.UserUtil;
 
 import javax.validation.constraints.Email;
@@ -17,7 +18,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserTo implements Serializable {
+public class UserTo implements Serializable, HasId {
     private static final long SERIAL_VERSION_UID = 1L;
 
     private Integer id;
@@ -36,6 +37,7 @@ public class UserTo implements Serializable {
     @NotNull
     private Integer caloriesPerDay = UserUtil.DEFAULT_CALORIES_PER_DAY;
 
+    @Override
     public boolean isNew() {
         return id == null;
     }

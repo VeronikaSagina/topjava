@@ -53,7 +53,14 @@ public class MealUtils {
         return new MealWithExceed(AuthorizedUser.id(), meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories(), exceeded);
     }
 
-    public static Meal createMealFromMealTo(MealTo mealTo){
-        return new Meal(mealTo.getDateTime(), mealTo.getDescription(), mealTo.getCalories());
+    public static Meal updateFromMealTo(Meal meal, MealTo mealTo){
+        meal.setDateTime(mealTo.getDateTime());
+        meal.setDescription(mealTo.getDescription());
+        meal.setCalories(mealTo.getCalories());
+        return meal;
+    }
+
+    public static MealTo createMealToFromMeal(Meal meal) {
+        return new MealTo(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories());
     }
 }
