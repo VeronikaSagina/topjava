@@ -32,7 +32,7 @@ public abstract class AbstractMealServiceTest extends DbTest {
 
 
     @Autowired
-   protected MealService service;
+    protected MealService service;
 
     @Test
     public void testGetAll() {
@@ -108,7 +108,7 @@ public abstract class AbstractMealServiceTest extends DbTest {
     @Test
     public void testEdit() {
         Meal updated = new Meal(MealTestData.MEAL_TEST_AD1.getId(), LocalDateTime.now(), "обед", 800);
-        service.edit(updated, 100001);
+        service.edit(MealUtils.createMealToFromMeal(updated), 100001);
         Meal actual = service.findById(MealTestData.MEAL_TEST_AD1.getId(), 100001);
         Assert.assertEquals(updated, actual);
     }

@@ -3,9 +3,10 @@ package ru.javawebinar.topjava.web.user;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 import ru.javawebinar.topjava.TestUtil;
-import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.to.UserLite;
+import ru.javawebinar.topjava.to.UserTo;
+import ru.javawebinar.topjava.util.UserUtil;
 import ru.javawebinar.topjava.web.AbstractRestControllerTest;
 
 import java.util.Collections;
@@ -39,14 +40,14 @@ public class ProfileRestControllerTest extends AbstractRestControllerTest {
 
     @Test
     public void testUpdate() throws Exception {
-        User updated = new User(USER_ID, "newName", "newemail@ya.ru", "newPassword", Role.ROLE_USER);
+        UserTo updated = new UserTo(USER_ID, "newName", "newemail@ya.ru", "newPassword", 1000);
         mockMvc.perform(put(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(USER))
                 .content(objectMapper.writeValueAsString(updated)))
                 .andDo(print())
                 .andExpect(status().isOk());
-        MATCHER_USER_LITE.assertEquals(new UserLite(updated), new UserLite(userService.getByEmail("newemail@ya.ru")));
+        MATCHER.assertEquals(UserUtil.updateFromUserTo(new User(USER), updated), userService.getByEmail("newemail@ya.ru"));
     }
 
     @Test
