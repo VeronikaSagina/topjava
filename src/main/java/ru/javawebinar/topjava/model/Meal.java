@@ -1,6 +1,8 @@
 package ru.javawebinar.topjava.model;
 
 
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.validator.constraints.Range;
@@ -11,7 +13,8 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-
+@Getter
+@Setter
 @Entity
 @Table(name = "meals", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "datetime"}, name = "meals_unique_user_datetime_idx")})
 @NamedQueries({
@@ -47,7 +50,6 @@ public class Meal extends BaseEntity {
     private User user;
 
     public Meal() {
-
     }
 
     public Meal(LocalDateTime dateTime, String description, int calories) {
@@ -64,28 +66,8 @@ public class Meal extends BaseEntity {
 
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public int getCalories() {
-        return calories;
-    }
-
     public LocalDate getDate() {
         return dateTime.toLocalDate();
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
     }
 
     public LocalTime getTime() {
@@ -99,7 +81,6 @@ public class Meal extends BaseEntity {
                 ", dateTime=" + dateTime +
                 ", description='" + description + '\'' +
                 ", calories=" + calories +
-               /* ", userId=" + user.getId() +*/
                 '}';
     }
 }
