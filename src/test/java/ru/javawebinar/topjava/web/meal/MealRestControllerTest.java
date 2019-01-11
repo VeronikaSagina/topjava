@@ -27,6 +27,32 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 public class MealRestControllerTest extends AbstractRestControllerTest {
     private static final String REST_URL = "/rest/meals/";
 
+    /*
+     *  CRUD
+     */
+
+    @Test
+    public void create() throws Exception {
+        Meal meal = new Meal(LocalDateTime.of(2018, 12, 25, 22, 50), "ужин", 800);
+        ResultActions actions = mockMvc.perform(post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(meal))
+                .with(userHttpBasic(USER)))
+                .andExpect(status().isCreated());
+        Meal returned = MATCHER_MEAL.fromJsonAction(actions);
+        meal.setId(returned.getId());
+
+        MATCHER_MEAL.assertEquals(meal, returned);
+        List<Meal> meals = Arrays.asList(MEAL_TEST_1, MEAL_TEST_2, MEAL_TEST_3, MEAL_TEST_4, MEAL_TEST_5, MEAL_TEST_6, meal);
+        meals.sort(Comparator.comparing(Meal::getDateTime).reversed());
+        MockUp<AuthorizedUser> mockUp = TestUtil.getMockUp(USER_ID);
+        try {
+            MATCHER.assertCollectionEquals(MealUtils.getMealWithExceeds(meals, 2000), mealService.findAll(USER_ID));
+        } finally {
+            mockUp.tearDown();
+        }
+    }
+
     @Test
     public void getBetweenMy() throws Exception {
         mockMvc.perform(get(REST_URL)
@@ -66,19 +92,23 @@ public class MealRestControllerTest extends AbstractRestControllerTest {
     }
 
     @Test
-    public void getAllUnauthorized() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(REST_URL)
-                .accept(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isUnauthorized());
-    }
-
-    @Test
     public void getOne() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get(REST_URL + 100003)
                 .with(userHttpBasic(USER)))
                 .andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(MATCHER_MEAL.contentMatcher(MEAL_TEST_2));
+    }
+
+    @Test
+    public void update() throws Exception {
+        Meal mealUp = new Meal(MEAL_TEST_5.getId(), MEAL_TEST_5.getDateTime(), "обедик", 800);
+        mockMvc.perform(put(REST_URL + 100006)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(mealUp))
+                .with(userHttpBasic(USER)))
+                .andExpect(status().isOk());
+        MATCHER_MEAL.assertEquals(mealUp, mealService.findById(100006, USER_ID));
     }
 
     @Test
@@ -98,36 +128,29 @@ public class MealRestControllerTest extends AbstractRestControllerTest {
         }
     }
 
+    /*
+     *  exception
+     */
+
     @Test
-    public void update() throws Exception {
-        Meal mealUp = new Meal(MEAL_TEST_5.getId(), MEAL_TEST_5.getDateTime(), "обедик", 800);
-        mockMvc.perform(put(REST_URL + 100006)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(mealUp))
+    public void testGetNotFound() throws Exception {
+        mockMvc.perform(get(REST_URL + 100010)
                 .with(userHttpBasic(USER)))
-                .andExpect(status().isOk());
-        MATCHER_MEAL.assertEquals(mealUp, mealService.findById(100006, USER_ID));
+                .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
-    public void create() throws Exception {
-        Meal meal = new Meal(LocalDateTime.of(2018, 12, 25, 22, 50), "ужин", 800);
-        ResultActions actions = mockMvc.perform(post(REST_URL)
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(meal))
+    public void testDeleteNotFound() throws Exception {
+        mockMvc.perform(delete(REST_URL + 100010)
                 .with(userHttpBasic(USER)))
-                .andExpect(status().isCreated());
-        Meal returned = MATCHER_MEAL.fromJsonAction(actions);
-        meal.setId(returned.getId());
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity());
+    }
 
-        MATCHER_MEAL.assertEquals(meal, returned);
-        List<Meal> meals = Arrays.asList(MEAL_TEST_1, MEAL_TEST_2, MEAL_TEST_3, MEAL_TEST_4, MEAL_TEST_5, MEAL_TEST_6, meal);
-        meals.sort(Comparator.comparing(Meal::getDateTime).reversed());
-        MockUp<AuthorizedUser> mockUp = TestUtil.getMockUp(USER_ID);
-        try {
-            MATCHER.assertCollectionEquals(MealUtils.getMealWithExceeds(meals, 2000), mealService.findAll(USER_ID));
-        } finally {
-            mockUp.tearDown();
-        }
+    @Test
+    public void getAllUnauthorized() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get(REST_URL)
+                .accept(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isUnauthorized());
     }
 }

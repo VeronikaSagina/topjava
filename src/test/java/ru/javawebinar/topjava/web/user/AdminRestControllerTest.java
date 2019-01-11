@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import ru.javawebinar.topjava.TestUtil;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.to.UserLite;
@@ -23,10 +24,29 @@ import static ru.javawebinar.topjava.UserTestData.*;
 public class AdminRestControllerTest extends AbstractRestControllerTest {
     private static final String REST_URL = "/rest/admin/users/";
 
+    /*
+     *  CRUD
+     */
+
+    @Test
+    public void testCreate() throws Exception {
+        User expected = new User(null, "New", "new@gmail.com", "newPass", 1000, Role.ROLE_USER, Role.ROLE_ADMIN);
+        ResultActions action = mockMvc.perform(post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(ADMIN))
+                .content(objectMapper.writeValueAsString(expected)))
+                .andExpect(status().isCreated());
+        UserLite returned = MATCHER_USER_LITE.fromJsonAction(action);
+        expected.setId(returned.getId());
+        MATCHER_USER_LITE.assertEquals(new UserLite(expected), returned);
+        MATCHER_USER_LITE.assertCollectionEquals(
+                Arrays.asList(new UserLite(ADMIN), new UserLite(expected), new UserLite(USER)),
+                userService.getAll().stream().map(UserLite::new).collect(Collectors.toList()));
+    }
+
     @Test
     public void getAll() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get(REST_URL)
-//                .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON_VALUE))
@@ -54,16 +74,6 @@ public class AdminRestControllerTest extends AbstractRestControllerTest {
     }
 
     @Test
-    public void testDelete() throws Exception {
-        mockMvc.perform(delete(REST_URL + USER_ID)
-                .with(userHttpBasic(ADMIN)))
-                .andDo(print())
-                .andExpect(status().isOk());
-        MATCHER_USER_LITE.assertCollectionEquals(Collections.singletonList(
-                new UserLite(ADMIN)), userService.getAll().stream().map(UserLite::new).collect(Collectors.toList()));
-    }
-
-    @Test
     public void testUpdate() throws Exception {
         User updated = new User(USER);
         updated.setName("UpdatedName");
@@ -78,24 +88,17 @@ public class AdminRestControllerTest extends AbstractRestControllerTest {
     }
 
     @Test
-    public void testCreate() throws Exception {
-        User expected = new User(null, "New", "new@gmail.com", "newPass", 1000, Role.ROLE_USER, Role.ROLE_ADMIN);
-        ResultActions action = mockMvc.perform(post(REST_URL)
-                .contentType(MediaType.APPLICATION_JSON)
-                .with(userHttpBasic(ADMIN))
-                .content(objectMapper.writeValueAsString(expected)))
-                .andExpect(status().isCreated());
-        UserLite returned = MATCHER_USER_LITE.fromJsonAction(action);
-        expected.setId(returned.getId());
-
-/*        MATCHER.assertEquals(expected, returned);
-        MATCHER.assertCollectionEquals(Arrays.asList(ADMIN, expected, USER), userService.getAll());*/
-        MATCHER_USER_LITE.assertEquals(new UserLite(expected), returned);
-        MATCHER_USER_LITE.assertCollectionEquals(
-                Arrays.asList(new UserLite(ADMIN), new UserLite(expected), new UserLite(USER)),
-                userService.getAll().stream().map(UserLite::new).collect(Collectors.toList()));
+    public void testDelete() throws Exception {
+        mockMvc.perform(delete(REST_URL + USER_ID)
+                .with(userHttpBasic(ADMIN)))
+                .andDo(print())
+                .andExpect(status().isOk());
+        MATCHER_USER_LITE.assertCollectionEquals(Collections.singletonList(
+                new UserLite(ADMIN)), userService.getAll().stream().map(UserLite::new).collect(Collectors.toList()));
     }
-
+    /*
+    *  redirect
+    */
     @Test
     public void testGetUnauthorized() throws Exception {
         mockMvc.perform(get(REST_URL))
@@ -107,5 +110,24 @@ public class AdminRestControllerTest extends AbstractRestControllerTest {
         mockMvc.perform(get(REST_URL)
                 .with(userHttpBasic(USER)))
                 .andExpect(status().isForbidden());
+    }
+
+    /*
+     *  exception
+     */
+    @Test
+    public void testGetNotFound() throws Exception {
+        mockMvc.perform(get(REST_URL + 1)
+                .with(TestUtil.userHttpBasic(ADMIN)))
+                .andExpect(status().isUnprocessableEntity())
+                .andDo(print());
+    }
+
+    @Test
+    public void testDeleteNotFound() throws Exception {
+        mockMvc.perform(delete(REST_URL + 1)
+                .with(TestUtil.userHttpBasic(ADMIN)))
+                .andExpect(status().isUnprocessableEntity())
+                .andDo(print());
     }
 }
