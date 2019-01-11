@@ -32,7 +32,7 @@ public class SpringMain {
 
             System.out.println("Bean definition names: " + Arrays.toString(context.getBeanDefinitionNames()));
             AdminRestController adminUserController = context.getBean(AdminRestController.class);
-            adminUserController.create(new User(null, "userName", "email", "password", Role.ROLE_ADMIN));
+            adminUserController.create(new User(null, "userName", "email", "password",2000, Role.ROLE_ADMIN));
             System.out.println();
 
             MealRestController mealController = context.getBean(MealRestController.class);

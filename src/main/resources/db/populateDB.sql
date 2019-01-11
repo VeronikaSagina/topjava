@@ -10,11 +10,11 @@ delete
 from user_roles;
 alter sequence global_seq restart with 100000;
 
-insert into users (name, email, password)
-values ('User', 'user@yandex.ru', 'password');
+insert into users (name, email, password, calories_per_day)
+values ('User', 'user@yandex.ru', 'password', 2005);
 
-insert into users (name, email, password)
-VALUES ('Admin', 'admin@gmail.com', 'admin');
+insert into users (name, email, password, calories_per_day)
+VALUES ('Admin', 'admin@gmail.com', 'admin', 1900);
 
 insert into user_roles (role, user_id)
 values ('ROLE_USER', 100000),

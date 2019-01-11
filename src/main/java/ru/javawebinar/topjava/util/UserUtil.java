@@ -12,7 +12,7 @@ public class UserUtil {
     }
 
     public static User createNewUserFromUserTo(UserTo newUser) {
-        return new User(null, newUser.getName(), newUser.getEmail().toLowerCase(), newUser.getPassword(), Role.ROLE_USER);
+        return new User(null, newUser.getName(), newUser.getEmail().toLowerCase(), newUser.getPassword(),newUser.getCaloriesPerDay(), Role.ROLE_USER);
     }
 
     public static UserTo asTo(User user) {
@@ -23,6 +23,7 @@ public class UserUtil {
         user.setName(userTo.getName());
         user.setEmail(userTo.getEmail().toLowerCase());
         user.setPassword(userTo.getPassword());
+        user.setCaloriesPerDay(userTo.getCaloriesPerDay());
         return user;
     }
 }

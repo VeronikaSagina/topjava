@@ -11,7 +11,7 @@ import static java.util.Objects.requireNonNull;
 
 public class AuthorizedUser extends org.springframework.security.core.userdetails.User {
 
-    private final UserTo userTo;
+    private UserTo userTo;
 
     public AuthorizedUser(User user) {
         super(user.getEmail(), user.getPassword(), user.isEnabled(), true, true, true, user.getRoles());
@@ -48,5 +48,9 @@ public class AuthorizedUser extends org.springframework.security.core.userdetail
     @Override
     public String toString() {
         return userTo.toString();
+    }
+
+    public void update(UserTo newTo) {
+        userTo = newTo;
     }
 }

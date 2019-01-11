@@ -4,7 +4,6 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
-import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.UserTestData;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
@@ -37,7 +36,7 @@ public abstract class AbstractUserServiceTest extends DbTest {
     @Test
     public void testDuplicateMailSave() {
         thrown.expect(DataAccessException.class);
-        service.save(new User(null, "newUserDuplicateEmail", "user@yandex.ru", "12345", Role.ROLE_USER));
+        service.save(new User(null, "newUserDuplicateEmail", "user@yandex.ru", "12345",1000, Role.ROLE_USER));
         //   System.out.println(service.getAll());
     }
 
@@ -110,9 +109,9 @@ public abstract class AbstractUserServiceTest extends DbTest {
 
     @Test
     public void testValidation() throws Exception {
-        validateRootCause(() -> service.save(new User(null, "  ", "mail@yandex.ru", "password", Role.ROLE_USER)), ConstraintViolationException.class);
-        validateRootCause(() -> service.save(new User(null, "User", "  ", "password", Role.ROLE_USER)), ConstraintViolationException.class);
-        validateRootCause(() -> service.save(new User(null, "User", "mail@yandex.ru", "  ", Role.ROLE_USER)), ConstraintViolationException.class);
+        validateRootCause(() -> service.save(new User(null, "  ", "mail@yandex.ru", "password",2000, Role.ROLE_USER)), ConstraintViolationException.class);
+        validateRootCause(() -> service.save(new User(null, "User", "  ", "password",2000, Role.ROLE_USER)), ConstraintViolationException.class);
+        validateRootCause(() -> service.save(new User(null, "User", "mail@yandex.ru", "  ",2000, Role.ROLE_USER)), ConstraintViolationException.class);
         validateRootCause(() -> service.save(new User(null, "User", "mail@yandex.ru", "password", 9, true, Instant.now(), Collections.emptySet())), ConstraintViolationException.class);
         validateRootCause(() -> service.save(new User(null, "User", "mail@yandex.ru", "password", 10001, true, Instant.now(), Collections.emptySet())), ConstraintViolationException.class);
     }
