@@ -5,11 +5,11 @@ import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.TestUtil;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.MealUtils;
 import ru.javawebinar.topjava.web.AbstractRestControllerTest;
-import ru.javawebinar.topjava.web.AuthorizedUser;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;

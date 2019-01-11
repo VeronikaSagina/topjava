@@ -10,7 +10,6 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.to.MealWithExceed;
-import ru.javawebinar.topjava.web.AuthorizedUser;
 
 import java.io.UnsupportedEncodingException;
 

@@ -1,4 +1,4 @@
-package ru.javawebinar.topjava.web;
+package ru.javawebinar.topjava;
 
 
 import org.springframework.security.core.Authentication;

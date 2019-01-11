@@ -5,16 +5,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ActiveProfiles;
-import ru.javawebinar.topjava.MealTestData;
-import ru.javawebinar.topjava.Profiles;
-import ru.javawebinar.topjava.TestUtil;
-import ru.javawebinar.topjava.UserTestData;
+import ru.javawebinar.topjava.*;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.JpaUtil;
 import ru.javawebinar.topjava.service.AbstractUserServiceTest;
 import ru.javawebinar.topjava.util.MealUtils;
-import ru.javawebinar.topjava.web.AuthorizedUser;
 
 import java.util.Arrays;
 import java.util.Comparator;

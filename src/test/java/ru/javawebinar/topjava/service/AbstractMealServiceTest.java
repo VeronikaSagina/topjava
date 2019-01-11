@@ -4,6 +4,7 @@ import mockit.MockUp;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.MealTestData;
 import ru.javawebinar.topjava.TestUtil;
 import ru.javawebinar.topjava.UserTestData;
@@ -13,7 +14,6 @@ import ru.javawebinar.topjava.to.MealWithExceed;
 import ru.javawebinar.topjava.util.MealUtils;
 import ru.javawebinar.topjava.util.UserUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
-import ru.javawebinar.topjava.web.AuthorizedUser;
 
 import javax.validation.ConstraintViolationException;
 import java.time.LocalDate;

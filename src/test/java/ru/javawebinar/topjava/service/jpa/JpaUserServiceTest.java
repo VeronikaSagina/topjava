@@ -11,7 +11,7 @@ import ru.javawebinar.topjava.service.AbstractUserServiceTest;
 public class JpaUserServiceTest extends AbstractUserServiceTest {
     @Autowired
     protected JpaUtil jpaUtil;
-    
+
     @Before
     public void setUp() {
         service.evictCache();

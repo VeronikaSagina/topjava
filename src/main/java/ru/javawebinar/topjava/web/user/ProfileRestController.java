@@ -3,10 +3,10 @@ package ru.javawebinar.topjava.web.user;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.service.UserService;
 import ru.javawebinar.topjava.to.UserLite;
 import ru.javawebinar.topjava.to.UserTo;
-import ru.javawebinar.topjava.web.AuthorizedUser;
 
 @RestController
 @RequestMapping(ProfileRestController.REST_URL)
