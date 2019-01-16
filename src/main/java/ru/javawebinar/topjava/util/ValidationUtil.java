@@ -49,4 +49,13 @@ public class ValidationUtil {
         result.getFieldErrors().forEach(fe -> sb.append(fe.getField()).append(" ").append(fe.getDefaultMessage()).append("<br>"));
         return new ResponseEntity<>(sb.toString(), HttpStatus.UNPROCESSABLE_ENTITY);
     }
+
+    public static Throwable getRootCause(Throwable throwable){
+        Throwable result = throwable;
+        Throwable cause;
+        while (null != (cause = result.getCause()) && (result != cause)){
+            result = cause;
+        }
+        return result;
+    }
 }

@@ -14,7 +14,7 @@ insert into users (name, email, password, calories_per_day)
 values ('User', 'user@yandex.ru', 'password', 2005);
 
 insert into users (name, email, password, calories_per_day)
-VALUES ('Admin', 'admin@gmail.com', 'admin', 1900);
+VALUES ('Admin', 'admin@gmail.com', 'admin', 1900);;
 
 insert into user_roles (role, user_id)
 values ('ROLE_USER', 100000),
