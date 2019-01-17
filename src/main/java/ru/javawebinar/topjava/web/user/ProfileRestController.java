@@ -8,6 +8,8 @@ import ru.javawebinar.topjava.service.UserService;
 import ru.javawebinar.topjava.to.UserLite;
 import ru.javawebinar.topjava.to.UserTo;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping(ProfileRestController.REST_URL)
 public class ProfileRestController extends AbstractUserController {
@@ -29,7 +31,7 @@ public class ProfileRestController extends AbstractUserController {
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void update(@RequestBody UserTo user) {
+    public void update(@Valid @RequestBody UserTo user) {
         super.update(user, AuthorizedUser.id());
     }
 }

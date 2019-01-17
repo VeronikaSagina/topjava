@@ -11,6 +11,7 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.to.MealWithExceed;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -52,12 +53,12 @@ public class MealRestController extends AbstractMealController {
 
     @Override
     @PutMapping(value = {"/{id}"}, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void update(@RequestBody MealTo meal, @PathVariable("id") Integer id) {
+    public void update(@Valid @RequestBody MealTo meal, @PathVariable("id") Integer id) {
         super.update(meal, id);
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Meal> create(@RequestBody MealTo meal) {
+    public ResponseEntity<Meal> create(@Valid @RequestBody MealTo meal) {
         Meal created = super.save(meal);
         URI uriOfNew = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path(REST_URL + "/{id}")

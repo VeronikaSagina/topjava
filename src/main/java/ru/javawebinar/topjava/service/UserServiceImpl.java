@@ -14,13 +14,14 @@ import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.repository.UserRepository;
 import ru.javawebinar.topjava.to.UserTo;
-import ru.javawebinar.topjava.util.UserUtil;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static ru.javawebinar.topjava.util.UserUtil.prepareToSave;
+import static ru.javawebinar.topjava.util.UserUtil.updateFromUserTo;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFound;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 
@@ -49,7 +50,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional
     public User save(User user) {
         Assert.notNull(user, "user must not be null");
-        return repository.save(user);
+        return repository.save(prepareToSave(user));
     }
 
     @Override
@@ -83,7 +84,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional
     @CacheEvict(value = "users", allEntries = true)
     public void update(User user) {
-        repository.save(user);
+        repository.save(prepareToSave(user));
     }
 
     @Override
@@ -91,7 +92,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @CacheEvict(value = "users", allEntries = true)
     public void update(UserTo userTo) {
         User user = get(userTo.getId());
-        repository.save(UserUtil.updateFromUserTo(user, userTo));
+        User user1 = updateFromUserTo(user, userTo);
+        repository.save(prepareToSave(user1));
     }
 
     @CacheEvict(value = "users", allEntries = true)
