@@ -7,6 +7,11 @@ function makeEditable() {
         failNoty(jqXHR);
     });
     $.ajaxSetup({cache: false});
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    $(document).ajaxSend(function(e, xhr, options) {
+        xhr.setRequestHeader(header, token);
+    });
 }
 
 function add() {
@@ -39,11 +44,6 @@ function editRow(id) {
         $("#headerEdit").removeAttr("hidden");
         $("#headerAdd").attr("hidden", true);
         $('#editRow').modal();
-    });
-    var token = $("meta[name='_csrf']").attr("content");
-    var header = $("meta[name='_csrf_header']").attr("content");
-    $(document).ajaxSend(function(e, xhr, options) {
-        xhr.setRequestHeader(header, token);
     });
 }
 
