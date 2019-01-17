@@ -1,10 +1,12 @@
 package ru.javawebinar.topjava.web.user;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.javawebinar.topjava.View;
 import ru.javawebinar.topjava.service.UserService;
 import ru.javawebinar.topjava.to.UserLite;
 import ru.javawebinar.topjava.to.UserTo;
@@ -26,11 +28,13 @@ public class AdminAjaxController extends AbstractUserController {
 
     @Override
     @GetMapping(produces = APPLICATION_JSON_VALUE)
+    @JsonView(View.JsonUI.class)
     public List<UserLite> getAll() {
         return super.getAll();
     }
 
     @Override
+    @JsonView(View.JsonUI.class)
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public UserLite get(@PathVariable("id") int id) {
         return super.get(id);

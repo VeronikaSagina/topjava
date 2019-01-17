@@ -3,6 +3,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@taglib uri="http://mycompany.com" prefix="f" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <html>
 <jsp:include page="fragments/headTag.jsp"/>
@@ -22,7 +23,7 @@
                     <div class="col-sm-7">
                         <div class="panel panel-default">
                             <div class="panel-body">
-                                <form class="form-horizontal" id="filter">
+                                <form:form class="form-horizontal" id="filter">
 
                                     <div class="form-group">
                                         <label class="control-label col-sm-3" for="startDate"><spring:message
@@ -51,7 +52,7 @@
                                             <input name="endTime" id="endTime" class="form-control">
                                         </div>
                                     </div>
-                                </form>
+                                </form:form>
                             </div>
                             <div class="panel-footer text-right">
                                 <button type="button" class="btn btn-primary" onclick="clearFilter()"><spring:message
@@ -97,22 +98,8 @@
                 <h2 class="modal-title" hidden id="headerAdd"><spring:message code="meals.add"/></h2>
             </div>
             <div class="modal-body">
-                <form class="form-horizontal" id="detailsForm">
+                <form:form class="form-horizontal" id="detailsForm">
                     <input type="text" hidden="hidden" id="id" name="id">
-                    <%--
-                                        <div class="form-group" id="datetimepicker">
-                                            <label for="dateTime" class="control-label col-xs-3"><spring:message
-                                                    code="meals.dateTime"/></label>
-                                            <div class="input-group bootstrap-timepicker timepicker">
-                                                <input id="dateTime" type="text" class="form-control" data-provide="timepicker"
-                                                       data-template="modal" data-minute-step="1" data-modal-backdrop="true" name="dateTime"
-                                                       placeholder="<spring:message code="meals.dateTime"/> ">
-                                                <span class="input-group-addon">
-                                            <span class="glyphicon glyphicon-calendar"></span>
-                                        </span>
-                                            </div>
-                                        </div>
-                    --%>
                     <div class="form-group">
                         <label for="dateTime" class="control-label col-xs-3"><spring:message
                                 code="meals.dateTime"/></label>
@@ -150,7 +137,7 @@
                             </button>
                         </div>
                     </div>
-                </form>
+                </form:form>
             </div>
         </div>
     </div>

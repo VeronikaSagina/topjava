@@ -1,11 +1,13 @@
 package ru.javawebinar.topjava.to;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
 import ru.javawebinar.topjava.HasId;
+import ru.javawebinar.topjava.View;
 import ru.javawebinar.topjava.util.UserUtil;
 
 import javax.validation.constraints.Email;
@@ -30,6 +32,7 @@ public class UserTo implements Serializable, HasId {
     @NotBlank
     private String email;
 
+    @JsonView(View.JsonREST.class)
     @Size(min = 5, max = 64, message = " mast be 5 and 64 characters")
     private String password;
 

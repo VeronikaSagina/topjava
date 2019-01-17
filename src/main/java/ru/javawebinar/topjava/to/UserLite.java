@@ -1,10 +1,12 @@
 package ru.javawebinar.topjava.to;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.BeanUtils;
+import ru.javawebinar.topjava.View;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;
 
@@ -23,6 +25,7 @@ public class UserLite {
     private Set<Role> roles;
     private boolean enabled;
     private Instant registered;
+    @JsonView(View.JsonREST.class)
     private String password;
 
     public UserLite(User user) {

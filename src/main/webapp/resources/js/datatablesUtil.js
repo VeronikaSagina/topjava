@@ -33,19 +33,17 @@ function updateTable() {
 
 function editRow(id) {
     $.get(ajaxUrl + id, function (data) {
-        console.log("data", data);
         $.each(data, function (key, value) {
             form.find(":input[name='" + key + "']").val(value);
         });
-        /*
-        form.find(":input[id='id']").val(data.id);
-        form.find(":input[id='dateTime']").val(data.dateTime);
-        form.find(":input[id='calories']").val(data.calories);
-        form.find(":input[id='description']").val(data.description);
-        */
         $("#headerEdit").removeAttr("hidden");
         $("#headerAdd").attr("hidden", true);
         $('#editRow').modal();
+    });
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    $(document).ajaxSend(function(e, xhr, options) {
+        xhr.setRequestHeader(header, token);
     });
 }
 
@@ -58,7 +56,7 @@ function sleep(ms) {
 }
 
 function save() {
-    var form = $('#detailsForm');
+   // var form = $('#detailsForm');
     $.ajax({
         type: "POST",
         url: ajaxUrl,
