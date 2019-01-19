@@ -9,7 +9,7 @@ function makeEditable() {
     $.ajaxSetup({cache: false});
     var token = $("meta[name='_csrf']").attr("content");
     var header = $("meta[name='_csrf_header']").attr("content");
-    $(document).ajaxSend(function(e, xhr, options) {
+    $(document).ajaxSend(function(e, xhr) {
         xhr.setRequestHeader(header, token);
     });
 }
@@ -90,9 +90,9 @@ function successNoty(key) {
 
 function failNoty(jqXHR) {
     closeNoty();
-    var errorInfo = $.parseJSON(jqXHR.responseText)
+    var errorInfo = $.parseJSON(jqXHR.responseText);
     failedNote = noty({
-        text: i18n['common.errorStatus'] + ': ' + + jqXHR.status + '<br>'+ errorInfo.cause + '<br>' + errorInfo.detail,
+        text: i18n['common.errorStatus'] + ': ' + + jqXHR.status + '<br>'+ errorInfo.cause + '<br>' + errorInfo.details.join("<br>"),
         type: 'error',
         layout: 'bottomRight'
     });

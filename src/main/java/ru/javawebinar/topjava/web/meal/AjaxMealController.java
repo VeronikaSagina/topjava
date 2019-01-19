@@ -1,16 +1,12 @@
 package ru.javawebinar.topjava.web.meal;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.View;
 import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.to.MealWithExceed;
-import ru.javawebinar.topjava.util.ValidationUtil;
 
 import java.util.List;
 
@@ -43,16 +39,12 @@ public class AjaxMealController extends AbstractMealController {
     }
 
     @PostMapping
-    public ResponseEntity<String> createAndUpdate(@Validated(View.ValidatedUI.class) MealTo meal, BindingResult result) {
-        if (result.hasErrors()) {
-            return ValidationUtil.getErrorResponse(result);
-        }
+    public void createAndUpdate(@Validated(View.ValidatedUI.class) MealTo meal) {
         if (meal.isNew()) {
             super.save(meal);
         } else {
             super.update(meal, meal.getId());
         }
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @Override

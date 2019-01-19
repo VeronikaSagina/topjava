@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
 import ru.javawebinar.topjava.HasId;
 import ru.javawebinar.topjava.View;
@@ -13,7 +14,6 @@ import ru.javawebinar.topjava.util.UserUtil;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Getter
@@ -33,7 +33,7 @@ public class UserTo implements Serializable, HasId {
     private String email;
 
     @JsonView(View.JsonREST.class)
-    @Size(min = 5, max = 64, message = " mast be 5 and 64 characters")
+    @Length(min = 5, max = 32)
     private String password;
 
     @Range(min = 10, max = 10000)
