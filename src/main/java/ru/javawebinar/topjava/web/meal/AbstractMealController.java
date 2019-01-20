@@ -2,7 +2,11 @@ package ru.javawebinar.topjava.web.meal;
 
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
@@ -10,7 +14,10 @@ import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.to.MealWithExceed;
 import ru.javawebinar.topjava.util.DateTimeUtil;
 import ru.javawebinar.topjava.util.MealUtils;
+import ru.javawebinar.topjava.util.exception.ErrorInfo;
+import ru.javawebinar.topjava.web.ExceptionInfoHandler;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -23,9 +30,13 @@ import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 
 public abstract class AbstractMealController {
     private static final Logger LOG = getLogger(AbstractMealController.class);
+    public static final String EXCEPTION_DUPLICATE_DATETIME = "exception.meal.duplicateDateTime";
 
     @Autowired
     private MealService service;
+
+    @Autowired
+    private ExceptionInfoHandler exceptionInfoHandler;
 
     public List<MealWithExceed> findAll() {
         LOG.info("findAll for user{}" + AuthorizedUser.id());
@@ -80,5 +91,10 @@ public abstract class AbstractMealController {
                 && StringUtils.isEmpty(endDate)
                 && StringUtils.isEmpty(startTime)
                 && StringUtils.isEmpty(endTime);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorInfo> duplicateDateTimeException(HttpServletRequest request, DataIntegrityViolationException e){
+        return exceptionInfoHandler.getErrorInfoResponseEntity(request, e, EXCEPTION_DUPLICATE_DATETIME, HttpStatus.CONFLICT);
     }
 }

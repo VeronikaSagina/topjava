@@ -2,11 +2,19 @@ package ru.javawebinar.topjava.web.user;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.service.UserService;
 import ru.javawebinar.topjava.to.UserLite;
 import ru.javawebinar.topjava.to.UserTo;
+import ru.javawebinar.topjava.util.exception.ErrorInfo;
+import ru.javawebinar.topjava.web.ExceptionInfoHandler;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,6 +26,9 @@ public abstract class AbstractUserController {
     public static final String EXCEPTION_DUPLICATE_EMAIL = "exception.user.duplicateEmail";
 
     private UserService service;
+
+    @Autowired
+    private ExceptionInfoHandler exceptionInfoHandler;
 
     public AbstractUserController(UserService service) {
         this.service = service;
@@ -54,13 +65,20 @@ public abstract class AbstractUserController {
         LOG.info("update {} with id={}", userTo, id);
         service.update(userTo);
     }
+
     public void update(User user, int id) {
         LOG.info("update {} with id={}", user, id);
         checkIdConsistent(user, id);
         service.update(user);
     }
+
     protected void changeEnabled(int userId, boolean enabled) {
         LOG.info("enabled user with id{} = {}", userId, enabled ? "enable" : "disable");
         service.enable(userId, enabled);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<ErrorInfo> duplicateEmailException(HttpServletRequest request, DataIntegrityViolationException e){
+        return exceptionInfoHandler.getErrorInfoResponseEntity(request, e, EXCEPTION_DUPLICATE_EMAIL, HttpStatus.CONFLICT);
     }
 }

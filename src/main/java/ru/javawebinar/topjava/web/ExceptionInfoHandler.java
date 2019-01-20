@@ -2,10 +2,12 @@ package ru.javawebinar.topjava.web;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -21,6 +23,13 @@ import java.util.Arrays;
 @Order(Ordered.HIGHEST_PRECEDENCE + 5)
 public class ExceptionInfoHandler {
     private static final Logger LOG = LoggerFactory.getLogger(ExceptionInfoHandler.class);
+
+    private final MessageUtil messageUtil;
+
+    @Autowired
+    public ExceptionInfoHandler(MessageUtil messageUtil) {
+        this.messageUtil = messageUtil;
+    }
 
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler(NotFoundException.class)
@@ -74,5 +83,16 @@ public class ExceptionInfoHandler {
             LOG.warn("Exception at request {}: {}", request.getRequestURI() + ": " + rootCause.toString());
         }
         return new ErrorInfo(request.getRequestURL(), rootCause);
+    }
+
+    private static ErrorInfo logAndGetErrorInfo(HttpServletRequest req, String cause, String... details) {
+        LOG.warn("{} exception at request {}: {}", cause, req.getRequestURL(), Arrays.toString(details));
+        return new ErrorInfo(req.getRequestURL(), cause, details);
+    }
+
+    public ResponseEntity<ErrorInfo> getErrorInfoResponseEntity(HttpServletRequest request, Exception e, String msgCode, HttpStatus status) {
+        LOG.warn("Application error: {}", ValidationUtil.getRootCause(e).toString());
+        ErrorInfo errorInfo = logAndGetErrorInfo(request, ValidationUtil.getRootCause(e).getClass().getSimpleName(), messageUtil.getMessage(msgCode));
+        return new ResponseEntity<>(errorInfo, status);
     }
 }
