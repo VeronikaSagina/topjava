@@ -54,6 +54,7 @@ public class RootController extends AbstractUserController {
     public String updateProfile(@Valid UserTo userTo, BindingResult result, SessionStatus status) {
         if (!result.hasErrors()) {
             try {
+                userTo.setId(AuthorizedUser.id());
                 super.update(userTo, AuthorizedUser.id());
                 AuthorizedUser.get().update(userTo);
                 status.setComplete();

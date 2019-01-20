@@ -9,6 +9,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
@@ -21,6 +22,7 @@ import ru.javawebinar.topjava.service.UserService;
 import javax.annotation.PostConstruct;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 
 @ContextConfiguration({
@@ -41,6 +43,7 @@ public abstract class AbstractRestControllerTest {
         CHARACTER_ENCODING_FILTER.setEncoding("UTF-8");
         CHARACTER_ENCODING_FILTER.setForceEncoding(true);
     }
+
     @Autowired
     protected ObjectMapper objectMapper;
 
@@ -58,6 +61,9 @@ public abstract class AbstractRestControllerTest {
     @Autowired
     protected MealService mealService;
 
+    @Autowired
+    private MessageUtil messageUtil;
+
     @PostConstruct
     private void postConstruct() {
         mockMvc = MockMvcBuilders
@@ -71,5 +77,13 @@ public abstract class AbstractRestControllerTest {
     public void setUp() {
         userService.evictCache();
         jpaUtil.clear2ndLevelHibernateCache();
+    }
+
+    protected String getMessage(String code) {
+        return messageUtil.getMessage(code);
+    }
+
+    public ResultMatcher jsonMessage(String path, String code) {
+        return jsonPath(path).value(getMessage(code));
     }
 }

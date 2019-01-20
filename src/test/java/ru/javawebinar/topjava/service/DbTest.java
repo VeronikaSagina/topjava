@@ -23,6 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
+import static ru.javawebinar.topjava.util.ValidationUtil.getRootCause;
 
 @ContextConfiguration({
         "classpath:spring/spring-app.xml",
@@ -86,14 +87,5 @@ public abstract class DbTest {
         } catch (Exception e) {
             Assert.assertThat(getRootCause(e), instanceOf(exceptionClass));
         }
-    }
-
-    public static Throwable getRootCause(Throwable t) {
-        Throwable result = t;
-        Throwable cause;
-        while (null != (cause = result.getCause()) && (result != cause)) {
-            result = cause;
-        }
-        return result;
     }
 }

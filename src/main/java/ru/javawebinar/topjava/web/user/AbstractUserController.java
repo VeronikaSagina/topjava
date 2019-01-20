@@ -7,6 +7,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.service.UserService;
 import ru.javawebinar.topjava.to.UserLite;
@@ -77,6 +78,7 @@ public abstract class AbstractUserController {
         service.enable(userId, enabled);
     }
 
+    @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<ErrorInfo> duplicateEmailException(HttpServletRequest request, DataIntegrityViolationException e){
         return exceptionInfoHandler.getErrorInfoResponseEntity(request, e, EXCEPTION_DUPLICATE_EMAIL, HttpStatus.CONFLICT);

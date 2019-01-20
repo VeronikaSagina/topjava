@@ -5,6 +5,8 @@ import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.AuthorizedUser;
 import ru.javawebinar.topjava.TestUtil;
 import ru.javawebinar.topjava.model.Meal;
@@ -18,11 +20,13 @@ import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.javawebinar.topjava.MealTestData.MATCHER;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.TestUtil.userHttpBasic;
-import static ru.javawebinar.topjava.UserTestData.USER;
-import static ru.javawebinar.topjava.UserTestData.USER_ID;
+import static ru.javawebinar.topjava.UserTestData.*;
+import static ru.javawebinar.topjava.web.meal.AbstractMealController.EXCEPTION_DUPLICATE_DATETIME;
 
 public class MealRestControllerTest extends AbstractRestControllerTest {
     private static final String REST_URL = "/rest/meals/";
@@ -152,5 +156,57 @@ public class MealRestControllerTest extends AbstractRestControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get(REST_URL)
                 .accept(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void testCreateInvalid() throws Exception {
+        Meal invalid = new Meal(null, null, "breakfast", 600);
+        mockMvc.perform(post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalid))
+                .with(userHttpBasic(ADMIN)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(content().json("{'cause':'ValidationException'}"))
+                .andDo(print());
+    }
+
+    @Test
+    public void testUpdateInvalid() throws Exception {
+        Meal invalidMeal = new Meal(MEAL_TEST_5.getId(), null, null, 800);
+        mockMvc.perform(put(REST_URL + MEAL_TEST_5.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(invalidMeal))
+                .with(userHttpBasic(USER)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(content().json("{'cause':'ValidationException'}"))
+                .andDo(print());
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    public void testUpdateDuplicate() throws Exception {
+        Meal invalid = new Meal(MEAL_TEST_1.getId(), MEAL_TEST_2.getDateTime(), "Dummy", 200);
+        mockMvc.perform(put(REST_URL + MEAL_TEST_1.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalid))
+                .with(userHttpBasic(USER)))
+                .andDo(print())
+                .andExpect(status().isConflict())
+                .andExpect(jsonMessage("$.details", EXCEPTION_DUPLICATE_DATETIME));
+    }
+
+    @Test
+    @Transactional(propagation = Propagation.NEVER)
+    public void testCreateDuplicate() throws Exception {
+        Meal invalid = new Meal(null, MEAL_TEST_AD1.getDateTime(), "Dummy", 200);
+        mockMvc.perform(post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalid))
+                .with(userHttpBasic(ADMIN)))
+                .andDo(print())
+                .andExpect(status().isConflict())
+                .andExpect(jsonMessage("$.details", EXCEPTION_DUPLICATE_DATETIME));
     }
 }

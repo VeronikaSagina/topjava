@@ -32,6 +32,7 @@ create table meals(
   description TEXT    NOT NULL,
   calories    INTEGER NOT NULL,
   user_id     INTEGER NOT NULL,
-  CONSTRAINT "fk_m.user_id __users" FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+  CONSTRAINT "fk_m.user_id __users" FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+  UNIQUE (user_id, dateTime)
 );
 CREATE INDEX idx_meals_userId_dateTime ON meals using btree(user_id, datetime DESC);

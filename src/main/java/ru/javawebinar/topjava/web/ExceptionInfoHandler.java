@@ -92,7 +92,10 @@ public class ExceptionInfoHandler {
 
     public ResponseEntity<ErrorInfo> getErrorInfoResponseEntity(HttpServletRequest request, Exception e, String msgCode, HttpStatus status) {
         LOG.warn("Application error: {}", ValidationUtil.getRootCause(e).toString());
-        ErrorInfo errorInfo = logAndGetErrorInfo(request, ValidationUtil.getRootCause(e).getClass().getSimpleName(), messageUtil.getMessage(msgCode));
+        ErrorInfo errorInfo = logAndGetErrorInfo(
+                request,
+                ValidationUtil.getRootCause(e).getClass().getSimpleName(),
+                messageUtil.getMessage(msgCode, request.getLocale()));
         return new ResponseEntity<>(errorInfo, status);
     }
 }
