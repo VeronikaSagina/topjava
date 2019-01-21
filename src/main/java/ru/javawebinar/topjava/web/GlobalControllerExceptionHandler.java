@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
-import ru.javawebinar.topjava.AuthorizedUser;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,10 +17,6 @@ public class GlobalControllerExceptionHandler {
         LOG.error("exception at request " + request.getRequestURI(), e);
         ModelAndView modelAndView = new ModelAndView("exception/exception");
         modelAndView.addObject("exception", e);
-        AuthorizedUser authorizedUser = AuthorizedUser.safeGet();
-        if (authorizedUser != null){
-            modelAndView.addObject("userTo", authorizedUser.getUserTo());
-        }
         return modelAndView;
     }
 }
