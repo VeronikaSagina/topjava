@@ -2,13 +2,7 @@ var ajaxUrl = 'ajax/profile/meals/';
 var datatableApi;
 
 $(function () {
-    datatableApi = $('#datatable').DataTable({
-        "ajax": {
-            "url": ajaxUrl,
-            "dataSrc": ""
-        },
-        "paging": false,
-        "info": true,
+    datatableApi = $('#datatable').DataTable(extendsOpts({
         "columns": [
             {
                 "data": "dateTimeUI"
@@ -36,7 +30,7 @@ $(function () {
             $(row).addClass(data.exceed ? 'exceeded' : 'normal');
         },
         "initComplete": makeEditable
-    });
+    }));
 
     $.datetimepicker.setLocale(localeCode);
 

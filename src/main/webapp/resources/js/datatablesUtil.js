@@ -2,16 +2,33 @@ var form;
 
 function makeEditable() {
     form = $('#detailsForm');
-
     $(document).ajaxError(function (event, jqXHR) {
         failNoty(jqXHR);
     });
     $.ajaxSetup({cache: false});
     var token = $("meta[name='_csrf']").attr("content");
     var header = $("meta[name='_csrf_header']").attr("content");
-    $(document).ajaxSend(function(e, xhr) {
+    $(document).ajaxSend(function (e, xhr) {
         xhr.setRequestHeader(header, token);
     });
+}
+
+function extendsOpts(opts) {
+    $.extend(true, opts,
+        {
+            "ajax": {
+                "url": ajaxUrl,
+                "dataSrc": ""
+            },
+            "paging": false,
+            "info": true,
+            "language": {
+                "search": i18n["common.search"]
+            },
+            "initComplete": makeEditable
+        }
+    );
+    return opts;
 }
 
 function add() {
@@ -56,7 +73,7 @@ function sleep(ms) {
 }
 
 function save() {
-   // var form = $('#detailsForm');
+    // var form = $('#detailsForm');
     $.ajax({
         type: "POST",
         url: ajaxUrl,
@@ -92,7 +109,7 @@ function failNoty(jqXHR) {
     closeNoty();
     let errorInfo = $.parseJSON(jqXHR.responseText);
     failedNote = noty({
-        text: i18n['common.errorStatus'] + ': ' + jqXHR.status + '<br>'+ errorInfo.cause + '<br>' + errorInfo.details.join("<br>"),
+        text: i18n['common.errorStatus'] + ': ' + jqXHR.status + '<br>' + errorInfo.cause + '<br>' + errorInfo.details.join("<br>"),
         type: 'error',
         layout: 'bottomRight'
     });

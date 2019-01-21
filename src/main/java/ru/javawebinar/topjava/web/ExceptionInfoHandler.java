@@ -67,8 +67,8 @@ public class ExceptionInfoHandler {
     }
 
     private ErrorInfo logAndGetValidatedErrorInfo(HttpServletRequest request, BindingResult result) {
-        String[] details = result.getFieldErrors().stream()
-                .map(er -> er.getField() + ' ' + er.getDefaultMessage())
+        String[] details = result.getAllErrors().stream()
+                .map(er ->  messageUtil.getMessage(er))
                 .toArray(String[]::new);
         String uri = request.getRequestURI();
         LOG.warn("Validation exception at request {}: {}", uri, Arrays.toString(details));

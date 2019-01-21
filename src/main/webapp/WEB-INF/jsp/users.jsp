@@ -11,30 +11,29 @@
 <script type="text/javascript" src="resources/js/datatablesUtil.js" defer></script>
 <script type="text/javascript" src="resources/js/userDatatables.js" defer></script>
 <jsp:include page="fragments/bodyHeader.jsp"/>
-
-<div class="jumbotron">
-    <div class="container">
-        <div class="shadow">
-            <h3><spring:message code="users.title"/></h3>
-        <br/>
-            <div class="view-box">
-                <a class="btn btn-primary" onclick="add()">
-                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
-                    <spring:message code="common.add"/>
-                </a>
-                <table class="table table-striped display" id="datatable">
-                    <thead>
-                    <tr>
-                        <th><spring:message code="users.Name"/></th>
-                        <th><spring:message code="users.email"/></th>
-                        <th><spring:message code="users.roles"/></th>
-                        <th><spring:message code="users.active"/></th>
-                        <th><spring:message code="users.registered"/></th>
-                        <th></th>
-                        <th></th>
-                    </tr>
-                    </thead>
-                </table>
+    <div class="jumbotron">
+        <div class="container">
+            <div class="shadow">
+                <h3><spring:message code="users.title"/></h3>
+                <br/>
+                <div class="view-box">
+                    <a class="btn btn-primary" onclick="add()">
+                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        <spring:message code="common.add"/>
+                    </a>
+                    <table class="table table-striped display" id="datatable">
+                        <thead>
+                        <tr>
+                            <th><spring:message code="users.Name"/></th>
+                            <th><spring:message code="users.email"/></th>
+                            <th><spring:message code="users.roles"/></th>
+                            <th><spring:message code="users.active"/></th>
+                            <th><spring:message code="users.registered"/></th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                    </table>
             </div>
         </div>
     </div>

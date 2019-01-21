@@ -14,7 +14,8 @@
     <div class="container">
         <h2>${userTo.name} <spring:message code="${register ? 'app.register' : 'app.profile'}"/></h2>
 
-        <form:form modelAttribute="userTo" class="form-horizontal" method="post" action="${register ? 'register' : 'profile'}"
+        <form:form modelAttribute="userTo" class="form-horizontal" method="post"
+                   action="${register ? 'register' : 'profile'}"
                    charset="utf-8" accept-charset="UTF-8">
 
             <spring:message code="users.name" var="userName"/>
