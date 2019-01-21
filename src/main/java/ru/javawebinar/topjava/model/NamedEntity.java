@@ -1,5 +1,7 @@
 package ru.javawebinar.topjava.model;
 
+import org.hibernate.validator.constraints.SafeHtml;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
@@ -12,6 +14,7 @@ public class NamedEntity extends BaseEntity {
 
     @Column(name = "name")
     @NotBlank
+    @SafeHtml
     protected String name;
 
     NamedEntity() {

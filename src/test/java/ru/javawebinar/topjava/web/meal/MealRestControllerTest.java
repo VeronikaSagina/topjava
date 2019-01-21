@@ -209,4 +209,17 @@ public class MealRestControllerTest extends AbstractRestControllerTest {
                 .andExpect(status().isConflict())
                 .andExpect(jsonMessage("$.details", EXCEPTION_DUPLICATE_DATETIME));
     }
+
+    @Test
+    public void testUpdateHtmlUnsafe() throws Exception {
+        Meal invalid = new Meal(MEAL_TEST_1.getId(), LocalDateTime.now(), "<script>alert(123)</script>", 200);
+        mockMvc.perform(put(REST_URL + MEAL_TEST_1.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(invalid))
+                .with(userHttpBasic(USER)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(content().json("{'cause':'ValidationException'}"))
+                .andDo(print());
+    }
 }

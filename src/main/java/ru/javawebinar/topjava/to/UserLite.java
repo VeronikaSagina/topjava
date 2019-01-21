@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.beans.BeanUtils;
 import ru.javawebinar.topjava.View;
 import ru.javawebinar.topjava.model.Role;
@@ -20,12 +21,15 @@ import java.util.Set;
 public class UserLite {
     private int id;
     private int caloriesPerDay;
+    @SafeHtml
     private String name;
+    @SafeHtml
     private String email;
     private Set<Role> roles;
     private boolean enabled;
     private Instant registered;
     @JsonView(View.JsonREST.class)
+    @SafeHtml
     private String password;
 
     public UserLite(User user) {

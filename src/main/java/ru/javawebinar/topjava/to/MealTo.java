@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
+import org.hibernate.validator.constraints.SafeHtml;
 import org.springframework.format.annotation.DateTimeFormat;
 import ru.javawebinar.topjava.HasId;
 import ru.javawebinar.topjava.View;
@@ -31,6 +32,7 @@ public class MealTo implements HasId {
     private LocalDateTime dateTime;
 
     @NotBlank(groups = {View.ValidatedUI.class, Default.class})
+    @SafeHtml(groups = {View.ValidatedUI.class})
     private String description;
 
     @NotNull(groups = {View.ValidatedUI.class, Default.class})

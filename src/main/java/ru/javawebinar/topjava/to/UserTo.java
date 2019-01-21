@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.Range;
+import org.hibernate.validator.constraints.SafeHtml;
 import ru.javawebinar.topjava.HasId;
 import ru.javawebinar.topjava.View;
 import ru.javawebinar.topjava.util.UserUtil;
@@ -26,14 +27,17 @@ public class UserTo implements Serializable, HasId {
     private Integer id;
 
     @NotBlank
+    @SafeHtml
     private String name;
 
     @Email
     @NotBlank
+    @SafeHtml
     private String email;
 
     @JsonView(View.JsonREST.class)
     @Length(min = 5, max = 32)
+    @SafeHtml
     private String password;
 
     @Range(min = 10, max = 10000)
