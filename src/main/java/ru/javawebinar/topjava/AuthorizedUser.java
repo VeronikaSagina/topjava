@@ -18,7 +18,7 @@ public class AuthorizedUser extends org.springframework.security.core.userdetail
         this.userTo = UserUtil.asTo(user);
     }
 
-    public static AuthorizedUser safeGet() {
+    private static AuthorizedUser safeGet() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
             return null;

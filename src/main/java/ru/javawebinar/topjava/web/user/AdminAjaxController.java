@@ -47,7 +47,6 @@ public class AdminAjaxController extends AbstractUserController {
 
     @PostMapping
     public void createOrUpdate(@Valid UserTo userTo) {
-        /* System.out.println(messageSource.getMessage("birthday", new Object[]{"Васю", LocalDate.now()}, ru));*/
         if (userTo.isNew()) {
             super.create(UserUtil.createNewUserFromUserTo(userTo));
         } else {
