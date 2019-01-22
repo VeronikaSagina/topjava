@@ -13,6 +13,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.util.ValidationUtil;
+import ru.javawebinar.topjava.util.exception.ApplicationException;
 import ru.javawebinar.topjava.util.exception.ErrorInfo;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
@@ -29,6 +30,12 @@ public class ExceptionInfoHandler {
     @Autowired
     public ExceptionInfoHandler(MessageUtil messageUtil) {
         this.messageUtil = messageUtil;
+    }
+
+    @ExceptionHandler(ApplicationException.class)
+    @ResponseBody
+    public ResponseEntity<ErrorInfo> applicationError(HttpServletRequest request, ApplicationException appEx) {
+        return getErrorInfoResponseEntity(request, appEx, appEx.getMsgCode(), appEx.getHttpStatus());
     }
 
     @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
@@ -68,7 +75,7 @@ public class ExceptionInfoHandler {
 
     private ErrorInfo logAndGetValidatedErrorInfo(HttpServletRequest request, BindingResult result) {
         String[] details = result.getAllErrors().stream()
-                .map(er ->  messageUtil.getMessage(er))
+                .map(messageUtil::getMessage)
                 .toArray(String[]::new);
         String uri = request.getRequestURI();
         LOG.warn("Validation exception at request {}: {}", uri, Arrays.toString(details));
