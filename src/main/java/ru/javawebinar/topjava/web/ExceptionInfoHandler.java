@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.util.ValidationUtil;
 import ru.javawebinar.topjava.util.exception.ApplicationException;
 import ru.javawebinar.topjava.util.exception.ErrorInfo;
-import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
@@ -35,14 +34,7 @@ public class ExceptionInfoHandler {
     @ExceptionHandler(ApplicationException.class)
     @ResponseBody
     public ResponseEntity<ErrorInfo> applicationError(HttpServletRequest request, ApplicationException appEx) {
-        return getErrorInfoResponseEntity(request, appEx, appEx.getMsgCode(), appEx.getHttpStatus());
-    }
-
-    @ResponseStatus(value = HttpStatus.UNPROCESSABLE_ENTITY)
-    @ExceptionHandler(NotFoundException.class)
-    @ResponseBody
-    public ErrorInfo handleError(HttpServletRequest request, NotFoundException e) {
-        return logAndGetErrorInfo(request, e, false);
+        return getErrorInfoResponseEntity(request, appEx, appEx.getMsgCode(), appEx.getHttpStatus(), appEx.getArgs());
     }
 
     @ResponseStatus(value = HttpStatus.CONFLICT)
@@ -97,12 +89,12 @@ public class ExceptionInfoHandler {
         return new ErrorInfo(req.getRequestURL(), cause, details);
     }
 
-    public ResponseEntity<ErrorInfo> getErrorInfoResponseEntity(HttpServletRequest request, Exception e, String msgCode, HttpStatus status) {
+    public ResponseEntity<ErrorInfo> getErrorInfoResponseEntity(HttpServletRequest request, Exception e, String msgCode, HttpStatus status, String...args) {
         LOG.warn("Application error: {}", ValidationUtil.getRootCause(e).toString());
         ErrorInfo errorInfo = logAndGetErrorInfo(
                 request,
                 ValidationUtil.getRootCause(e).getClass().getSimpleName(),
-                messageUtil.getMessage(msgCode, request.getLocale()));
+                messageUtil.getMessage(msgCode, request.getLocale(), args));
         return new ResponseEntity<>(errorInfo, status);
     }
 }
